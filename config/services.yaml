@@ -9,6 +9,7 @@ parameters:
     ldap_users_uuid: '%env(LDAP_USERS_UUID)%'
     # Use {username} in the filter where the username has to be replaced.
     ldap_users_filter: '(&(objectclass=Person)(%env(LDAP_USERS_UUID)%={username}))'
+    receipt_files_directory: '%kernel.project_dir%/public/uploads/receipt_files'
 
 
 services:
@@ -47,3 +48,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%receipt_files_directory%'
+    
+    App\Service\CsvFormatValidator:

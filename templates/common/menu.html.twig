@@ -8,10 +8,13 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-
-		<li class='nav-item'>
-		  <a class="nav-link" href="#">{{"navitem.sendFile" | trans }}</a>
+		<li class="nav-item">
+		  <a class="nav-link" href="{{ path('receipts_file_upload') }}">{{ 'navitem.sendFile' | trans |capitalize }}</a>
 		</li>
+		<li class="nav-item">
+		  <a class="nav-link" href="{{ path('receipts_file_list') }}">{{ 'navitem.list' | trans |capitalize }}</a>
+		</li>
+
 
 		{% if is_granted('ROLE_ADMIN') %}
 		<li class="nav-item dropdown">

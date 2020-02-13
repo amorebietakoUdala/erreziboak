@@ -88,7 +88,6 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user, [
             'password_change' => true,
         ]);
-
         $previousPassword = $user->getPassword();
 
         $form->handleRequest($request);
@@ -100,7 +99,6 @@ class UserController extends AbstractController
             } else {
                 $user->setPassword($passwordEncoder->encodePassword($user, $user->getPassword()));
             }
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();

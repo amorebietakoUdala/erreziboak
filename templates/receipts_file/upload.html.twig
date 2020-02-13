@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Upload File{% endblock %}
+
+{% block body %}
+    <main class="container-fluid" >
+		{{ include ('/receipts_file/_form.html.twig') }}
+    </main>
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('receiptsFile_upload') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('receiptsFile_upload') }}
+{% endblock %}

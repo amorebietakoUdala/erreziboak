@@ -1,1 +1,5 @@
 "The password fields must match.": "Las contraseñas deben coincidir."
+"Select a valid csv file.": "Introduzca un fichero csv válido."
+"too_much_fields": "Sobran los siguientes campos: %invalid_headers%"
+"incorrect_field_names": "Los siguientes campos no son válidos: %invalid_headers%"
+"fields_with_missing_values": "Los siguientes campos contienen valores vacíos que deben ser rellenados: %fields%"

@@ -28,6 +28,8 @@ Encore
     .addEntry('user_list', './assets/js/user/list.js')
     .addEntry('user_edit', './assets/js/user/edit.js')
     .addEntry('user_new', './assets/js/user/new.js')
+    .addEntry('receiptsFile_upload', './assets/js/receipts_file/upload.js')
+    .addEntry('receiptsFile_list', './assets/js/receipts_file/list.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
