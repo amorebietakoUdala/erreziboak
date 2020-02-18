@@ -10,7 +10,8 @@ parameters:
     # Use {username} in the filter where the username has to be replaced.
     ldap_users_filter: '(&(objectclass=Person)(%env(LDAP_USERS_UUID)%={username}))'
     receipt_files_directory: '%kernel.project_dir%/public/uploads/receipt_files'
-
+    mailer_user: '%env(MAILER_USER)%'
+    delivery_addresses: '%env(MAILER_SENT_TO)%'
 
 services:
     
@@ -54,3 +55,4 @@ services:
             $targetDirectory: '%receipt_files_directory%'
     
     App\Service\CsvFormatValidator:
+        

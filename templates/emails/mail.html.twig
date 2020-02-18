@@ -1,0 +1,3 @@
+
+{{ 'messages.download:' | trans }}
+<a href="{{ absolute_url(path('receipts_file_download', {'receiptFile': receiptFile.id})) }}">{{ path('receipts_file_download', {'receiptFile': receiptFile.id}) }}</a>

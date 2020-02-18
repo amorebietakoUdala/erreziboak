@@ -9,11 +9,12 @@ use App\Service\FileUploader;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @Route("/receipts")
@@ -24,7 +25,7 @@ class ReceiptsFileController extends AbstractController
     /**
      * @Route("/upload", name="receipts_file_upload")
      */
-    public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, TranslatorInterface $translator, KernelInterface $kernel)
+    public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, TranslatorInterface $translator, \Swift_Mailer $mailer)
     {
         $form = $this->createForm(ReceiptsFileType::class);
 
@@ -52,6 +53,8 @@ class ReceiptsFileController extends AbstractController
                     $em->flush();
                     $this->addFlash('success', 'messages.successfullySended');
 
+                    $this->__sendMail($receiptsFileObject, $mailer);
+
                     return $this->redirectToRoute('receipts_file_list');
                 } catch (Exception $e) {
                     $this->addFlash('error', $e->getMessage());
@@ -62,6 +65,23 @@ class ReceiptsFileController extends AbstractController
         return $this->render('receipts_file/upload.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/{receiptFile}/download", name="receipts_file_download")
+     */
+    public function download(ReceiptsFile $receiptFile)
+    {
+        $without_extension = pathinfo($receiptFile->getFileName(), PATHINFO_FILENAME);
+        $fileName = $this->getParameter('receipt_files_directory').'/'.$without_extension.'.zip';
+        $response = new BinaryFileResponse($fileName);
+        $response->headers->set('Content-Type', 'application/zip');
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $without_extension.'.zip'
+        );
+
+        return $response;
     }
 
     /**
@@ -111,5 +131,28 @@ class ReceiptsFileController extends AbstractController
                 )
             );
         }
+    }
+
+    public function __sendMail(ReceiptsFile $receiptsFile, \Swift_Mailer $mailer)
+    {
+        $sent_from = $this->getParameter('mailer_user');
+        $sent_to = $this->getParameter('delivery_addresses');
+        $message = (new \Swift_Message('Conversión de ficheros'))
+        ->setFrom($sent_from)
+        ->setTo($sent_to)
+        ->setBody(
+            $this->renderView(
+                'emails/mail.html.twig',
+                ['receiptFile' => $receiptsFile]
+            ),
+            'text/html'
+        );
+
+        $mailer->send($message);
+
+        return $this->render(
+            'emails/mail.html.twig',
+            ['receiptFile' => $receiptsFile])
+        ;
     }
 }

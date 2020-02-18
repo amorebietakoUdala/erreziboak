@@ -31,10 +31,9 @@
 					<td>{{receiptsFile.receiptsFinishStatus }}</td>
 					<td>{{ ('receiptsFile.status.choices.' ~ receiptsFile.status) | trans }}</td>
 					<td>
-					<a href=""><i class="fa fa-eye"></i></a>
-					&nbsp;<a href=""><i class="fa fa-edit"></i></a>
-					&nbsp;<a class="js-delete" href="#" 
-							 data-url=""><i class="fa fa-trash"></i></a>
+						{% if receiptsFile.status == constant('App\\Entity\\ReceiptsFile::STATUS_PROCESSED') %}
+							<a href="{{ path('receipts_file_download', { 'receiptFile': receiptsFile.id }) }}"><i class="fa fa-download"></i></a>
+						{% endif %}
 					</td>
 				</tr>
 				{% endfor %}

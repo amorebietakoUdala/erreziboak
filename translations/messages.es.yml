@@ -63,6 +63,7 @@ messages.userSaved: "El usuario se ha guardado correctamente"
 messages.userDeleted: "El usuario se ha eliminado correctamente"
 messages.existingUser: "El nombre de usuario o el email ya existe"
 messages.successfullySended: "El fichero se ha enviado correctamente"
+messages.download: "Puede descargar los ficheros de la siguiente dirección:"
 
 ROLE_USER: "Usuario"
 ROLE_ADMIN: "Administrador"
