@@ -1,3 +1,4 @@
+{{ 'messages.wait' | trans }}<br/>
 
-{{ 'messages.download:' | trans }}
+{{ 'messages.download' | trans }}<br/>
 <a href="{{ absolute_url(path('receipts_file_download', {'receiptFile': receiptFile.id})) }}">{{ path('receipts_file_download', {'receiptFile': receiptFile.id}) }}</a>
