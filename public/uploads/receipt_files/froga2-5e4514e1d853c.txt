@@ -1,2 +1,0 @@
-Nombre;Apellido1;Apellido2;Dni;Importe;Cuenta_Corriente;Referencia_Externa;Presupuesto;Institucion;Tipo_Ingreso;Tributo;Fecha_Inicio_Pago;Fecha_Limite_Pago;Referencia_C19;Cuerpo1;Cuerpo2;Cuerpo3;Cuerpo4;Cuerpo5;Cuerpo6;Cuerpo7
-MARKEL;BEDIAGA;SUAREZ;79424411Y;44;ES0630350015010151136667;230686;2020;AMOREBIE;KABONO;34014;01/01/2020;07/02/2020;1,86795E+11;Renovacion Abono Titular MARKEL BEDIAGA SUAREZ;;;;;;
