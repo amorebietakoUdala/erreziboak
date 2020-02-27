@@ -8,6 +8,8 @@ use App\Service\CsvFormatValidator;
 use App\Service\FileUploader;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Swift_Mailer;
+use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -25,7 +27,7 @@ class ReceiptsFileController extends AbstractController
     /**
      * @Route("/upload", name="receipts_file_upload")
      */
-    public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, TranslatorInterface $translator, \Swift_Mailer $mailer)
+    public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, TranslatorInterface $translator, Swift_Mailer $mailer)
     {
         $form = $this->createForm(ReceiptsFileType::class);
 
@@ -133,11 +135,11 @@ class ReceiptsFileController extends AbstractController
         }
     }
 
-    public function __sendMail(ReceiptsFile $receiptsFile, \Swift_Mailer $mailer)
+    public function __sendMail(ReceiptsFile $receiptsFile, Swift_Mailer $mailer)
     {
         $sent_from = $this->getParameter('mailer_user');
         $sent_to = $this->getParameter('delivery_addresses');
-        $message = (new \Swift_Message('Conversión de ficheros'))
+        $message = (new Swift_Message('Conversión de ficheros'))
         ->setFrom($sent_from)
         ->setTo($sent_to)
         ->setBody(

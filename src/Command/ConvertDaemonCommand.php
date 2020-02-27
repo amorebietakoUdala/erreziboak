@@ -34,7 +34,7 @@ class ConvertDaemonCommand extends Command
         $this->container = $container;
         $this->twig = $twig;
         $this->transport = $transport;
-        $this->sleep = 5 * 60;
+        $this->sleep = 1 * 60; // One minute
     }
 
     protected function configure()
@@ -55,6 +55,7 @@ class ConvertDaemonCommand extends Command
             $io->writeln('Files to process: '.count($receiptFiles));
             $index = 1;
             foreach ($receiptFiles as $receiptFile) {
+                /* @var $receiptFile ReceiptsFile */
                 $io->writeln('Processing file: '.$index.' of '.count($receiptFiles));
                 $file = $receiptFile->getFileName();
                 $receiptType = $receiptFile->getReceiptsType();
@@ -70,6 +71,7 @@ class ConvertDaemonCommand extends Command
                     $io->writeln('Processing file: '.$file);
                     $receiptFile->setStatus(ReceiptsFile::STATUS_PROCESSING);
                     $returnCode = $command->run($converFileInput, $output);
+                    $io->writeln('Return code: '.$returnCode);
                     $receiptFile->setStatus(ReceiptsFile::STATUS_PROCESSED);
                     $receiptFile->setProcessedDate(new DateTime());
                     $this->em->persist($receiptFile);

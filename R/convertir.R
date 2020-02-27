@@ -64,7 +64,6 @@ fichero_sin_extension = strsplit(fichero,".",TRUE)[[1]][1]
 # extension = strsplit(fichero,".",TRUE)[[1]][2]
 path = paste0(dirname(args[1]),"/")
 
-data$Fecha_Inicio_Pago = as.POSIXct(data$Fecha_Inicio_Pago, tryFormats=c("%Y/%m/%d","%Y-%m-%d"))
 data$Fecha_Inicio_Pago = as.POSIXct(data$Fecha_Inicio_Pago, format="%d/%m/%Y")
 data$Fecha_Limite_Pago = as.POSIXct(data$Fecha_Limite_Pago, format="%d/%m/%Y")
 data$Cuerpo1 = as.character(data$Cuerpo1)
@@ -407,8 +406,8 @@ if (!error) {
 	print("Ficheros generados:")
 	print(paste0(fichero_sin_extension,".rec"))
 	print(paste0(fichero_sin_extension,".lin"))
-	write.table(header_lines, paste0(path,fichero_sin_extension,".rec"),quote = FALSE,col.names = FALSE, row.names = FALSE)
-	write.table(linea_lines, paste0(path,fichero_sin_extension,".lin"),quote = FALSE,col.names = FALSE, row.names = FALSE)
+	write.table(header_lines, paste0(path,fichero_sin_extension,".rec"),quote = FALSE,col.names = FALSE, row.names = FALSE, fileEncoding="Windows-1252", eol = "\r\n")
+	write.table(linea_lines, paste0(path,fichero_sin_extension,".lin"),quote = FALSE,col.names = FALSE, row.names = FALSE, fileEncoding="Windows-1252", eol = "\r\n")
 	print("===============================================================")
 	print("El proceso ha finalizado correctamente")
 	print("===============================================================")

@@ -64,6 +64,7 @@ messages.userDeleted: "El usuario se ha eliminado correctamente"
 messages.existingUser: "El nombre de usuario o el email ya existe"
 messages.successfullySended: "El fichero se ha enviado correctamente"
 messages.download: "Puede descargar los ficheros de la siguiente dirección:"
+messages.wait: "La conversión puede tardar unos minutos, espere unos minutos antes de utilizar el enlace."
 
 ROLE_USER: "Usuario"
 ROLE_ADMIN: "Administrador"
