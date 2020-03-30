@@ -3,3 +3,4 @@
 "too_much_fields": "Sobran los siguientes campos: %invalid_headers%"
 "incorrect_field_names": "Los siguientes campos no son válidos: %invalid_headers%"
 "fields_with_missing_values": "Los siguientes campos contienen valores vacíos que deben ser rellenados: %fields%"
+"importe_not_numeric": "La columna \"Importe\" tiene que ser numérica sin símbolos de €. Si lo ha generado con Excel, por favor, ponga la columna \"Importe\" de tipo número en vez de moneda."

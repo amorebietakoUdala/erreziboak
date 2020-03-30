@@ -78,6 +78,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         } catch (ConnectionException $e) {
             $bindSuccessfull = false;
         }
+
         /*
          * If bindSuccessfull, find the user in the ldap.
          * Then check DB for the same username.

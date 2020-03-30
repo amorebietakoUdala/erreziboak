@@ -1,0 +1,29 @@
+{% block body_html %}
+<p><b>AMOREBIETA-ETXANOKO UDALA</b></p>
+
+<img class="logo" alt="Logo del Ayuntamiento / Udaletxearen logoa" src="{{ absolute_url(asset('images/udala-ametx.jpg')) }}">
+
+<p>
+    {% if payment.isPaymentSuccessfull %}
+	<b style="color: green">{{ 'Payment was successfull' | trans | capitalize }}</b><br/>
+    {% else %}
+	<b style="color: red">{{ 'Payment was NOT successfull' | trans }}</b><br/>
+	<b style="color: red">Detalles / Zehaztasunak: {{ payment.statusMessage }}</b><br/>
+    {% endif %}
+</p>
+
+<p>
+    <br/>
+    <br/>
+    <b>Nº de recibo / Errezibo zenbakia:</b> {{ receipt.numeroRecibo }} <br/> 
+    <b>Referencia C60 / C60 Erreferentzia:</b> {{ payment.registered_payment_id }} <br/> 
+    <b>Fecha/Data:</b> {{ payment.timestamp | date('Y-m-d') }}<br/>
+    <b>Concepto / Kontzeptua:</b> {{ receipt.concepto }} <br/> 
+    <b>Nombre / Izena:</b> {{ receipt.nombre }} <br/> 
+    <b>Primer apellido/ Lehen abizena:</b> {{ receipt.apellido1 }} <br/> 
+    <b>Segundo apellido/ Bigarren abizena:</b> {{ receipt.apellido2 }} <br/> 
+    <b>DNI/ NAN-a:</b> {{ receipt.dni }} <br/> 
+    <b>Teléfono/ Telefonoa:</b> {{ receipt.telefono }} <br/> 
+    <b>Importe/ Zenbatekoa:</b> {{ receipt.importe }} <br/> 
+</p>
+{% endblock %}

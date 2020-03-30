@@ -9,11 +9,25 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
 		<li class="nav-item">
+		  <a class="nav-link" href="{{ path('receipt_find') }}">{{ 'navitem.receiptsFind' | trans |capitalize }}</a>
+		</li>
+        {% if is_granted('ROLE_USER') %}
+		<li class="nav-item dropdown">
+		  <a class="nav-link dropdown-toggle" href="#" id="navbarRecibos" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			{{ 'navitem.receipts' | trans | capitalize }}
+		  </a>
+		  <div class="dropdown-menu" aria-labelledby="navbarRecibos">
+			  <a class="dropdown-item" href="{{ path('receipts_file_upload') }}">{{ 'navitem.sendFile' | trans |capitalize }}</a>
+			  <a class="dropdown-item" href="{{ path('receipts_file_list') }}">{{ 'navitem.list' | trans |capitalize }}</a>
+		  </div>
+		</li>        
+{#		<li class="nav-item">
 		  <a class="nav-link" href="{{ path('receipts_file_upload') }}">{{ 'navitem.sendFile' | trans |capitalize }}</a>
 		</li>
 		<li class="nav-item">
 		  <a class="nav-link" href="{{ path('receipts_file_list') }}">{{ 'navitem.list' | trans |capitalize }}</a>
-		</li>
+		</li>#}
+        {% endif %}
 
 
 		{% if is_granted('ROLE_ADMIN') %}

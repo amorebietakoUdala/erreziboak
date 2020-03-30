@@ -1,10 +1,12 @@
-messages.appTitle: "Conversión de recibos"
+messages.appTitle: "Recibos"
 
 navitem.administration: "Administración"
 navitem.users: "Usuarios"
-navitem.sendFile: "Enviar fichero"
+navitem.receipts: "Recibos"
+navitem.sendFile: "Conversión ficheros"
 navitem.list: "Listado"
 navitem.receiptsFiles: "Ficheros de recibos"
+navitem.receiptsFind: "Buscar"
 
 link.logout: "Salir"
 
@@ -46,6 +48,17 @@ choice.autoliquidaciones: "Autoliquidaciones"
 choice.liquidaciones: "Liquidaciones"
 choice.recibos: "Recibos"
 
+receipt.numeroRecibo: "Nº de recibo"
+receipt.dni: "DNI"
+receipt.search: "Buscar"
+receipt.importe: "Importe"
+receipt.concepto: "Concepto"
+receipt.nombre: "Nombre"
+receipt.apellidos: "Apellidos"
+receipt.ultimoDiaPago: "Limite Pago"
+receipt.payd: "Pagado"
+options: "Opciones"
+
 choice.pending: "Pendientes"
 choice.validated: "Validados"
 
@@ -66,7 +79,12 @@ messages.successfullySended: "El fichero se ha enviado correctamente"
 messages.download: "Puede descargar los ficheros de la siguiente dirección:"
 messages.wait: "La conversión puede tardar unos minutos, espere unos minutos antes de utilizar el enlace."
 
+confirmation.title: "Datos del pago"
+confirmation.pay: "Pagar"
+confirmation.cancel: "Cancelar"
+
 ROLE_USER: "Usuario"
+ROLE_API: "API"
 ROLE_ADMIN: "Administrador"
 
 table.options: "Opciones"

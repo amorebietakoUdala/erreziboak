@@ -24,6 +24,7 @@ class CsvFormatValidator
     public const TOO_MUCH_FIELDS = 1;
     public const INCORRECT_FIELD_NAMES = 2;
     public const MISSING_VALUES_ON_REQUIRED_FIELDS = 3;
+    public const IMPORTE_NOT_NUMBERIC = 4;
 
     private $validHeaders = [
             'Nombre',
@@ -91,6 +92,11 @@ class CsvFormatValidator
                 if (empty($value)) {
                     $counters[array_keys($record)[$key]] = $counters[array_keys($record)[$key]] + 1;
                 }
+            }
+            if (!is_numeric($record['Importe'])) {
+                return [
+                    'status' => self::IMPORTE_NOT_NUMBERIC,
+                ];
             }
         }
 

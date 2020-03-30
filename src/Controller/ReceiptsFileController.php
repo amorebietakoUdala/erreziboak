@@ -133,6 +133,11 @@ class ReceiptsFileController extends AbstractController
                 )
             );
         }
+        if ($validationResult['status'] === $validator::IMPORTE_NOT_NUMBERIC) {
+            $this->addFlash('error',
+                $translator->trans('importe_not_numeric', [], 'validators')
+            );
+        }
     }
 
     public function __sendMail(ReceiptsFile $receiptsFile, Swift_Mailer $mailer)

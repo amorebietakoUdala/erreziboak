@@ -30,6 +30,7 @@ Encore
     .addEntry('user_new', './assets/js/user/new.js')
     .addEntry('receiptsFile_upload', './assets/js/receipts_file/upload.js')
     .addEntry('receiptsFile_list', './assets/js/receipts_file/list.js')
+    .addEntry('receipt_list', './assets/js/receipt/list.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

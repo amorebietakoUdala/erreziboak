@@ -1,0 +1,3 @@
+mi_pago:
+  resource: "@MiPagoBundle/Resources/config/routing.yml"
+  prefix: /mipago

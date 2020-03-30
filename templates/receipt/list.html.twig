@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{'messages.appTitle' | trans }}
+{% endblock %}
+
+{% block body %}
+    <main class="container-fluid">
+        <div class="mt-2">
+            {{ include('receipt/_searchForm.html.twig',{}) }}
+        </div>
+        <div class="container-fluid">
+            {% if receipts is defined and receipts|length == 1 %}
+                    {% set receipt = receipts[0] %}
+                    <div id="js-autoPay" class="js-btnPay d-none" data-numeroRecibo="{{ receipt.numeroRecibo }}" data-concepto="{{ receipt.tipoIngreso.descripcion }}" data-dni="{{ receipt.dni }}{{ receipt.letra }}" data-nombre="{{ receipt.nombre }}" data-apellido1="{{ receipt.apellido1 }}" data-apellido2="{{ receipt.apellido2 }}" data-importe="{{ receipt.importeTotal|number_format(2, ',', '.') }}" data-ultimodiapago="{{ receipt.fechaLimitePagoBanco|date(" Y/m/d") }}" href="#">&nbsp;</div>
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') and receipts is defined  and receipts|length != 1 %}
+                {% if receipts is defined and receipts|length > 0 %}
+                    <table id="taula" class="table bootstrap-table mt-3">
+                        <thead>
+                            <tr>
+                                <th data-sortable="true">{{"receipt.numeroRecibo" | trans | capitalize}}</th>
+                                <th data-sortable="true">{{"receipt.dni" | trans | capitalize}}</th>
+                                <th data-sortable="true" data-width="15%">{{"receipt.concepto" | trans | capitalize}}</th>
+                                <th data-sortable="true">{{"receipt.importe" | trans | capitalize}}</th>
+                                <th data-sortable="true">{{"receipt.ultimoDiaPago" | trans | capitalize}}</th>
+                                <th data-sortable="true">{{"receipt.payd" | trans | capitalize}}</th>
+                                <th data-sortable="true" data-field="options">{{"options" | trans | capitalize}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for receipt in receipts %}
+                            <tr>
+                                <td>{{receipt.numeroRecibo}}</td>
+                                <td>{{receipt.dni }}</td>
+                                <td data-width="15%">{{receipt.tipoIngreso.descripcion }}</td>
+                                <td>{{receipt.importe}}</td>
+                                <td>{{receipt.fechaFinVoluntaria|date("Y/m/d")}}</td>
+                                <td>{{receipt.estaPagado ? 'messages.si' | trans : 'messages.no' | trans }}</td>
+                                <td>
+                                        {% if receipt.esPagable %}
+                                            <a class="js-btnPay" data-numeroRecibo="{{ receipt.numeroRecibo }}" data-concepto="{{ receipt.tipoIngreso.descripcion }}" data-dni="{{ receipt.dni }}{{ receipt.letra }}" data-nombre="{{ receipt.nombre }}" data-apellido1="{{ receipt.apellido1 }}" data-apellido2="{{ receipt.apellido2 }}" data-importe="{{ receipt.importeTotal|number_format(2, ',', '.') }}" data-ultimodiapago="{{ receipt.fechaFinVoluntaria|date(" Y/m/d") }}" href="#">
+                                            <i class="fa fa-credit-card"></i>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div>
+                        <p>{{"messages.results0" | trans }}</p
+                    </div>
+                {% endif %}
+            {% else %}
+
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('receipt_list') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('receipt_list') }}
+{% endblock %}

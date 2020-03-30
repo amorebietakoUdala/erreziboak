@@ -1,0 +1,26 @@
+<div class="card">
+    <div
+        class="card-body p-1">
+        {{ form_start(form, {'attr': {'class': 'container-fluid form-group',
+						 'novalidate': 'novalidate'
+						} 
+				       }) }}
+        {{ form_errors(form) }}
+            <div class="form-row align-items-center mb-1">
+                <div class="col-lg-2 col-md-2 col-sm-6">
+                    {{ form_label(form.numeroRecibo) }}
+                    {{ form_widget(form.numeroRecibo, { 'id': 'input-numeroRecibo', 'attr': { 'class' : 'form-control form-control-sm' } }) }}
+                    {{ form_errors(form.numeroRecibo) }}
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-6">
+                    {{ form_label(form.dni) }}
+                    {{ form_widget(form.dni, { 'attr': { 'id': 'input-dni', 'class' : 'form-control form-control-sm' } }) }}
+                    {{ form_errors(form.dni) }}
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-6">
+                    {{ form_widget(form.search, { 'attr': { 'class' : 'btn btn-primary' } }) }}
+                </div>
+            </div>
+            {{ form_end(form) }}
+    </div>
+</div>

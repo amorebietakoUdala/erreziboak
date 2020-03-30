@@ -1,9 +1,90 @@
+messages.appTitle: "Erreziboak"
+
+navitem.administration: "Administrazioa"
+navitem.users: "Erabiltzaileak"
+navitem.receipts: "Erreziboak"
+navitem.sendFile: "Fitxategi eraldaketa"
+navitem.list: "Zerrenda"
+navitem.receiptsFiles: "Erreziboen fitxategiak"
+navitem.receiptsFind: "Bilatu"
+
+link.logout: "Irten"
+
+security.login.username: "Erabiltzailea"
+security.login.password: "Pasahitza"
+security.login.remember_me: "Gogora nazazu"
+security.login.submit: "Sartu"
+security.login.invalid_credentials: 'Erabiltzailea eta pasahitza ez dira zuzenak'
+security.login.system_error: 'Sistema akatsa dela eta, ezin da erabiltzailea konprobatu'
+security.login.remember_password: 'Pasahitza ahaztu al zaizu?'
+security.password:
+security.resetted: 'Pasahitza aldatu egin da'
+btn.loginera.itzuli: 'Login orrialdera itzuli'
+'Credenciales no válidas.': 'Erabiltzailea eta pasahitz ezegokiak.'
+
+user.id: "Id"
+user.username: "Erabiltzailea"
+user.firstName: "Izena"
+user.roles: "Rolak"
+user.email: "Emaila"
+user.new_password: "Pasahitz berria"
+user.repeat_new_password: "Errepikatu pasahitza"
 
 
-#           invalid_credentials: 'Pasahitza eta erabiltzailea ez dira zuzenak'
-#           system_error: 'Sistema akatsa dela eta, ezin izan da erabiltzailea konprobatu'
-#           remember_password: 'Pasa hitza ahaztu zaizu?'
-#    password:
-#        resetted: 'Pasahitza aldatu egin da'
-#btn.loginera.itzuli: 'Login orrialdera itzuli'
-#'Credenciales no válidas.': 'Pasahitza eta erabiltzailea ez dira zuzenak'
+receiptsFile.id: "Id"
+receiptsFile.fileName: "Fitxategia"
+receiptsFile.receptionDate: "Bidaltze data"
+receiptsFile.processedDate: "Prozesatze data"
+receiptsFile.ficheroCSV: "CSV fitxategia"
+receiptsFile.receiptsType: "Erreziboen mota"
+receiptsFile.receiptsFinishStatus: "Erreziboen egoera"
+receiptsFile.status: "Fitxategi egoera"
+receiptsFile.status.choices.0: "Prozesatu barik"
+receiptsFile.status.choices.1: "Prozesatzen"
+receiptsFile.status.choices.2: "Prozesatuta"
+receiptsFile.status.choices.3: "Ezegokia"
+receiptsFile.status.choices.4: "Akatsduna"
+choice.autoliquidaciones: "Autolikidazioak"
+choice.liquidaciones: "Likidazioak"
+choice.recibos: "Erreziboak"
+
+receipt.numeroRecibo: "Errezibo zenbakia"
+receipt.dni: "NAN"
+receipt.search: "Bilatu"
+receipt.importe: "Zenbatekoa"
+receipt.concepto: "Kontzeptua"
+receipt.nombre: "Izena"
+receipt.apellidos: "Abizenak"
+receipt.ultimoDiaPago: "Ordaintzeko azken eguna"
+receipt.payd: "Ordainduta"
+options: "Aukerak"
+
+choice.pending: "Zain"
+choice.validated: "Balioztatuak"
+
+btn.cancel: "Itzuli"
+btn.save: "Gorde"
+btn.new: "Berria"
+btn.send: "Bidali"
+
+messages.confirmacion: "Konfirmazioa"
+messages.confirmationDetail: "¿Erregistroa ezabatuko da ziur al zaude?"
+messages.results0: "Ez da erantzunik aurkitu"
+messages.si: "Bai"
+messages.no: "Ez"
+messages.userSaved: "Erabiltzailea behar bezala gorde da"
+messages.userDeleted: "Erabiltzailea behar bezala ezabatu da"
+messages.existingUser: "Erabiltzailea edo emaila jadanik existitzen da"
+messages.successfullySended: "Fitxategia ondo bidali da"
+messages.download: "Fitxategiak hurrengo helbidean jaitsi ditzakezu:"
+messages.wait: "Konbertsioak minutu batzuk iraun ditzake, itxoin apur baten helbidea erabili aurretik."
+
+confirmation.title: "Erreziboaren datuak"
+confirmation.pay: "Ordaindu"
+confirmation.cancel: "Itzuli"
+
+ROLE_USER: "Erabiltzailea arrunta"
+ROLE_API: "API"
+ROLE_ADMIN: "Aministraria"
+
+table.options: "Aukerak"

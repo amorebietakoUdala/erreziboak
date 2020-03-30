@@ -88,6 +88,7 @@ formatearNumero <- function (x,tamanio) {
  }
  
 formatearNumeroCuerpoBaseImponible <- function (x,tamanio) {
+	print(x)
 	importe = as.character(x)
  	importe_partido = strsplit(as.character(x),"[\\,|\\.]")[[1]]
  	enteros = importe_partido[[1]]
@@ -293,6 +294,7 @@ crear_datos_domicilio_tributario <- function (row) {
  }
  
 crear_base_imponible <- function (row) {
+	print(row)
  	importe = formatearNumeroCuerpoBaseImponible (row["Importe"], 15)
  	cuerpo1 = formatearCampo (row["Cuerpo1"], 71)
  	cuerpo2 = formatearCampo (row["Cuerpo2"], 71)
@@ -384,7 +386,7 @@ for ( i in 1:nrow(data) ) {
 	header_line = create_header_line_file(row["Tipo_Ingreso"], row["Institucion"], row, i, tipo_recibo)
 	if ( grepl('Invalid',header_line,fixed = TRUE) ) {
 		print ("Hay errores en los datos de domiciliación. Se cancela el proceso. El registro afectado es: ")
-		print (row)
+#		print (row)
 		print ("Por favor, corrija los errores antes de volver a lanzar el proceso")
 		error = TRUE
 		print("===============================================================")

@@ -44,6 +44,7 @@ class UserType extends AbstractType
                 'label' => 'user.roles',
                 'choices' => [
                     'ROLE_USER' => 'ROLE_USER',
+                    'ROLE_API' => 'ROLE_API',
                     'ROLE_ADMIN' => 'ROLE_ADMIN',
                 ],
                 'multiple' => true,
