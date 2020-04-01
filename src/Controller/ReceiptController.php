@@ -5,6 +5,7 @@ namespace App\Controller;
 //use App\Entity\Receipt;
 
 use App\Entity\GTWIN\ReciboGTWIN;
+use App\Entity\Payment;
 use App\Form\ReceiptSearchForm;
 use App\Service\GTWINIntegrationService;
 use Psr\Log\LoggerInterface;
@@ -172,17 +173,17 @@ class ReceiptController extends AbstractController
     {
         $logger->debug('-->ReceiptConfirmationAction: Start');
         $payment = $request->get('payment');
-        $reference_number = intval($payment->getReference_number());
+        $reference_number = intval($payment->getReferenceNumber());
         $logger->info('ReferenceNumber: '.$reference_number.', Status: '.$payment->getStatus().', PaymentId: '.$payment->getId());
-        $receipt = $gts->findByNumRecibo($payment->getReference_number());
+        $receipt = $gts->findByNumRecibo($payment->getReferenceNumber());
         $this->__sendConfirmationEmails($receipt, $payment, $mailer);
-        $this->__updatePayment($receipt, $payment, $logger, $gts);
+        $message = $this->__updatePayment($receipt, $payment, $logger, $gts);
         $logger->debug('<--ReceiptConfirmationAction: End OK');
 
-        return new JsonResponse('OK');
+        return new JsonResponse($message);
     }
 
-    private function __sendConfirmationEmails(ReciboGTWIN $receipt, \MiPago\Bundle\Entity\Payment $payment, $mailer)
+    private function __sendConfirmationEmails(ReciboGTWIN $receipt, Payment $payment, $mailer)
     {
         if (true === $this->getParameter('mailer_sendConfirmation') && !empty($receipt->getEmail())) {
             $emails = [$receipt->getEmail()];
@@ -194,7 +195,7 @@ class ReceiptController extends AbstractController
         }
     }
 
-    private function __sendMessage($subject, ReciboGTWIN $receipt, \MiPago\Bundle\Entity\Payment $payment, $emails, $mailer)
+    private function __sendMessage($subject, ReciboGTWIN $receipt, Payment $payment, $emails, $mailer)
     {
         $from = $this->getParameter('mailer_from');
         $message = new Swift_Message($subject);
@@ -210,24 +211,32 @@ class ReceiptController extends AbstractController
         $mailer->send($message);
     }
 
-    private function __updatePayment(ReciboGTWIN $receipt, \MiPago\Bundle\Entity\Payment $payment, LoggerInterface $logger, GTWINIntegrationService $gts)
+    private function __updatePayment(ReciboGTWIN $receipt, Payment $payment, LoggerInterface $logger, GTWINIntegrationService $gts)
     {
         // No need to update
         if (null === $receipt->getNumeroRecibo()) {
             $logger->info('No GTWIN reference to update');
 
-            return;
+            return 'Receipt not found';
         }
-        if (null === $payment) {
-            $logger->info('No payment to update status in GTWIN');
+        if ($receipt->getEstaPagado()) {
+            $logger->info('Already paid');
 
-            return;
+            return 'Already paid';
+        }
+
+        if (null === $payment) {
+            $logger->info('No payment to update status');
+
+            return 'No payment to update status';
         }
         if (!$payment->isPaymentSuccessfull()) {
-            $logger->info('Payment not successfull no need to update payment in GTWIN');
+            $logger->info('Payment not successfull');
 
-            return;
+            return 'Payment not successfull';
         }
-        $gts->paidWithCreditCard($receipt->getNumeroRecibo(), $receipt->getFraccion(), $payment->getQuantity(), $payment->getTimestamp(), $payment->getRegistered_payment_id());
+        $gts->paidWithCreditCard($receipt->getNumeroRecibo(), $receipt->getFraccion(), $payment->getQuantity(), $payment->getTimestamp(), $payment->getRegisteredPaymentId());
+
+        return 'OK';
     }
 }

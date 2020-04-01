@@ -36,11 +36,6 @@ doctrine:
                         dir: "%kernel.project_dir%/src/Entity"
                         prefix: 'App\Entity'
                         alias: "App"
-                    MiPagoBundle:
-                        type: "annotation"
-                        is_bundle: true
-                        prefix: 'MiPago\Bundle\Entity'
-                        alias: "MiPagoBundle"
             oracle:
                 connection: oracle
                 mappings:

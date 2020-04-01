@@ -10,3 +10,4 @@ mi_pago:
   payment_modes: "%env(MIPAGO_PAYMENT_MODES)%"
 #      - '001'
 #      - '002'
+  payment_class: 'App\Entity\Payment'

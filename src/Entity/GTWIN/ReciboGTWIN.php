@@ -651,7 +651,7 @@ class ReciboGTWIN
     public function tieneOperacionesDePagoConTarjeta()
     {
         foreach ($this->operaciones as $operacion) {
-            if ('PAGO_TAR' === $operacion->getTipoOperacion()) {
+            if ('PAGO_TAR' === $operacion->getTipoOperacion()->getCodOperacion()) {
                 return true;
             }
         }

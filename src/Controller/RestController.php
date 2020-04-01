@@ -12,7 +12,7 @@ use App\Service\GTWINIntegrationService;
 use App\Utils\ApiResponse;
 use Exception;
 use JMS\Serializer\SerializerInterface;
-use MiPago\Bundle\Entity\Payment;
+use App\Entity\Payment;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -77,7 +77,7 @@ class RestController extends AbstractController
     public function receiptsConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer)
     {
         $logger->debug($request->getContent());
-        $payment = \App\Entity\Payment::createPaymentFromJson($request->getContent());
+        $payment = Payment::createPaymentFromJson($request->getContent());
 
         $em = $this->getDoctrine()->getManager();
 
