@@ -7,6 +7,7 @@ navitem.sendFile: "Fitxategi eraldaketa"
 navitem.list: "Zerrenda"
 navitem.receiptsFiles: "Erreziboen fitxategiak"
 navitem.receiptsFind: "Bilatu"
+navitem.payments: "Ordainketak"
 
 link.logout: "Irten"
 
@@ -59,6 +60,45 @@ receipt.ultimoDiaPago: "Ordaintzeko azken eguna"
 receipt.payd: "Ordainduta"
 options: "Aukerak"
 
+inscription.dni: "NAN"
+inscription.nombre: "Izena"
+inscription.apellido1: "1. Abizena"
+inscription.apellido2: "2. Abizena"
+inscription.email: "Emaila"
+inscription.telefono: "Telefonoa"
+
+exam.category: "Kategoria"
+
+concept.id: "Id"
+concept.name: "Izena"
+concept.name_eu: "Izena (Euskaraz)"
+concept.entity: "Entitatea"
+concept.suffix: "Atzizkia"
+concept.accountingConcept: "Errenta kontzeptua"
+concept.unitaryPrice: "Unitateko prezioa"
+
+payment.from: Noiztik
+payment.to: Nora
+payment.referenceNumber: Erreferentzia
+payment.timestamp: Data
+payment.suffix: Atzizkia
+payment.registeredPaymentId: C60
+payment.status: Egoera
+payment.statusMessage: Mezua
+payment.name: Izena
+payment.surname1: 1. Abizena
+payment.surname2: 2. Abizena
+payment.nif: IFZ
+payment.phone: Telefonoa
+payment.email: Emaila
+payment.operationNumber: Eragiketa zk.
+payment.quantity: Zenbatekoa
+
+status.any: Edozein
+status.initialized: Hasieratua
+status.paid: Ordaindua
+status.unpaid: Ordaintzeke
+
 choice.pending: "Zain"
 choice.validated: "Balioztatuak"
 
@@ -66,6 +106,8 @@ btn.cancel: "Itzuli"
 btn.save: "Gorde"
 btn.new: "Berria"
 btn.send: "Bidali"
+btn.search: "Bilatu"
+btn.pay: "Ordaindu"
 
 messages.confirmacion: "Konfirmazioa"
 messages.confirmationDetail: "¿Erregistroa ezabatuko da ziur al zaude?"

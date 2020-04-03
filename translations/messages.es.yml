@@ -7,6 +7,7 @@ navitem.sendFile: "Conversión ficheros"
 navitem.list: "Listado"
 navitem.receiptsFiles: "Ficheros de recibos"
 navitem.receiptsFind: "Buscar"
+navitem.payments: "Pagos"
 
 link.logout: "Salir"
 
@@ -59,6 +60,45 @@ receipt.ultimoDiaPago: "Limite Pago"
 receipt.payd: "Pagado"
 options: "Opciones"
 
+inscription.dni: "DNI"
+inscription.nombre: "Nombre"
+inscription.apellido1: "Apellido1"
+inscription.apellido2: "Apellido2"
+inscription.email: "Email"
+inscription.telefono: "Telefono"
+
+exam.category: "Categoría"
+
+concept.id: "Id"
+concept.name: "Nombre"
+concept.name_eu: "Nombre (Euskera)"
+concept.entity: "Entidad"
+concept.suffix: "Sufijo"
+concept.accountingConcept: "Concepto de Renta"
+concept.unitaryPrice: "Precio unitario"
+
+payment.from: Desde
+payment.to: Hasta
+payment.referenceNumber: Referencia
+payment.timestamp: Fecha
+payment.suffix: Sufijo
+payment.registeredPaymentId: C60
+payment.status: Estado
+payment.statusMessage: Mensaje
+payment.name: Nombre
+payment.surname1: Apellido 1
+payment.surname2: Apellido 2
+payment.nif: Nif
+payment.phone: Teléfono
+payment.email: Email
+payment.operationNumber: Num. operación
+payment.quantity: Importe
+
+status.any: Cualquiera
+status.initialized: Inicializado
+status.paid: Pagado
+status.unpaid: No pagado
+
 choice.pending: "Pendientes"
 choice.validated: "Validados"
 
@@ -66,6 +106,9 @@ btn.cancel: "Volver"
 btn.save: "Guardar"
 btn.new: "Nuevo"
 btn.send: "Enviar"
+btn.search: "Buscar"
+btn.pay: "Pagar"
+
 
 messages.confirmacion: "Confirmación"
 messages.confirmationDetail: "¿Esta seguro de que desea eliminar el registro?"

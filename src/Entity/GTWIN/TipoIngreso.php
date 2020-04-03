@@ -75,6 +75,16 @@ class TipoIngreso
      */
     private $conceptoC60;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Tarifa", mappedBy="tipoIngreso")
+     */
+    private $tarifas;
+
+    public function __construct()
+    {
+        $this->tarifas = new ArrayCollection();
+    }
+
     public function __toString()
     {
         return $this->descripcion;
@@ -182,5 +192,17 @@ class TipoIngreso
     public function esPlanPlago()
     {
         return self::PLANPAG === $this->getCodigo();
+    }
+
+    public function getTarifas()
+    {
+        return $this->tarifas;
+    }
+
+    public function setTarifas($tarifas)
+    {
+        $this->tarifas = $tarifas;
+
+        return $this;
     }
 }

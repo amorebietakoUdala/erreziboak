@@ -325,4 +325,11 @@ class GTWINIntegrationService
 
         return $new_criteria;
     }
+
+    public function findConceptoContables()
+    {
+        $conceptosContables = $this->em->getRepository(\App\Entity\GTWIN\ConceptoContable::class)->findAll();
+
+        return $conceptosContables;
+    }
 }

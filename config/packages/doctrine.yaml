@@ -27,7 +27,7 @@ doctrine:
             mysql:
                 connection: mysql
                 auto_mapping: true
-                naming_strategy: doctrine.orm.naming_strategy.underscore
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
                 mappings:
                     
                     App:
@@ -40,6 +40,7 @@ doctrine:
                 connection: oracle
                 mappings:
                     GTWIN:
+                        is_bundle: false
                         type: "annotation"
                         dir: "%kernel.project_dir%/src/Entity/GTWIN"
                         prefix: 'App\Entity\GTWIN'

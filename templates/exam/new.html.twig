@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{'messages.appTitle' | trans }}
+{% endblock %}
+
+{% block body %}
+    <main class="container-fluid">
+        <div class="mt-2">
+            {{ include('exam/_form.html.twig',{
+	    'readonly': false,
+			    }) }}
+        </div>
+    </main>
+{% endblock body %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('exam_new') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('exam_new') }}
+{% endblock %}

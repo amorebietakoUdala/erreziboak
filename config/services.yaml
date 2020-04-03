@@ -76,7 +76,11 @@ services:
                     'App:GTWIN\OperacionesExternas',
                     'App:GTWIN\OperacionesRecibo',
                     'App:GTWIN\MensajesError',
-                    'App:GTWIN\Person'
+                    'App:GTWIN\Person',
+                    'App:GTWIN\Institucion',
+                    'App:GTWIN\ConceptoContable'
+                    'App:GTWIN\ConceptoRenta'
+                    'App:GTWIN\Tarifa'
                 ]
         tags:
             - { name: doctrine.event_listener, event: postGenerateSchema }
