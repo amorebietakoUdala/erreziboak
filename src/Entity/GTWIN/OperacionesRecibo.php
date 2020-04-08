@@ -19,7 +19,7 @@ class OperacionesRecibo
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GTWIN\ReciboGTWIN", inversedBy="operaciones")
+     * @ORM\ManyToOne(targetEntity="App\Entity\GTWIN\Recibo", inversedBy="operaciones")
      * @ORM\JoinColumn(name="OPERECIBO", referencedColumnName="RECDBOIDE")
      */
     private $recibo;
@@ -35,7 +35,7 @@ class OperacionesRecibo
         return $this->id;
     }
 
-    public function getRecibo(): ReciboGTWIN
+    public function getRecibo(): Recibo
     {
         return $this->recibo;
     }

@@ -8,6 +8,8 @@ navitem.list: "Zerrenda"
 navitem.receiptsFiles: "Erreziboen fitxategiak"
 navitem.receiptsFind: "Bilatu"
 navitem.payments: "Ordainketak"
+navitem.concepts: "Kontzeptuak"
+
 
 link.logout: "Irten"
 
@@ -77,6 +79,10 @@ concept.suffix: "Atzizkia"
 concept.accountingConcept: "Errenta kontzeptua"
 concept.unitaryPrice: "Unitateko prezioa"
 
+category.id: "Id"
+category.name: "Izena"
+category.concept: "Kategoria"
+
 payment.from: Noiztik
 payment.to: Nora
 payment.referenceNumber: Erreferentzia
@@ -130,3 +136,7 @@ ROLE_API: "API"
 ROLE_ADMIN: "Aministraria"
 
 table.options: "Aukerak"
+
+"La nueva categoría se ha guardado correctamente.": "Kategoria berria behar bezala gorde da."
+"La categoría se ha eliminado correctamente.": "Kategoria behar bezala ezabatu da."
+"El concepto se ha eliminado correctamente.": "Kontzeptua behar bezala ezabatu da."

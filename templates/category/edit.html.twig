@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'messages.appTitle' | trans }}{% endblock %}
+
+{% block body %}
+    <main class="container-fluid">
+	<div class="mt-2">
+	{{ include('category/_form.html.twig',{
+	    'readonly': readonly,
+	    'new': new,
+			    }) }}
+	</div>
+    </main>
+{% endblock body %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('category_edit') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('category_edit') }}
+{% endblock %}

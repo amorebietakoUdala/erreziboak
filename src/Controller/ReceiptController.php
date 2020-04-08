@@ -4,7 +4,7 @@ namespace App\Controller;
 
 //use App\Entity\Receipt;
 
-use App\Entity\GTWIN\ReciboGTWIN;
+use App\Entity\GTWIN\Recibo;
 use App\Entity\Payment;
 use App\Form\ReceiptSearchForm;
 use App\Service\GTWINIntegrationService;
@@ -33,16 +33,16 @@ class ReceiptController extends AbstractController
         $roles = (null === $user) ? ['IS_AUTHENTICATED_ANONYMOUSLY'] : $user->getRoles();
         $numeroRecibo = $request->get('numeroRecibo');
         $dni = $request->get('dni');
-        $reciboGTWIN = new ReciboGTWIN();
-        $reciboGTWIN->setDni($dni);
-        $reciboGTWIN->setNumeroRecibo($numeroRecibo);
-        $form = $this->createForm(ReceiptSearchForm::class, $reciboGTWIN, [
+        $recibo = new Recibo();
+        $recibo->setDni($dni);
+        $recibo->setNumeroRecibo($numeroRecibo);
+        $form = $this->createForm(ReceiptSearchForm::class, $recibo, [
             'roles' => $roles,
         ]);
         $results = [];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /* @var $data ReciboGTWIN */
+            /* @var $data Recibo */
             $data = $form->getData();
             if (null === $user && (null === $data->getDni() || null === $data->getNumeroRecibo())) {
                 $this->addFlash('error', 'El dni y el número de recibo son obligatorios');
@@ -52,7 +52,7 @@ class ReceiptController extends AbstractController
                     'receipts' => $results,
                 ]);
             }
-            /* @var $result ReciboGTWIN */
+            /* @var $result Recibo */
             $result = $gts->findByExample($data);
             $receipts = [];
             if (null === $result || 0 === count($result)) {
@@ -87,7 +87,7 @@ class ReceiptController extends AbstractController
         ]);
     }
 
-    private function __createMiPagoParametersArray(ReciboGTWIN $receipt)
+    private function __createMiPagoParametersArray(Recibo $receipt)
     {
         $params = [
             'reference_number' => $receipt->getNumeroRecibo(),
@@ -112,7 +112,7 @@ class ReceiptController extends AbstractController
     /**
      * @Route("/pay/{receipt}", name="receipt_forwarded_pay", methods={"POST"})
      */
-    public function payForwardedReceiptAction(Request $request, ReciboGTWIN $receipt, LoggerInterface $logger)
+    public function payForwardedReceiptAction(Request $request, Recibo $receipt, LoggerInterface $logger)
     {
         $logger->debug('-->payForwardedReceiptAction: Start');
         if (null != $receipt) {
@@ -139,7 +139,7 @@ class ReceiptController extends AbstractController
         $logger->debug('-->payReceiptAction: Start');
         $user = $this->getUser();
         $roles = (null === $user) ? ['IS_AUTHENTICATED_ANONYMOUSLY'] : $user->getRoles();
-        $form = $this->createForm(ReceiptSearchForm::class, new ReciboGTWIN(), [
+        $form = $this->createForm(ReceiptSearchForm::class, new Recibo(), [
             'roles' => $roles,
         ]);
         if (null === $user && (null === $dni || null === $numeroRecibo)) {
@@ -183,7 +183,7 @@ class ReceiptController extends AbstractController
         return new JsonResponse($message);
     }
 
-    private function __sendConfirmationEmails(ReciboGTWIN $receipt, Payment $payment, $mailer)
+    private function __sendConfirmationEmails(Recibo $receipt, Payment $payment, $mailer)
     {
         if (true === $this->getParameter('mailer_sendConfirmation') && !empty($receipt->getEmail())) {
             $emails = [$receipt->getEmail()];
@@ -195,7 +195,7 @@ class ReceiptController extends AbstractController
         }
     }
 
-    private function __sendMessage($subject, ReciboGTWIN $receipt, Payment $payment, $emails, $mailer)
+    private function __sendMessage($subject, Recibo $receipt, Payment $payment, $emails, $mailer)
     {
         $from = $this->getParameter('mailer_from');
         $message = new Swift_Message($subject);
@@ -211,7 +211,7 @@ class ReceiptController extends AbstractController
         $mailer->send($message);
     }
 
-    private function __updatePayment(ReciboGTWIN $receipt, Payment $payment, LoggerInterface $logger, GTWINIntegrationService $gts)
+    private function __updatePayment(Recibo $receipt, Payment $payment, LoggerInterface $logger, GTWINIntegrationService $gts)
     {
         // No need to update
         if (null === $receipt->getNumeroRecibo()) {

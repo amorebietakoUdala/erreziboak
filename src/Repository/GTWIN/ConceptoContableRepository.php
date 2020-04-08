@@ -15,19 +15,19 @@ class ConceptoContableRepository extends \Doctrine\ORM\EntityRepository
     // /**
     //  * @return ConceptoContable[] Returns an array of ConceptoContable objects
     //  */
-    /*
-    public function findByExampleField($value)
+    public function findByTipoIngreso($tipoIngreso)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $qb = $this->createQueryBuilder('cc')
+                ->join('GTWIN:TipoIngreso', 'ti', 'with', 'cc.tipoIngreso = ti.id')
+                ->andWhere('ti.codigo = :codigoTipoIngreso')
+                ->setParameter('codigoTipoIngreso', $tipoIngreso)
+                ->orderBy('ti.codigo', 'ASC');
+
+        dump($qb->getQuery(), $qb->getQuery()->getResult());
+        die;
+
+        return $qb->getQuery()->getResult();
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?ConceptoContable

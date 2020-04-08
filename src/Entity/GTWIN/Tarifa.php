@@ -3,12 +3,15 @@
 namespace App\Entity\GTWIN;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * ConceptoContables.
  *
  * @ORM\Table(name="SP_TRB_TARIFA")
  * @ORM\Entity(repositoryClass="App\Repository\GTWIN\TarifaRepository",readOnly=true)
+ * @Serializer\ExclusionPolicy("all")
+ * @Serializer\AccessType("public_method")
  */
 class Tarifa
 {
@@ -20,26 +23,30 @@ class Tarifa
 
     /**
      * @ORM\Column(name="TARNOMTAR", type="string")
+     * @Serializer\Expose
      */
     private $nombre;
 
     /**
      * @ORM\Column(name="TARDESCRI", type="string")
+     * @Serializer\Expose
      */
     private $descripcion;
 
     /**
-     * @ORM\Column(name="TARANYOPTO", type="int")
+     * @ORM\Column(name="TARANYPTO", type="integer")
+     * @Serializer\Expose
      */
     private $anyo;
 
     /**
-     * @ORM\Column(name="TARVALACT", type="int")
+     * @ORM\Column(name="TARVALACT", type="integer")
+     * @Serializer\Expose
      */
     private $valorActual;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TipoIngreso")
+     * @ORM\ManyToOne(targetEntity="TipoIngreso", inversedBy="tarifas")
      * @ORM\JoinColumn(name="TARTIPING", referencedColumnName="TINDBOIDE")
      */
     private $tipoIngreso;
@@ -47,11 +54,6 @@ class Tarifa
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCodigo()
-    {
-        return $this->codigo;
     }
 
     public function getDescripcion()
@@ -62,16 +64,62 @@ class Tarifa
         return $descripcion;
     }
 
-    public function setCodigo($codigo)
+    public function setDescripcion($descripcion)
     {
-        $this->codigo = $codigo;
+        $this->descripcion = $descripcion;
 
         return $this;
     }
 
-    public function setDescripcion($descripcion)
+    public function getNombre()
     {
-        $this->descripcion = $descripcion;
+        return $this->nombre;
+    }
+
+    public function getAnyo()
+    {
+        return $this->anyo;
+    }
+
+    public function getValorActual()
+    {
+        return $this->valorActual;
+    }
+
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    public function setAnyo($anyo)
+    {
+        $this->anyo = $anyo;
+
+        return $this;
+    }
+
+    public function setValorActual($valorActual)
+    {
+        $this->valorActual = $valorActual;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return ''.$this->valorActual;
+    }
+
+    public function getTipoIngreso()
+    {
+        return $this->tipoIngreso;
+    }
+
+    public function setTipoIngreso($tipoIngreso)
+    {
+        $this->tipoIngreso = $tipoIngreso;
 
         return $this;
     }

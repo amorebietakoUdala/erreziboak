@@ -3,36 +3,42 @@
 						} 
 }) }}
 {{ form_errors(form) }}
-    <div class="form-row align-items-center mb-1"> 
-	<div class="form-group col-lg-2 col-md-2 col-sm-6">
-	    {{ form_label(form.entity) }}
-	    {{ form_widget(form.entity, { 'attr': { 'class' : 'form-control-sm col' } }) }}
-	</div>
-	<div class="form-group col-lg-2 col-md-2 col-sm-6">
-	    {{ form_label(form.suffix) }}
-	    {{ form_widget(form.suffix, { 'attr': { 'class' : 'form-control-sm col' } }) }}
-	</div>
-	<div class="form-group col-lg-2 col-md-2 col-sm-6">
-	    {{ form_label(form.accountingConcept) }}
-	    {{ form_widget(form.accountingConcept, { 'attr': { 'class' : 'form-control-sm col-6' } }) }}
-	</div>
-	<div class="form-group col-lg-2 col-md-2 col-sm-6">
-	    {{ form_label(form.name) }}
-	    {{ form_widget(form.name, { 'id': '', 'attr': { 'class' : 'form-control-sm col' } }) }}
-	</div>
-	<div class="form-group  col-lg-2 col-md-2 col-sm-6">
-	    {{ form_label(form.nameEu) }}
-	    {{ form_widget(form.nameEu, { 'id': '', 'attr': { 'class' : 'form-control-sm col' } }) }}
-	</div>
-	<div class="form-group col-lg-1 col-md-2 col-sm-6">
-	    {{ form_label(form.unitaryPrice) }}
-	    {{ form_widget(form.unitaryPrice, { 'attr': { 'id': 'input-dni', 'class' : 'form-control-sm col' } }) }}
-	</div>
+    <div class="form-row align-items-center mb-1">
+        <div class="form-group col-lg-3 col-md-2 col-sm-6">
+            {{ form_label(form.entity) }}
+            {% set url_select = path('admin_tipos_ingreso_select') %}
+            {{ form_widget(form.entity, { 'attr': { 'class' : 'form-control-sm col js-entity-select', 'data-suffix-select-url': url_select } }) }}
+        </div>
+        <div class="form-group col-lg-3 col-md-2 col-sm-6 js-suffix-select-div">
+            {{ form_label(form.suffix) }}
+            {% set url_select2 = path('admin_tarifas_select') %}
+            {{ form_widget(form.suffix, { 'attr': 
+                  { 'class' : 'form-control-sm col js-suffix-select' , 'data-accounting-concept-select-url': url_select2 }
+               }) }}
+        </div>
+        <div class="form-group col-lg-3 col-md-2 col-sm-6 js-accountingConcept-select-div">
+            {{ form_label(form.accountingConcept) }}
+            {{ form_widget(form.accountingConcept, { 'attr': { 'class' : 'form-control-sm col js-accountingConcept-select' } }) }}
+        </div>
+    </div>
+    <div class="form-row align-items-center mb-1">
+        <div class="form-group col-lg-2 col-md-2 col-sm-6">
+            {{ form_label(form.name) }}
+            {{ form_widget(form.name, { 'id': '', 'attr': { 'class' : 'form-control-sm col' } }) }}
+        </div>
+        <div class="form-group  col-lg-2 col-md-2 col-sm-6">
+            {{ form_label(form.nameEu) }}
+            {{ form_widget(form.nameEu, { 'id': '', 'attr': { 'class' : 'form-control-sm col' } }) }}
+        </div>
+        <div class="form-group col-lg-1 col-md-2 col-sm-6">
+            {{ form_label(form.unitaryPrice) }}
+            {{ form_widget(form.unitaryPrice, { 'attr': { 'id': 'input-dni', 'class' : 'form-control-sm col' } }) }}
+        </div>
     </div>
     {% if readonly == false %}
 	{{ form_widget(form.save, { 'attr': { 'class' : 'btn btn-primary ml-1' } }) }}
     {% endif %}
-    {% set url = path('concept_list') %}
+    {% set url = path('admin_concept_list') %}
     {{ form_widget(form.back, { 'attr': { 'class' : 'js-back btn btn-primary ml-1' ,
 					 'data-url' : url },
 			      }) }}

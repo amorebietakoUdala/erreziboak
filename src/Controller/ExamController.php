@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\ExamInscription;
-use App\Entity\GTWIN\ReciboGTWIN;
+use App\Entity\GTWIN\Recibo;
 use App\Form\ExamInscriptionTypeForm;
 use App\Service\GTWINIntegrationService;
 use DateTime;
@@ -56,10 +56,10 @@ class ExamController extends AbstractController
                 $logger->debug('-->newExamAction: Create GTWIN Receipt');
                 $em->persist($receipt);
                 $em->flush();
-                $reciboGTWIN = $gts->createReciboOpt($receipt);
+                $recibo = $gts->createReciboOpt($receipt);
                 $logger->debug('-->newExamAction: GTWIN Receipt Created successfully');
-                $receipt->setNumeroReferenciaGTWIN($reciboGTWIN->getNumeroRecibo());
-                $logger->debug('-->newExamAction: Numero ReferenciaGTWIN: '.$reciboGTWIN->getId());
+                $receipt->setNumeroReferenciaGTWIN($recibo->getNumeroRecibo());
+                $logger->debug('-->newExamAction: Numero ReferenciaGTWIN: '.$recibo->getId());
                 $em->persist($receipt);
                 $em->flush();
                 $logger->debug('-->newExamAction: End forwarded to payForwardedReceiptAction');
@@ -84,7 +84,7 @@ class ExamController extends AbstractController
 
     private function createReceiptFromInscriptionData(ExamInscription $exam)
     {
-        $recibo = new ReciboGTWIN();
+        $recibo = new Recibo();
         $recibo->setDni(strtoupper($exam->getDni()));
         $recibo->setNombre(strtoupper($exam->getNombre()));
         $recibo->setApellido1(strtoupper($exam->getApellido1()));

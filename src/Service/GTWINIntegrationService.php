@@ -8,7 +8,7 @@
 
 namespace App\Service;
 
-use App\Entity\GTWIN\ReciboGTWIN;
+use App\Entity\GTWIN\Recibo;
 use App\Entity\GTWIN\TipoIngreso;
 use App\Entity\GTWIN\OperacionesExternas;
 use App\Entity\Receipt;
@@ -39,7 +39,7 @@ class GTWINIntegrationService
         $this->logger = $logger;
     }
 
-    public function findByExample(ReciboGTWIN $criteria)
+    public function findByExample(Recibo $criteria)
     {
         $newCriteria = $this->__remove_blank_filters($criteria->__toArray());
 //        unset($newCriteria['operaciones']);
@@ -50,30 +50,30 @@ class GTWINIntegrationService
             $newCriteria['dni'] = $numero;
             $newCriteria['letra'] = $letra;
         }
-        $recibosGTWIN = $this->em->getRepository(ReciboGTWIN::class)->findBy($newCriteria);
+        $recibosGTWIN = $this->em->getRepository(Recibo::class)->findBy($newCriteria);
 
         return $recibosGTWIN;
     }
 
-    public function findByNumReciboDni($numRecibo, $dni): ?ReciboGTWIN
+    public function findByNumReciboDni($numRecibo, $dni): ?Recibo
     {
         $em = $this->em;
         $numero = substr($dni, 0, -1);
         $letra = substr($dni, -1);
         $numero = $this->__fixDniNumber($numero);
-        $reciboGTWIN = $em->getRepository(ReciboGTWIN::class)->findByNumReciboDni($numRecibo, $numero, $letra);
+        $recibo = $em->getRepository(Recibo::class)->findByNumReciboDni($numRecibo, $numero, $letra);
 
-        return $reciboGTWIN;
+        return $recibo;
     }
 
     public function findByNumRecibo($numRecibo)
     {
         $em = $this->em;
-        $reciboGTWIN = $em->getRepository(ReciboGTWIN::class)->findOneBy([
+        $recibo = $em->getRepository(Recibo::class)->findOneBy([
             'numeroRecibo' => $numRecibo,
         ]);
 
-        return $reciboGTWIN;
+        return $recibo;
     }
 
     /**
@@ -122,7 +122,7 @@ class GTWINIntegrationService
         $dc = substr($dni, -1);
         $numDocumento = substr($dni, 0, -1);
         $em = $this->em;
-        $person = $em->getRepository(ReciboGTWIN::class)->findByRecibosPendientesByDni(
+        $person = $em->getRepository(Recibo::class)->findByRecibosPendientesByDni(
             $this->__fixDniNumber($numDocumento),
             $dc
         );
@@ -187,11 +187,11 @@ class GTWINIntegrationService
      *
      * @param Receipt $receipt Recibo de ordaindu
      *
-     * @return ReciboGTWIN|null
+     * @return Recibo|null
      *
      * @throws Exception Si la operaciónExterna devuelve un error
      */
-    public function createReciboOpt(array $receipt): ?ReciboGTWIN
+    public function createReciboOpt(array $receipt): ?Recibo
     {
         $tipoIngreso = $this->em->getRepository(TipoIngreso::class)->findOneBy([
             'conceptoC60' => $receipt->getSufijo(),
@@ -218,7 +218,7 @@ class GTWINIntegrationService
         $result = null;
         if ($operacionExterna->procesadaOk()) {
             $em = $this->em;
-            $result = $em->getRepository(ReciboGTWIN::class)->findOneBy(['numeroReferenciaExterna' => $receipt->getId()]);
+            $result = $em->getRepository(Recibo::class)->findOneBy(['numeroReferenciaExterna' => $receipt->getId()]);
         } else {
             throw new \Exception($operacionExterna->getMensajeError()->getDescripcion());
         }
@@ -331,5 +331,26 @@ class GTWINIntegrationService
         $conceptosContables = $this->em->getRepository(\App\Entity\GTWIN\ConceptoContable::class)->findAll();
 
         return $conceptosContables;
+    }
+
+    public function findTipoIngresoInstitucion($institucion)
+    {
+        $result = $this->em->getRepository(TipoIngreso::class)->findByInstitucion($institucion);
+
+        return $result;
+    }
+
+    public function findConceptosContablesTipoIngreso($tipoIngreso)
+    {
+        $result = $this->em->getRepository(\App\Entity\GTWIN\ConceptoContable::class)->findByTipoIngreso($tipoIngreso);
+
+        return $result;
+    }
+
+    public function findTarifasTipoIngreso($tipoIngreso)
+    {
+        $result = $this->em->getRepository(\App\Entity\GTWIN\Tarifa::class)->findByTipoIngreso($tipoIngreso);
+
+        return $result;
     }
 }

@@ -11,10 +11,10 @@ use JMS\Serializer\Annotation as Serializer;
  * Tipo Ingreso.
  *
  * @ORM\Table(name="SP_TRB_RECIBO")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\ReciboGTWINRepository",readOnly=true)
+ * @ORM\Entity(repositoryClass="App\Repository\GTWIN\ReciboRepository",readOnly=true)
  * @Serializer\ExclusionPolicy("all")
  */
-class ReciboGTWIN
+class Recibo
 {
     public const SITUACION_VOLUNTARIA = 'V';
     public const ESTADO_PENDIENTE = 'P';

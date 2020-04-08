@@ -28,6 +28,9 @@ class ConceptTypeForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $concept = $options['data'] ?? null;
+        /** @var Institucion|null $entity */
+        $entity = $concept ? $concept->getEntity() : null;
         //	$roles = $options['roles'];
         $readonly = $options['readonly'];
         $builder->add('name', null, [
@@ -42,43 +45,67 @@ class ConceptTypeForm extends AbstractType
         'label' => 'concept.unitaryPrice',
         'disabled' => $readonly,
     ])
-    ->add('entity', EntityType::class, [
-        'class' => Institucion::class,
-        'em' => 'oracle',
-        'query_builder' => function (EntityRepository $er) {
-            return $er->createQueryBuilder('u')
-                ->orderBy('u.codigo', 'ASC');
-        },
-        'choice_label' => 'nombre',
-        'choice_value' => 'codigo',
-        'label' => 'concept.entity',
-        'disabled' => $readonly,
-    ])
     ->add('suffix', EntityType::class, [
         'class' => TipoIngreso::class,
         'em' => 'oracle',
         'query_builder' => function (EntityRepository $er) {
             return $er->createQueryBuilder('u')
-                ->orderBy('u.codigo', 'ASC');
+            ->orderBy('u.codigo', 'ASC');
         },
         'choice_label' => function ($tipoIngreso) {
-            return $tipoIngreso->getCodigo().'-'.$tipoIngreso->getDescripcion();
+            return $tipoIngreso->getConceptoC60().'-'.$tipoIngreso->getCodigo().'-'.$tipoIngreso->getDescripcion();
         },
-        'choice_value' => 'codigo',
+        'choice_value' => function ($tipoIngreso) {
+            return $tipoIngreso;
+        },
         'label' => 'concept.suffix',
         'disabled' => $readonly,
-    ])
-    ->add('accountingConcept', EntityType::class, [
-        'class' => \App\Entity\GTWIN\ConceptoContable::class,
+    ]);
+        $builder->add('entity', EntityType::class, [
+            'class' => Institucion::class,
+            'em' => 'oracle',
+            'choice_label' => 'nombre',
+            'choice_value' => 'codigo',
+            'label' => 'concept.entity',
+            'disabled' => $readonly,
+            'data' => 'AMOREBIE',
+        ]);
+//    ->add('entity', EntityType::class, [
+//        'class' => Institucion::class,
+//        'em' => 'oracle',
+//        'query_builder' => function (EntityRepository $er) {
+//            return $er->createQueryBuilder('u')
+//                ->orderBy('u.codigo', 'ASC');
+//        },
+//        'choice_label' => 'nombre',
+//        'choice_value' => 'codigo',
+//        'label' => 'concept.entity',
+//        'disabled' => $readonly,
+//    ]);
+        $builder->add('accountingConcept', EntityType::class, [
+        'class' => \App\Entity\GTWIN\Tarifa::class,
         'em' => 'oracle',
         'query_builder' => function (EntityRepository $er) {
-            return $er->createQueryBuilder('u')
-                ->orderBy('u.codigo', 'ASC');
+            $qb = $er->createQueryBuilder('u')
+                ->distinct()
+                ->andWhere('u.anyo >= :anyo')
+                ->setParameter('anyo', date('Y') - 1)
+                ->orderBy('u.valorActual', 'ASC');
+//            dump($qb);
+//            die;
+
+            return $qb;
         },
-        'choice_label' => function ($tipoIngreso) {
-            return $tipoIngreso->getCodigo().'-'.$tipoIngreso->getDescripcion();
+        'choice_label' => function ($tarifa) {
+            return $tarifa->getValorActual().'-'.$tarifa->getNombre();
         },
-        'choice_value' => 'codigo',
+        'choice_value' => function ($tarifa) {
+            if (null === $tarifa) {
+                return null;
+            }
+
+            return $tarifa;
+        },
         'label' => 'concept.accountingConcept',
         'disabled' => $readonly,
     ]);

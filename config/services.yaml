@@ -70,7 +70,7 @@ services:
         arguments:
             $ignoredEntities:
                 [
-                    'App:GTWIN\ReciboGTWIN',
+                    'App:GTWIN\Recibo',
                     'App:GTWIN\TipoIngreso',
                     'App:GTWIN\TipoOperacion',
                     'App:GTWIN\OperacionesExternas',
@@ -78,9 +78,10 @@ services:
                     'App:GTWIN\MensajesError',
                     'App:GTWIN\Person',
                     'App:GTWIN\Institucion',
-                    'App:GTWIN\ConceptoContable'
-                    'App:GTWIN\ConceptoRenta'
-                    'App:GTWIN\Tarifa'
+                    'App:GTWIN\ConceptoContable',
+                    'App:GTWIN\ConceptoRenta',
+                    'App:GTWIN\Tarifa',
+                    'App:GTWIN\InstitucionTipoIngreso'
                 ]
         tags:
             - { name: doctrine.event_listener, event: postGenerateSchema }

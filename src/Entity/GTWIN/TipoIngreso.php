@@ -11,6 +11,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Table(name="SP_TRB_TIPING")
  * @ORM\Entity(repositoryClass="App\Repository\GTWIN\TipoIngresoRepository",readOnly=true)
  * @Serializer\ExclusionPolicy("all")
+ * @Serializer\AccessType("public_method")
  */
 class TipoIngreso
 {
@@ -57,6 +58,7 @@ class TipoIngreso
      * @var string
      *
      * @ORM\Column(name="TINCC60AU", type="string", nullable=false)
+     * @Serializer\Expose
      */
     private $conceptoC60AU;
 
@@ -80,14 +82,21 @@ class TipoIngreso
      */
     private $tarifas;
 
+    /**
+     * @ORM\OneToMany(targetEntity="InstitucionTipoIngreso", mappedBy="tipoIngreso")
+     * @ORM\JoinTable(name="SP_TRB_TININS")
+     */
+    private $instituciones;
+
     public function __construct()
     {
         $this->tarifas = new ArrayCollection();
+        $this->instituciones = new ArrayCollection();
     }
 
     public function __toString()
     {
-        return $this->descripcion;
+        return ''.$this->getConceptoC60AU();
     }
 
     public function getId()

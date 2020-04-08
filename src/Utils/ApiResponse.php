@@ -2,7 +2,7 @@
 
 namespace App\Utils;
 
-use App\Entity\GTWIN\ReciboGTWIN;
+use App\Entity\GTWIN\Recibo;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -38,8 +38,8 @@ class ApiResponse
     {
         if (is_array($data)) {
             foreach ($data as $element) {
-                if ($element instanceof ReciboGTWIN) {
-                    /* @var $element ReciboGTWIN */
+                if ($element instanceof Recibo) {
+                    /* @var $element Recibo */
                     $element->setNumeroReferenciaExterna(mb_convert_encoding($element->getNumeroReferenciaExterna(), 'UTF-8'));
                     $element->setNombreCompleto(mb_convert_encoding($element->getNombreCompleto(), 'UTF-8'));
                     $tipo_ingreso = new \App\Entity\GTWIN\TipoIngreso();

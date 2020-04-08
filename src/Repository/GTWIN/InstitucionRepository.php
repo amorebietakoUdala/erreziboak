@@ -13,19 +13,18 @@ class InstitucionRepository extends \Doctrine\ORM\EntityRepository
     // /**
     //  * @return ConceptoContable[] Returns an array of ConceptoContable objects
     //  */
-    /*
-    public function findByExampleField($value)
+
+    public function findByInstitucionesByTipoIngreso($codigo)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        return $this->createQueryBuilder()
+            ->select('i')
+            ->from('TipoIngreso', 'ti')
+            ->leftJoin('Institucion', 'i')
+            ->andWhere('ti.codigo = :codigo')
+            ->setParameter('codigo', $codigo)
+            ->orderBy('i.codigo', 'ASC')
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?ConceptoContable

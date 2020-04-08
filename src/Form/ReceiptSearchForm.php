@@ -8,7 +8,7 @@
 
 namespace App\Form;
 
-use App\Entity\GTWIN\ReciboGTWIN;
+use App\Entity\GTWIN\Recibo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,7 +38,7 @@ class ReceiptSearchForm extends AbstractType
     {
         $resolver->setDefaults([
         'csrf_protection' => true,
-        'data_class' => ReciboGTWIN::class,
+        'data_class' => Recibo::class,
         'roles' => [],
     ]);
     }

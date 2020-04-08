@@ -8,6 +8,7 @@ navitem.list: "Listado"
 navitem.receiptsFiles: "Ficheros de recibos"
 navitem.receiptsFind: "Buscar"
 navitem.payments: "Pagos"
+navitem.concepts: "Conceptos"
 
 link.logout: "Salir"
 
@@ -77,6 +78,11 @@ concept.suffix: "Sufijo"
 concept.accountingConcept: "Concepto de Renta"
 concept.unitaryPrice: "Precio unitario"
 
+category.id: "Id"
+category.name: "Nombre"
+category.name_eu: "Nombre (Euskera)"
+category.concept: "Concepto"
+
 payment.from: Desde
 payment.to: Hasta
 payment.referenceNumber: Referencia
@@ -131,3 +137,7 @@ ROLE_API: "API"
 ROLE_ADMIN: "Administrador"
 
 table.options: "Opciones"
+
+"La nueva categoría se ha guardado correctamente.": "La nueva categoría se ha guardado correctamente."
+"La categoría se ha eliminado correctamente.": "La categoría se ha eliminado correctamente."
+"El concepto se ha eliminado correctamente.": "El concepto se ha eliminado correctamente."

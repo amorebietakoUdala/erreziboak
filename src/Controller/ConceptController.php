@@ -4,9 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Concept;
 use App\Form\ConceptTypeForm;
+use App\Service\GTWINIntegrationService;
+use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,31 +22,24 @@ class ConceptController extends AbstractController
 {
     /**
      * @IsGranted("ROLE_ADMIN")
-     * @Route("/concept/new", name="concept_new", methods={"GET","POST"})
+     * @Route("/concept/new", name="admin_concept_new", methods={"GET","POST"})
      */
-    public function newAction(Request $request, LoggerInterface $logger)
+    public function newAction(Request $request, LoggerInterface $logger, \App\Service\GTWINIntegrationService $gts)
     {
         $logger->debug('-->newAction: Start');
         $em = $this->getDoctrine()->getManager();
-        $conceptoContable = $this->getDoctrine()->getManager('oracle')
-            ->getRepository(\App\Entity\GTWIN\ConceptoContable::class)->findOneBy(['codigo' => 107]);
-
-        $conceptosRentas = $conceptoContable->getConceptosRentas();
-        foreach ($conceptosRentas as $conceptoRenta) {
-            dump($conceptoRenta->getConceptoEconomico());
-        }
-        die;
         $form = $this->createForm(ConceptTypeForm::class, new Concept(), [
         'readonly' => false,
     ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Concept $concept */
             $concept = $form->getData();
             $em->persist($concept);
             $em->flush();
             $this->addFlash('success', 'message.concept_created');
 
-            return $this->redirectToRoute('concept_list');
+            return $this->redirectToRoute('admin_concept_list');
         }
         $logger->debug('<--newAction: End OK');
 
@@ -54,7 +50,8 @@ class ConceptController extends AbstractController
     }
 
     /**
-     * @Route("/concept", name="concept_list", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
+     * @Route("/concept", name="admin_concept_list", methods={"GET"})
      */
     public function listAction(Request $request, LoggerInterface $logger)
     {
@@ -68,7 +65,8 @@ class ConceptController extends AbstractController
     }
 
     /**
-     * @Route("/concept/{id}", name="concept_show", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
+     * @Route("/concept/{id}", name="admin_concept_show", methods={"GET"})
      */
     public function showAction(Concept $id, LoggerInterface $logger)
     {
@@ -86,7 +84,8 @@ class ConceptController extends AbstractController
     }
 
     /**
-     * @Route("/concept/{id}/edit", name="concept_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
+     * @Route("/concept/{id}/edit", name="admin_concept_edit", methods={"GET","POST"})
      */
     public function editAction(Request $request, Concept $id, LoggerInterface $logger)
     {
@@ -113,7 +112,8 @@ class ConceptController extends AbstractController
     }
 
     /**
-     * @Route("/concept/{id}/delete", name="concept_delete", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
+     * @Route("/concept/{id}/delete", name="admin_concept_delete", methods={"GET"})
      */
     public function deleteAction(Concept $id, LoggerInterface $logger)
     {
@@ -125,6 +125,28 @@ class ConceptController extends AbstractController
         $this->addFlash('success', 'El concepto se ha eliminado correctamente.');
         $logger->debug('<--deleteAction: End OK');
 
-        return $this->redirectToRoute('concept_list');
+        return $this->redirectToRoute('admin_concept_list');
+    }
+
+    /**
+     * @IsGranted("ROLE_ADMIN")
+     * @Route("/concept/tiposIngreso/select", name="admin_tipos_ingreso_select", methods={"GET"})
+     */
+    public function getTiposIngresoInstitucion(Request $request, GTWINIntegrationService $gts, SerializerInterface $serializer)
+    {
+        $tiposIngreso = $gts->findTipoIngresoInstitucion($request->get('entity'));
+
+        return new JsonResponse($serializer->serialize($tiposIngreso, 'json'), 200);
+    }
+
+    /**
+     * @IsGranted("ROLE_ADMIN")
+     * @Route("/concept/tarifas/select", name="admin_tarifas_select", methods={"GET"})
+     */
+    public function getTarifasTipoIngreso(Request $request, GTWINIntegrationService $gts, SerializerInterface $serializer)
+    {
+        $tarifas = $gts->findTarifasTipoIngreso($request->get('suffix'));
+
+        return new JsonResponse($serializer->serialize($tarifas, 'json'), 200);
     }
 }

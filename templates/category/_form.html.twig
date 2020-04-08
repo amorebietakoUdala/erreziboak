@@ -1,0 +1,34 @@
+{{ form_start(form, {'attr': {'class': 'container-fluid form-group',
+						 'novalidate': 'novalidate'
+						} 
+}) }}
+{{ form_errors(form) }}
+    <div class="form-row align-items-center mb-1"> 
+	<div class="col-lg-2 col-md-2 col-sm-6">
+{#		{{ form_label(form.numeroReferencia, null, { 'label_attr': {'class':'col-form-label-sm' } }) }}#}
+	    {{ form_label(form.name) }}
+	    {{ form_widget(form.name, { 'id': '', 'attr': { 'class' : 'form-control-sm' } }) }}
+	    {{ form_errors(form.name) }}
+	</div>
+	<div class="col-lg-2 col-md-2 col-sm-6">
+{#		{{ form_label(form.numeroReferencia, null, { 'label_attr': {'class':'col-form-label-sm' } }) }}#}
+	    {{ form_label(form.nameEu) }}
+	    {{ form_widget(form.nameEu, { 'id': '', 'attr': { 'class' : 'form-control-sm' } }) }}
+	    {{ form_errors(form.nameEu) }}
+	</div>
+	<div class="col-lg-2 col-md-2 col-sm-6">
+	    {{ form_label(form.concept) }}
+	    {{ form_widget(form.concept, { 'attr': { 'id': '', 'class' : 'form-control-sm' } }) }}
+	</div>
+    </div>
+    {% if readonly == false %}
+	{{ form_widget(form.save, { 'attr': { 'class' : 'btn btn-primary ml-1' } }) }}
+    {% endif %}
+    {% set url = path('admin_category_list') %}
+    {{ form_widget(form.back, { 'attr': { 'class' : 'js-back btn btn-primary ml-1' ,
+					 'data-url' : url },
+			      }) }}
+    </div>
+{{ form_end(form, {'attr': {'class': '',
+			       } 
+}) }}

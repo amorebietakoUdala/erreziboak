@@ -29,7 +29,7 @@ class ConceptoContable
     private $descripcion;
 
     /**
-     * @ORM\OneToMany(targetEntity="ConceptoRenta", mappedBy="conceptoContable")
+     * @ORM\OneToMany(targetEntity="App\Entity\GTWIN\ConceptoRenta", mappedBy="conceptoContable")
      */
     private $conceptosRentas;
 
@@ -80,5 +80,27 @@ class ConceptoContable
         $this->conceptosRentas = $conceptosRentas;
 
         return $this;
+    }
+
+    public function getUltimoConceptoEconomico()
+    {
+        if (empty($this->conceptosRentas)) {
+            return null;
+        }
+        $ultimoConceptoRenta = null;
+        $ultimoAnyo = 0;
+        foreach ($this->conceptosRentas as $concepto) {
+            if ($concepto->getAnyo() > $ultimoAnyo) {
+                $ultimoAnyo = $concepto->getAnyo();
+                $ultimoConceptoRenta = $concepto->getConceptoEconomico();
+            }
+        }
+
+        return $ultimoConceptoRenta;
+    }
+
+    public function __toString()
+    {
+        return ''.$this->getUltimoConceptoEconomico();
     }
 }

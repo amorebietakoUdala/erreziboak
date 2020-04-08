@@ -32,9 +32,9 @@
 			    {%endif%}
 			    <td>{{concept.unitaryPrice}}</td>
 			    <td>
-				<a href="{{ path ("concept_show",{'id': concept.id })}}"><i class="fa fa-eye"></i></a>
-				&nbsp;<a href="{{ path ("concept_edit",{'id': concept.id })}}"><i class="fa fa-edit"></i></a>
-				&nbsp;<a class="js-delete" href="#" data-url='{{ path ("concept_delete",{'id': concept.id })}}'><i class="fa fa-trash"></i></a>
+				<a href="{{ path ("admin_concept_show",{'id': concept.id })}}"><i class="fa fa-eye"></i></a>
+				&nbsp;<a href="{{ path ("admin_concept_edit",{'id': concept.id })}}"><i class="fa fa-edit"></i></a>
+				&nbsp;<a class="js-delete" href="#" data-url='{{ path ("admin_concept_delete",{'id': concept.id })}}'><i class="fa fa-trash"></i></a>
 			    </td>
 			</tr>
 			{% endfor %}
@@ -43,7 +43,7 @@
 		    {% endif %}
 		</tbody>
 	    </table>
-	    <span class="pull-right"><a href="{{ path ('concept_new') }}" class="btn btn-primary btn-rounded fixed-bottom-right"><i class="fa fa-plus" title='{{ "btn.new" | trans | capitalize }}'></i></a></span>
+	    <span class="pull-right"><a href="{{ path ('admin_concept_new') }}" class="btn btn-primary btn-rounded fixed-bottom-right"><i class="fa fa-plus" title='{{ "btn.new" | trans | capitalize }}'></i></a></span>
 	</div>
     </main>
 {% endblock %}

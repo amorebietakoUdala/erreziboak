@@ -15,6 +15,32 @@ class TipoIngresoRepository extends \Doctrine\ORM\EntityRepository
     //	return $qb->getQuery()->getResult();
 //    }
 
+    public function findByInstitucionQB(Institucion $institucion)
+    {
+        if (null === $institucion) {
+            return new \Doctrine\Common\Collections\ArrayCollection();
+        }
+
+        $qb = $this->createQueryBuilder('u')
+                        ->andWhere('u.entity.id = :id')
+                        ->setParameter('id', $entity->getId())
+                        ->orderBy('u.codigo', 'ASC');
+
+        return $qb;
+    }
+
+    public function findByInstitucion($codigoInstitucion)
+    {
+        $qb = $this->createQueryBuilder('ti')
+                ->join('GTWIN:InstitucionTipoIngreso', 'iti', 'with', 'ti.id = iti.tipoIngreso')
+                ->join('GTWIN:Institucion', 'i', 'with', 'i.id = iti.institucion')
+                ->andWhere('i.codigo = :codigoInstitucion')
+                ->setParameter('codigoInstitucion', $codigoInstitucion)
+                ->orderBy('i.codigo', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
     private function __remove_blank_filters($criteria)
     {
         $new_criteria = [];

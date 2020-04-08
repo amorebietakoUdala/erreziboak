@@ -19,7 +19,7 @@ class ConceptoRenta
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ConceptoContable")
+     * @ORM\ManyToOne(targetEntity="App\Entity\GTWIN\ConceptoContable", inversedBy="conceptosRentas")
      * @ORM\JoinColumn(name="ANYCONCON", referencedColumnName="CCODBOIDE")
      */
     private $conceptoContable;
