@@ -9,6 +9,9 @@ navitem.receiptsFiles: "Ficheros de recibos"
 navitem.receiptsFind: "Buscar"
 navitem.payments: "Pagos"
 navitem.concepts: "Conceptos"
+navitem.categories: "Categorías de Examen"
+navitem.taxes: "Pago de tasas"
+navitem.exams: "Examenes"
 
 link.logout: "Salir"
 

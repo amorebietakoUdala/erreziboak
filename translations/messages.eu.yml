@@ -9,6 +9,9 @@ navitem.receiptsFiles: "Erreziboen fitxategiak"
 navitem.receiptsFind: "Bilatu"
 navitem.payments: "Ordainketak"
 navitem.concepts: "Kontzeptuak"
+navitem.categories: "Azterketa Kategoriak"
+navitem.taxes: "Tasa ordainketa"
+navitem.exams: "Azterketak"
 
 
 link.logout: "Irten"

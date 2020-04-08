@@ -1,4 +1,4 @@
-{% if app.user %}
+
 
 <nav class="navbar navbar-expand navbar-dark bg-dark mb-1">
   <a class="navbar-brand" href="#">&nbsp;</a>
@@ -11,6 +11,15 @@
 		<li class="nav-item">
 		  <a class="nav-link" href="{{ path('receipt_find') }}">{{ 'navitem.receiptsFind' | trans |capitalize }}</a>
 		</li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarTaxes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ 'navitem.taxes' | trans | capitalize }}
+            </a>
+            <div id="js-menu-pagos" class="dropdown-menu" aria-labelledby="navbarTaxes">
+                <a class="dropdown-item" href="{{ path('exam_new') }}">{{"navitem.exams" | trans | capitalize}}</a>
+            </div>
+        </li>
+        {% if app.user %}
         {% if is_granted('ROLE_USER') %}
 		<li class="nav-item dropdown">
 		  <a class="nav-link dropdown-toggle" href="#" id="navbarRecibos" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -20,13 +29,7 @@
 			  <a class="dropdown-item" href="{{ path('receipts_file_upload') }}">{{ 'navitem.sendFile' | trans |capitalize }}</a>
 			  <a class="dropdown-item" href="{{ path('receipts_file_list') }}">{{ 'navitem.list' | trans |capitalize }}</a>
 		  </div>
-		</li>        
-{#		<li class="nav-item">
-		  <a class="nav-link" href="{{ path('receipts_file_upload') }}">{{ 'navitem.sendFile' | trans |capitalize }}</a>
 		</li>
-		<li class="nav-item">
-		  <a class="nav-link" href="{{ path('receipts_file_list') }}">{{ 'navitem.list' | trans |capitalize }}</a>
-		</li>#}
         {% endif %}
 
 
@@ -39,6 +42,7 @@
 			  <a class="dropdown-item" href="{{ path('admin_user_list') }}">{{"navitem.users" | trans | capitalize}}</a>
 			  <a class="dropdown-item" href="{{ path('admin_list_payments') }}">{{"navitem.payments" | trans | capitalize}}</a>
               <a class="dropdown-item" href="{{ path('admin_concept_list') }}">{{"navitem.concepts" | trans | capitalize}}</a>
+              <a class="dropdown-item" href="{{ path('admin_category_list') }}">{{"navitem.categories" | trans | capitalize}}</a>
 		  </div>
 		</li>
 		{% endif %}}
@@ -61,8 +65,11 @@
 		<li class='nav-item'>
 		  <a class='nav-link' href="{{ path ('history_list') }}">{{ 'navitem.history' | trans | capitalize }}</a>
 		</li>
-#}    </ul>
+#}    
+      {% endif %}
+    </ul>
   </div>
+
 </nav>
 		
-{% endif %}
+
