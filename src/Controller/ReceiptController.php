@@ -33,6 +33,7 @@ class ReceiptController extends AbstractController
         $roles = (null === $user) ? ['IS_AUTHENTICATED_ANONYMOUSLY'] : $user->getRoles();
         $numeroRecibo = $request->get('numeroRecibo');
         $dni = $request->get('dni');
+        $email = $request->get('email');
         $recibo = new Recibo();
         $recibo->setDni($dni);
         $recibo->setNumeroRecibo($numeroRecibo);
@@ -44,6 +45,7 @@ class ReceiptController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /* @var $data Recibo */
             $data = $form->getData();
+            $email = $recibo->getEmail();
             if (null === $user && (null === $data->getDni() || null === $data->getNumeroRecibo())) {
                 $this->addFlash('error', 'El dni y el número de recibo son obligatorios');
 
@@ -73,6 +75,7 @@ class ReceiptController extends AbstractController
             return $this->render('receipt/list.html.twig', [
                 'form' => $form->createView(),
                 'receipts' => $receipts,
+                'email' => $email,
             ]);
         }
 
@@ -101,7 +104,7 @@ class ReceiptController extends AbstractController
                 'citizen_surname_2' => $receipt->getApellido2(),
                 'citizen_nif' => $receipt->getDni().$receipt->getLetra(),
                 'citizen_phone' => null,
-                'citizen_email' => null,
+                'citizen_email' => $receipt->getEmail(),
             ],
             'receipt' => $receipt,
         ];
@@ -139,6 +142,7 @@ class ReceiptController extends AbstractController
         $logger->debug('-->payReceiptAction: Start');
         $user = $this->getUser();
         $roles = (null === $user) ? ['IS_AUTHENTICATED_ANONYMOUSLY'] : $user->getRoles();
+        $email = $request->get('email');
         $form = $this->createForm(ReceiptSearchForm::class, new Recibo(), [
             'roles' => $roles,
         ]);
@@ -149,6 +153,7 @@ class ReceiptController extends AbstractController
             return $this->render('receipt/list.html.twig', [
                 'form' => $form->createView(),
                 'receipts' => [],
+                'email' => $email,
             ]);
         }
         $receipt = $gts->findByNumReciboDni($numeroRecibo, $dni);
@@ -159,9 +164,11 @@ class ReceiptController extends AbstractController
             return $this->render('receipt/list.html.twig', [
                 'form' => $form->createView(),
                 'receipts' => [],
+                'email' => $email,
             ]);
         }
         $logger->debug('<--payReceiptAction: End Forwarded to sendRequest');
+        $receipt->setEmail($email);
 
         return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequestAction', $this->__createMiPagoParametersArray($receipt));
     }
@@ -185,8 +192,8 @@ class ReceiptController extends AbstractController
 
     private function __sendConfirmationEmails(Recibo $receipt, Payment $payment, $mailer)
     {
-        if (true === $this->getParameter('mailer_sendConfirmation') && !empty($receipt->getEmail())) {
-            $emails = [$receipt->getEmail()];
+        if (true === $this->getParameter('mailer_sendConfirmation') && !empty($payment->getEmail())) {
+            $emails = [$payment->getEmail()];
             $this->__sendMessage('Confirmación del Pago / Ordainketaren konfirmazioa', $receipt, $payment, $emails, $mailer);
         }
         if (true === $this->getParameter('mailer_sendBCC')) {
@@ -199,6 +206,7 @@ class ReceiptController extends AbstractController
     {
         $from = $this->getParameter('mailer_from');
         $message = new Swift_Message($subject);
+
         $message->setFrom($from);
         $message->setTo($emails);
         $message->setBody(

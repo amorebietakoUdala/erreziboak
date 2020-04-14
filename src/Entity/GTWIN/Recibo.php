@@ -219,6 +219,8 @@ class Recibo
      */
     private $operaciones;
 
+    private $email;
+
     public function __construct()
     {
         $this->operaciones = new ArrayCollection();
@@ -699,6 +701,13 @@ class Recibo
 
     public function getEmail()
     {
-        return null;
+        return $this->email;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
     }
 }

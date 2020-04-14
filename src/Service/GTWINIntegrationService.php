@@ -42,7 +42,7 @@ class GTWINIntegrationService
     public function findByExample(Recibo $criteria)
     {
         $newCriteria = $this->__remove_blank_filters($criteria->__toArray());
-//        unset($newCriteria['operaciones']);
+        unset($newCriteria['email']);
         if (null !== $criteria->getDni()) {
             $numero = substr($criteria->getDni(), 0, -1);
             $letra = substr($criteria->getDni(), -1);

@@ -12,7 +12,7 @@
         <div class="container-fluid">
             {% if receipts is defined and receipts|length == 1 %}
                     {% set receipt = receipts[0] %}
-                    <div id="js-autoPay" class="js-btnPay d-none" data-numeroRecibo="{{ receipt.numeroRecibo }}" data-concepto="{{ receipt.tipoIngreso.descripcion }}" data-dni="{{ receipt.dni }}{{ receipt.letra }}" data-nombre="{{ receipt.nombre }}" data-apellido1="{{ receipt.apellido1 }}" data-apellido2="{{ receipt.apellido2 }}" data-importe="{{ receipt.importeTotal|number_format(2, ',', '.') }}" data-ultimodiapago="{{ receipt.fechaLimitePagoBanco|date(" Y/m/d") }}" href="#">&nbsp;</div>
+                    <div id="js-autoPay" class="js-btnPay d-none" data-numeroRecibo="{{ receipt.numeroRecibo }}" data-concepto="{{ receipt.tipoIngreso.descripcion }}" data-dni="{{ receipt.dni }}{{ receipt.letra }}" data-nombre="{{ receipt.nombre }}" data-apellido1="{{ receipt.apellido1 }}" data-apellido2="{{ receipt.apellido2 }}" data-importe="{{ receipt.importeTotal|number_format(2, ',', '.') }}" data-ultimodiapago="{{ receipt.fechaLimitePagoBanco|date(" Y/m/d") }}" data-email="{{ email }}" href="#">&nbsp;</div>
             {% endif %}
             {% if is_granted('ROLE_ADMIN') and receipts is defined  and receipts|length != 1 %}
                 {% if receipts is defined and receipts|length > 0 %}
@@ -39,7 +39,7 @@
                                 <td>{{receipt.estaPagado ? 'messages.si' | trans : 'messages.no' | trans }}</td>
                                 <td>
                                         {% if receipt.esPagable %}
-                                            <a class="js-btnPay" data-numeroRecibo="{{ receipt.numeroRecibo }}" data-concepto="{{ receipt.tipoIngreso.descripcion }}" data-dni="{{ receipt.dni }}{{ receipt.letra }}" data-nombre="{{ receipt.nombre }}" data-apellido1="{{ receipt.apellido1 }}" data-apellido2="{{ receipt.apellido2 }}" data-importe="{{ receipt.importeTotal|number_format(2, ',', '.') }}" data-ultimodiapago="{{ receipt.fechaFinVoluntaria|date(" Y/m/d") }}" href="#">
+                                            <a class="js-btnPay" data-numeroRecibo="{{ receipt.numeroRecibo }}" data-concepto="{{ receipt.tipoIngreso.descripcion }}" data-dni="{{ receipt.dni }}{{ receipt.letra }}" data-nombre="{{ receipt.nombre }}" data-apellido1="{{ receipt.apellido1 }}" data-apellido2="{{ receipt.apellido2 }}" data-importe="{{ receipt.importeTotal|number_format(2, ',', '.') }}" data-ultimodiapago="{{ receipt.fechaFinVoluntaria|date(" Y/m/d") }}" data-email="{{ email }} href="#">
                                             <i class="fa fa-credit-card"></i>
                                         </a>
                                     {% endif %}

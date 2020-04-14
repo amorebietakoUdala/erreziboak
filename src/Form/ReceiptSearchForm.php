@@ -29,6 +29,9 @@ class ReceiptSearchForm extends AbstractType
         $builder->add('numeroRecibo', null, [
                     'label' => 'receipt.numeroRecibo',
                     ]);
+        $builder->add('email', null, [
+                    'label' => 'receipt.email',
+                    ]);
         $builder->add('search', SubmitType::class, [
             'label' => 'receipt.search',
                 ]);

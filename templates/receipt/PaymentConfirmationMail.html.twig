@@ -16,14 +16,13 @@
     <br/>
     <br/>
     <b>Nº de recibo / Errezibo zenbakia:</b> {{ receipt.numeroRecibo }} <br/> 
-    <b>Referencia C60 / C60 Erreferentzia:</b> {{ payment.registered_payment_id }} <br/> 
+    <b>Referencia C60 / C60 Erreferentzia:</b> {{ payment.registeredPaymentId }} <br/> 
     <b>Fecha/Data:</b> {{ payment.timestamp | date('Y-m-d') }}<br/>
-    <b>Concepto / Kontzeptua:</b> {{ receipt.concepto }} <br/> 
+    <b>Concepto / Kontzeptua:</b> {{ receipt.tipoIngreso.descripcion }} <br/> 
     <b>Nombre / Izena:</b> {{ receipt.nombre }} <br/> 
     <b>Primer apellido/ Lehen abizena:</b> {{ receipt.apellido1 }} <br/> 
     <b>Segundo apellido/ Bigarren abizena:</b> {{ receipt.apellido2 }} <br/> 
     <b>DNI/ NAN-a:</b> {{ receipt.dni }} <br/> 
-    <b>Teléfono/ Telefonoa:</b> {{ receipt.telefono }} <br/> 
     <b>Importe/ Zenbatekoa:</b> {{ receipt.importe }} <br/> 
 </p>
 {% endblock %}

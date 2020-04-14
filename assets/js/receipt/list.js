@@ -47,7 +47,7 @@ $(document).ready(function(){
 
 	$(document).on('click','#js-autoPay',function(e){
         e.preventDefault();
-        createAlert(e, app_base + Routing.generate('receipt_pay', { numeroRecibo: $(e.currentTarget).data('numerorecibo'), dni: $(e.currentTarget).data('dni'), _locale: current_locale  } ));
+        createAlert(e, app_base + Routing.generate('receipt_pay', { numeroRecibo: $(e.currentTarget).data('numerorecibo'), dni: $(e.currentTarget).data('dni'), email: $(e.currentTarget).data('email'), _locale: current_locale  } ));
     });
 
     if ($('#js-autoPay').length > 0) { 
@@ -56,7 +56,7 @@ $(document).ready(function(){
 
     $(document).on('click','.js-btnPay',function(e){
         e.preventDefault();
-        createAlert(e, app_base + Routing.generate('receipt_pay', { numeroRecibo: $(e.currentTarget).data('numerorecibo'), dni: $(e.currentTarget).data('dni'), _locale: current_locale  } ));
+        createAlert(e, app_base + Routing.generate('receipt_pay', { numeroRecibo: $(e.currentTarget).data('numerorecibo'), dni: $(e.currentTarget).data('dni'), email: $(e.currentTarget).data('email'), _locale: current_locale  } ));
     });
 
 });

@@ -13,8 +13,10 @@ parameters:
     mailer_user: '%env(MAILER_USER)%'
     delivery_addresses: '%env(MAILER_SENT_TO)%'
     mipago.sender: '%env(MIPAGO_SENDER)%'
-    mailer_sendConfirmation: '%env(MAILER_SEND_CONFIRMATION)%'
-    mailer_sendBCC: '%env(MAILER_SEND_BCC)%'
+    mailer_sendConfirmation: '%env(bool:MAILER_SEND_CONFIRMATION)%'
+    mailer_sendBCC: '%env(bool:MAILER_SEND_BCC)%'
+    mailer_BCC_email: '%env(MAILER_BCC_EMAIL)%'
+    mailer_from: '%env(MAILER_BCC_EMAIL)%'
 
 services:
     
