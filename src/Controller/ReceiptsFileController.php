@@ -55,7 +55,9 @@ class ReceiptsFileController extends AbstractController
                     $em->flush();
                     $this->addFlash('success', 'messages.successfullySended');
 
-                    $this->__sendMail($receiptsFileObject, $mailer);
+                    if (true === $this->getParameter('send_receiptfile_messages')) {
+                        $this->__sendMail($receiptsFileObject, $mailer);
+                    }
 
                     return $this->redirectToRoute('receipts_file_list');
                 } catch (Exception $e) {

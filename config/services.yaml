@@ -17,6 +17,7 @@ parameters:
     mailer_sendBCC: '%env(bool:MAILER_SEND_BCC)%'
     mailer_BCC_email: '%env(MAILER_BCC_EMAIL)%'
     mailer_from: '%env(MAILER_BCC_EMAIL)%'
+    send_receiptfile_messages: '%env(bool:SEND_RECEIPTFILE_MESSAGES)%'
 
 services:
     
