@@ -28,10 +28,6 @@ class ConceptTypeForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $concept = $options['data'] ?? null;
-        /** @var Institucion|null $entity */
-        $entity = $concept ? $concept->getEntity() : null;
-        //	$roles = $options['roles'];
         $readonly = $options['readonly'];
         $builder->add('name', null, [
         'label' => 'concept.name',
@@ -70,18 +66,6 @@ class ConceptTypeForm extends AbstractType
             'disabled' => $readonly,
             'data' => 'AMOREBIE',
         ]);
-//    ->add('entity', EntityType::class, [
-//        'class' => Institucion::class,
-//        'em' => 'oracle',
-//        'query_builder' => function (EntityRepository $er) {
-//            return $er->createQueryBuilder('u')
-//                ->orderBy('u.codigo', 'ASC');
-//        },
-//        'choice_label' => 'nombre',
-//        'choice_value' => 'codigo',
-//        'label' => 'concept.entity',
-//        'disabled' => $readonly,
-//    ]);
         $builder->add('accountingConcept', EntityType::class, [
         'class' => \App\Entity\GTWIN\Tarifa::class,
         'em' => 'oracle',
@@ -91,8 +75,6 @@ class ConceptTypeForm extends AbstractType
                 ->andWhere('u.anyo >= :anyo')
                 ->setParameter('anyo', date('Y') - 1)
                 ->orderBy('u.valorActual', 'ASC');
-//            dump($qb);
-//            die;
 
             return $qb;
         },
@@ -124,7 +106,6 @@ class ConceptTypeForm extends AbstractType
         $resolver->setDefaults([
         'csrf_protection' => true,
         'data_class' => Concept::class,
-//	    'roles' => null,
         'readonly' => false,
     ]);
     }
