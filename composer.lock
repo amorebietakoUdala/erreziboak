@@ -4,8 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c5264a9930d99bd2ccbbf9dbb17d8e3a",
+    "content-hash": "d0b0e88551245930467bdd6698ebbfcb",
     "packages": [
+        {
+            "name": "amorebietakoudala/mipago-bundle",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/amorebietakoUdala/mipago-bundle.git",
+                "reference": "c28a0b7b80f3ee8163529e982d7d5dde11eddb95"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/amorebietakoUdala/mipago-bundle/zipball/c28a0b7b80f3ee8163529e982d7d5dde11eddb95",
+                "reference": "c28a0b7b80f3ee8163529e982d7d5dde11eddb95",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "^2.5",
+                "php": ">=7.1.0",
+                "sensio/framework-extra-bundle": "^4.0|^5.0",
+                "symfony/config": "^4.0|^5.0",
+                "symfony/dom-crawler": "^4.0|^5.0",
+                "symfony/translation": "^4.0|^5.0",
+                "twig/twig": "^2.12|^3.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "master-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "MiPago\\Bundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Amorebietako Udala",
+                    "email": "informatika@amorebieta.eus"
+                }
+            ],
+            "description": "A bundle to make payment through Basque Goverment's MiPago platform in symfony projects",
+            "keywords": [
+                "Payments MiPago Basque Government"
+            ],
+            "time": "2020-04-15T12:21:42+00:00"
+        },
         {
             "name": "doctrine/annotations",
             "version": "1.10.1",

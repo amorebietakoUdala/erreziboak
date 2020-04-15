@@ -1,4 +1,7 @@
 {
+    "amorebietakoudala/mipago-bundle": {
+        "version": "1.0.2"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
