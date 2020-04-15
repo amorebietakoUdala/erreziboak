@@ -72,29 +72,4 @@ class InscriptionTypeForm extends AbstractType
             'inherit_data' => true,
     ]);
     }
-
-//    public function validar_dni($dni)
-//    {
-//        $letra = substr($dni, -1);
-//        $numeros = substr($dni, 0, -1);
-//        if (substr('TRWAGMYFPDXBNJZSQVHLCKE', $numeros % 23, 1) == $letra && 1 == strlen($letra) && 8 == strlen($numeros)) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    public function is_valid_dni_nie($string)
-//    {
-//        if (9 != strlen($string) ||
-//        1 !== preg_match('/^[XYZ]?([0-9]{7,8})([A-Z])$/i', $string, $matches)) {
-//            return false;
-//        }
-//
-//        $map = 'TRWAGMYFPDXBNJZSQVHLCKE';
-//
-//        list(, $number, $letter) = $matches;
-//
-//        return strtoupper($letter) === $map[((int) $number) % 23];
-//    }
 }
