@@ -31,14 +31,17 @@ export function createAlert(e, confirmURL) {
     var importe=$(e.currentTarget).data('importe'); 
     var ultimodiapago=$(e.currentTarget).data('ultimodiapago');
     var email=$(e.currentTarget).data('email');
+    console.log(email);
     var html=Translator.trans('receipt.numeroRecibo')+": "+numeroRecibo + '<br/>'
              + Translator.trans('receipt.concepto')+": " + concepto + '<br/>' 
              + Translator.trans('receipt.dni')+": " + dni + '<br/>' 
              + Translator.trans('receipt.nombre')+": " + nombre + '<br/>' 
              + Translator.trans('receipt.apellidos')+": " + apellido1 + ' ' + apellido2 + '<br/>' 
              + Translator.trans('receipt.importe')+": " + importe + '<br/>' 
-             + Translator.trans('receipt.ultimoDiaPago')+": " + ultimodiapago + '<br/>'
-             + Translator.trans('receipt.email')+": " + email + '<br/>';
+             + Translator.trans('receipt.ultimoDiaPago')+": " + ultimodiapago + '<br/>';
+    if (email !== '') {
+        html = html + Translator.trans('receipt.email')+": " + email + '<br/>';
+    }
     showAlert(Translator.trans('confirmation.title'), html, Translator.trans('confirmation.pay'), Translator.trans('confirmation.cancel'), confirmURL);
 }
 

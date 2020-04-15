@@ -10,10 +10,11 @@ namespace App\Form;
 
 use App\Validator\IsValidDNI;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Description of InscriptionTypeForm.
@@ -30,6 +31,7 @@ class InscriptionTypeForm extends AbstractType
                 new NotBlank(),
                 new IsValidDNI(),
             ],
+            'invalid_message' => '',
     ])
     ->add('nombre', TextType::class, [
         'label' => 'inscription.nombre',
@@ -53,7 +55,9 @@ class InscriptionTypeForm extends AbstractType
         'label' => 'inscription.email',
         'constraints' => [
             new NotBlank(),
+            new Email(),
         ],
+        'invalid_message' => '',
     ])
     ->add('telefono', TextType::class, [
         'label' => 'inscription.telefono',

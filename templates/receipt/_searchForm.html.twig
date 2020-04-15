@@ -15,12 +15,12 @@
                 <div class="col-lg-2 col-md-2 col-sm-6">
                     {{ form_label(form.dni) }}
                     {{ form_widget(form.dni, { 'attr': { 'id': 'input-dni', 'class' : 'form-control form-control-sm' } }) }}
-                    {{ form_errors(form.dni) }}
+                    <span class='text text-danger'>{{ form_errors(form.dni) }}</span>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-6">
                     {{ form_label(form.email) }}
                     {{ form_widget(form.email, { 'attr': { 'id': 'input-email', 'class' : 'form-control form-control-sm' } }) }}
-                    {{ form_errors(form.email) }}
+                    <span class='text text-danger'>{{ form_errors(form.email) }}</span>
                 </div>                
                 <div class="col-lg-2 col-md-2 col-sm-6">
                     {{ form_widget(form.search, { 'attr': { 'class' : 'btn btn-primary' } }) }}

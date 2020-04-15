@@ -30,24 +30,30 @@ class ReceiptController extends AbstractController
     {
         $logger->debug('-->findReceiptsAction: Start');
         $user = $this->getUser();
-        $roles = (null === $user) ? ['IS_AUTHENTICATED_ANONYMOUSLY'] : $user->getRoles();
         $numeroRecibo = $request->get('numeroRecibo');
         $dni = $request->get('dni');
         $email = $request->get('email');
         $recibo = new Recibo();
         $recibo->setDni($dni);
         $recibo->setNumeroRecibo($numeroRecibo);
-        $form = $this->createForm(ReceiptSearchForm::class, $recibo, [
-            'roles' => $roles,
-        ]);
+        $form = $this->createForm(ReceiptSearchForm::class, $recibo);
         $results = [];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /* @var $data Recibo */
             $data = $form->getData();
+
             $email = $recibo->getEmail();
             if (null === $user && (null === $data->getDni() || null === $data->getNumeroRecibo())) {
                 $this->addFlash('error', 'El dni y el número de recibo son obligatorios');
+
+                return $this->render('receipt/list.html.twig', [
+                    'form' => $form->createView(),
+                    'receipts' => $results,
+                ]);
+            }
+            if (!is_numeric($data->getNumeroRecibo())) {
+                $this->addFlash('error', 'El número de recibo no es correcto debe ser un número.');
 
                 return $this->render('receipt/list.html.twig', [
                     'form' => $form->createView(),

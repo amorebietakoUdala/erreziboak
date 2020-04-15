@@ -9,10 +9,13 @@
 namespace App\Form;
 
 use App\Entity\GTWIN\Recibo;
+use App\Validator\IsValidDNI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 
 /**
  * Description of ReceiptSearchForm.
@@ -25,12 +28,19 @@ class ReceiptSearchForm extends AbstractType
     {
         $builder->add('dni', null, [
                     'label' => 'receipt.dni',
+                    'constraints' => [
+                        new IsValidDNI(),
+                    ],
                     ]);
-        $builder->add('numeroRecibo', null, [
+        $builder->add('numeroRecibo', TextType::class, [
                     'label' => 'receipt.numeroRecibo',
                     ]);
-        $builder->add('email', null, [
+        $builder->add('email', TextType::class, [
                     'label' => 'receipt.email',
+                    'required' => false,
+                    'constraints' => [
+                        new Email(),
+                    ],
                     ]);
         $builder->add('search', SubmitType::class, [
             'label' => 'receipt.search',
@@ -42,7 +52,6 @@ class ReceiptSearchForm extends AbstractType
         $resolver->setDefaults([
         'csrf_protection' => true,
         'data_class' => Recibo::class,
-        'roles' => [],
     ]);
     }
 }

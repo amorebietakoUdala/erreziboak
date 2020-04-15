@@ -191,34 +191,36 @@ class GTWINIntegrationService
      *
      * @throws Exception Si la operaciónExterna devuelve un error
      */
-    public function createReciboOpt(array $receipt): ?Recibo
+    public function createReciboOpt(\App\Entity\ExamInscription $exam): ?Recibo
     {
+        $concept = $exam->getCategory()->getConcept();
         $tipoIngreso = $this->em->getRepository(TipoIngreso::class)->findOneBy([
-            'conceptoC60' => $receipt->getSufijo(),
+            'conceptoC60' => $exam->getCategory()->getConcept()->getSuffix(),
         ]);
+        $now = new DateTime();
+        $reference = $now->format('YmdHis');
         $inputparams = $this->createReciboParams(
-            $receipt->getId(),
-            $receipt->getId(),
+            null,
+            $reference,
             $tipoIngreso->getCodigo(),
-            self::INSTITUCIONES[$receipt->getEntidad()],
-            $receipt->getApellido1().'*'.$receipt->getApellido2().','.$receipt->getNombre(),
-            substr($receipt->getDni(), 0, -1),
-            substr($receipt->getDni(), -1),
-            (Validaciones::validar_dni($receipt->getDni()) ? 'ES' : 'EX'),
-            str_pad($receipt->getImporte(), '80', ' ', STR_PAD_RIGHT).str_pad($receipt->getConcepto(), '80', ' ', STR_PAD_RIGHT),
+            $concept->getEntity(),
+            mb_convert_encoding($exam->getApellido1().'*'.$exam->getApellido2().','.$exam->getNombre(), 'ISO-8859-1'),
+            substr($exam->getDni(), 0, -1),
+            substr($exam->getDni(), -1),
+            (Validaciones::validar_dni($exam->getDni()) ? 'ES' : 'EX'),
+            str_pad($concept->getUnitaryPrice(), '15', ' ', STR_PAD_RIGHT).str_pad(mb_convert_encoding($concept->getName(), 'ISO-8859-1'), '80', ' ', STR_PAD_RIGHT),
             $tipoIngreso->getTipoDefecto(),
             'P',
             'V',
             'F',
-            $receipt->getConceptoRenta(),
-            $receipt->getImporte());
-
+            $concept->getAccountingConcept(),
+            $concept->getUnitaryPrice());
         $dboid = $this->__insertExternalOperation('CREA_RECIBO', $inputparams);
         $operacionExterna = $this->__waitUntilProcessed($dboid);
         $result = null;
         if ($operacionExterna->procesadaOk()) {
             $em = $this->em;
-            $result = $em->getRepository(Recibo::class)->findOneBy(['numeroReferenciaExterna' => $receipt->getId()]);
+            $result = $em->getRepository(Recibo::class)->findOneBy(['numeroReferenciaExterna' => $reference]);
         } else {
             throw new \Exception($operacionExterna->getMensajeError()->getDescripcion());
         }

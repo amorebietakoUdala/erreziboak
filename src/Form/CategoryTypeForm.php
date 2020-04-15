@@ -29,16 +29,16 @@ class CategoryTypeForm extends AbstractType
         //	$roles = $options['roles'];
         $readonly = $options['readonly'];
         $builder->add('name', null, [
-        'label' => 'activity.name',
+        'label' => 'category.name',
         'disabled' => $readonly,
     ])
     ->add('nameEu', null, [
-        'label' => 'activity.name_eu',
+        'label' => 'category.name_eu',
         'disabled' => $readonly,
     ])
     ->add('concept', EntityType::class, [
         'class' => Concept::class,
-        'label' => 'activity.concept',
+        'label' => 'category.concept',
         'disabled' => $readonly,
     ]);
         if (!$readonly) {
