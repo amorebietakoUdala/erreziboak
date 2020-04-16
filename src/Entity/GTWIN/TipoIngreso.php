@@ -2,6 +2,8 @@
 
 namespace App\Entity\GTWIN;
 
+use App\Repository\GTWIN\TipoIngresoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -9,7 +11,7 @@ use JMS\Serializer\Annotation as Serializer;
  * Tipo Ingreso.
  *
  * @ORM\Table(name="SP_TRB_TIPING")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\TipoIngresoRepository",readOnly=true)
+ * @ORM\Entity(repositoryClass="TipoIngresoRepository",readOnly=true)
  * @Serializer\ExclusionPolicy("all")
  * @Serializer\AccessType("public_method")
  */

@@ -81,8 +81,8 @@ class RestController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $existingPayment = $em->getRepository(\MiPago\Bundle\Entity\Payment::class)->findOneBy([
-            'reference_number' => $payment->getReference_number(),
+        $existingPayment = $em->getRepository(Payment::class)->findOneBy([
+            'referenceNumber' => $payment->getReference_number(),
             'status' => Payment::PAYMENT_STATUS_OK,
         ]);
         if ($existingPayment) {
@@ -125,8 +125,8 @@ class RestController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $recibosNoPagados = [];
         foreach ($recibos as $recibo) {
-            $payment = $em->getRepository(\MiPago\Bundle\Entity\Payment::class)->findOneBy([
-                'reference_number' => str_pad($recibo->getNumeroRecibo(), 10, '0', STR_PAD_LEFT),
+            $payment = $em->getRepository(Payment::class)->findOneBy([
+                'referenceNumber' => str_pad($recibo->getNumeroRecibo(), 10, '0', STR_PAD_LEFT),
                 'status' => Payment::PAYMENT_STATUS_OK,
             ]);
             if (null === $payment) {
