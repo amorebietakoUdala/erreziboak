@@ -64,7 +64,7 @@ services:
 
     App\Security\LoginFormAuthenticator:
         class: App\Security\LoginFormAuthenticator
-        arguments: ["@doctrine.orm.mysql_entity_manager", "@router.default", "@security.csrf.token_manager", "@security.user_password_encoder.generic", "@Symfony\\Component\\Ldap\\Ldap", "@App\\Repository\\UserRepository", "@service_container"]
+        arguments: ["@doctrine.orm.default_entity_manager", "@router.default", "@security.csrf.token_manager", "@security.user_password_encoder.generic", "@Symfony\\Component\\Ldap\\Ldap", "@App\\Repository\\UserRepository", "@service_container"]
     
     
     App\Utils\IgnoreTablesListener:
