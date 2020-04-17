@@ -143,6 +143,7 @@ table.options: "Aukerak"
 
 "La nueva categoría se ha guardado correctamente.": "Kategoria berria behar bezala gorde da."
 "La categoría se ha eliminado correctamente.": "Kategoria behar bezala ezabatu da."
+"message.concept_created": "Kontzeptua behar bezala sortu da."
 "El concepto se ha eliminado correctamente.": "Kontzeptua behar bezala ezabatu da."
 "Payment was successfull": "Ordainketa behar den moduan gauzatu da."
 "Payment was NOT successfull": "Arazoa bat egon da ordainketa egiterakoan. Ez da ordainketarik egin."

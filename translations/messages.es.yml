@@ -144,6 +144,7 @@ table.options: "Opciones"
 
 "La nueva categoría se ha guardado correctamente.": "La nueva categoría se ha guardado correctamente."
 "La categoría se ha eliminado correctamente.": "La categoría se ha eliminado correctamente."
+"message.concept_created": "El concepto se ha creado correctamente"
 "El concepto se ha eliminado correctamente.": "El concepto se ha eliminado correctamente."
 "Payment was successfull": "El pago se ha realizado correctamente."
 "Payment was NOT successfull": "Ha ocurrido un error al realizar el pago. NO se ha realizado correctamente."
