@@ -149,9 +149,7 @@ class ReceiptController extends AbstractController
         $user = $this->getUser();
         $roles = (null === $user) ? ['IS_AUTHENTICATED_ANONYMOUSLY'] : $user->getRoles();
         $email = $request->get('email');
-        $form = $this->createForm(ReceiptSearchForm::class, new Recibo(), [
-            'roles' => $roles,
-        ]);
+        $form = $this->createForm(ReceiptSearchForm::class, new Recibo());
         if (null === $user && (null === $dni || null === $numeroRecibo)) {
             $this->addFlash('error', 'El dni y el número de recibo son obligatorios');
             $logger->debug('<--payReceiptAction: End El dni y el número de recibo son obligatorios');
