@@ -19,8 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/receipts")
+ * @Route("/{_locale}/receipts_file", requirements={
+ *	    "_locale": "es|eu|en"
+ * })
  * @IsGranted("ROLE_USER")
+ * })
  */
 class ReceiptsFileController extends AbstractController
 {
