@@ -140,6 +140,11 @@ class ReceiptsFileController extends AbstractController
                 $translator->trans('importe_not_numeric', [], 'validators')
             );
         }
+        if ($validationResult['status'] === $validator::INVALID_DATE) {
+            $this->addFlash('error',
+                $translator->trans('invalid_date', ['%invalid_value%' => $validationResult['invalid_value']], 'validators')
+            );
+        }
     }
 
     public function __sendMail(ReceiptsFile $receiptsFile, Swift_Mailer $mailer)

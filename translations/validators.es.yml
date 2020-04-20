@@ -4,6 +4,7 @@
 "incorrect_field_names": "Los siguientes campos no son válidos: %invalid_headers%"
 "fields_with_missing_values": "Los siguientes campos contienen valores vacíos que deben ser rellenados: %fields%"
 "importe_not_numeric": "La columna \"Importe\" tiene que ser numérica sin símbolos de €. Si lo ha generado con Excel, por favor, ponga la columna \"Importe\" de tipo número en vez de moneda."
+"invalid_date": "La fecha '%invalid_value%' no es válida"
 "El email introducido no es válido": "El email introducido no es válido"
 validation.invalidDNI: "El DNI/NIE no es correcto"
 "El número de recibo no es correcto debe ser un número.": "El número de recibo no es correcto debe ser un número."

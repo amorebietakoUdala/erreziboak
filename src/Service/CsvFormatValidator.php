@@ -8,9 +8,9 @@
 
 namespace App\Service;
 
-use League\Csv\Reader;
+use App\Utils\Validaciones;
 use League\Csv\CharsetConverter;
-use League\Csv\Statement;
+use League\Csv\Reader;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -25,6 +25,7 @@ class CsvFormatValidator
     public const INCORRECT_FIELD_NAMES = 2;
     public const MISSING_VALUES_ON_REQUIRED_FIELDS = 3;
     public const IMPORTE_NOT_NUMBERIC = 4;
+    public const INVALID_DATE = 5;
 
     private $validHeaders = [
             'Nombre',
@@ -96,6 +97,18 @@ class CsvFormatValidator
             if (!is_numeric($record['Importe'])) {
                 return [
                     'status' => self::IMPORTE_NOT_NUMBERIC,
+                ];
+            }
+            if (!Validaciones::validateDate($record['Fecha_Inicio_Pago'])) {
+                return [
+                    'status' => self::INVALID_DATE,
+                    'invalid_value' => $record['Fecha_Inicio_Pago'],
+                ];
+            }
+            if (!Validaciones::validateDate($record['Fecha_Limite_Pago'])) {
+                return [
+                    'status' => self::INVALID_DATE,
+                    'invalid_value' => $record['Fecha_Limite_Pago'],
                 ];
             }
         }
