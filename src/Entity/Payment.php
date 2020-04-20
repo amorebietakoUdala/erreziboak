@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
+use App\Repository\PaymentRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use MiPago\Bundle\Model\Payment as BasePayment;
 use MiPago\Bundle\Model\PaymentInterface;
 
 /**
  * @ORM\Table(name="payment")
- * @ORM\Entity(repositoryClass="App\Repository\PaymentRepository")
+ * @ORM\Entity(repositoryClass="PaymentRepository")
  */
 class Payment extends BasePayment implements PaymentInterface
 {
@@ -24,7 +26,7 @@ class Payment extends BasePayment implements PaymentInterface
     protected $id;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="timestamp", type="datetime")
      */
@@ -248,5 +250,17 @@ class Payment extends BasePayment implements PaymentInterface
     public function getResponse()
     {
         return $this->getMiPagoResponse();
+    }
+
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    public function setSource($source)
+    {
+        $this->source = $source;
+
+        return $this;
     }
 }
