@@ -77,6 +77,12 @@ class RestController extends AbstractController
     public function receiptsConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer)
     {
         $logger->debug($request->getContent());
+        if (null === $request->getContent() || empty($request->getContent())) {
+            return new JsonResponse(
+                $serializer->serialize(
+                        new ApiResponse('NOK', 'No response data found', null), 'json')
+            );
+        }
         $payment = Payment::createPaymentFromJson($request->getContent());
 
         $em = $this->getDoctrine()->getManager();
