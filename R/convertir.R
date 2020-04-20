@@ -27,12 +27,11 @@ print(getwd())
 args = commandArgs(trailingOnly=TRUE)
 
 # Instalar los paquetes necesarios
-packages <- c("RODBC","stringr","lubridate", "dplyr")
+packages <- c("stringr","lubridate", "dplyr")
 new <- packages[!(packages %in% installed.packages()[,"Package"])]
 if(length(new)) install.packages(new, repos = "http://cran.us.r-project.org", dependencies = TRUE )
 a=lapply(packages, require, character.only=TRUE)
 
-library(RODBC)
 library(stringr)
 library(lubridate)
 library(dplyr)
