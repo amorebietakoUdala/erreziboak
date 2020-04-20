@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Repository\PaymentRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use MiPago\Bundle\Model\Payment as BasePayment;
@@ -10,7 +9,7 @@ use MiPago\Bundle\Model\PaymentInterface;
 
 /**
  * @ORM\Table(name="payment")
- * @ORM\Entity(repositoryClass="PaymentRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\PaymentRepository")
  */
 class Payment extends BasePayment implements PaymentInterface
 {
