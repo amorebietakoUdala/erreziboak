@@ -226,7 +226,7 @@ class Payment extends BasePayment implements PaymentInterface
         $payment_response = json_decode($json, true);
         $payment = new self();
         $payment->setSource(self::SOURCE_OTHER);
-        $payment->setReference_number(str_pad($payment_response['reference_number'], 10, '0', STR_PAD_LEFT));
+        $payment->setReferenceNumber(str_pad($payment_response['reference_number'], 10, '0', STR_PAD_LEFT));
         $payment->setSuffix($payment_response['suffix']);
         $payment->setNif($payment_response['dni']);
         $payment->setQuantity($payment_response['Ds_Amount'] / 100);
