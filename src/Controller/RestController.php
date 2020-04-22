@@ -84,11 +84,10 @@ class RestController extends AbstractController
             );
         }
         $payment = Payment::createPaymentFromJson($request->getContent());
-
         $em = $this->getDoctrine()->getManager();
 
         $existingPayment = $em->getRepository(Payment::class)->findOneBy([
-            'referenceNumber' => $payment->getReference_number(),
+            'referenceNumber' => $payment->getReferenceNumber(),
             'status' => Payment::PAYMENT_STATUS_OK,
         ]);
         if ($existingPayment) {
@@ -98,13 +97,13 @@ class RestController extends AbstractController
             );
         }
 
-        $recibo = $gts->findByNumReciboDni($payment->getReference_number(), $payment->getNif());
+        $recibo = $gts->findByNumReciboDni($payment->getReferenceNumber(), $payment->getNif());
         if (null !== $recibo) {
             try {
                 $gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $payment->getQuantity(), $payment->getTimeStamp(), '', 'APP');
                 $em->persist($payment);
                 $em->flush();
-                $logger->debug('Receipt number '.$payment->getReference_number().' successfully paid');
+                $logger->debug('Receipt number '.$payment->getReferenceNumber().' successfully paid');
 
                 return new JsonResponse(
                     $serializer->serialize(
@@ -118,7 +117,7 @@ class RestController extends AbstractController
             }
         }
 
-        $logger->debug('Receipt number '.$payment->getReference_number().' not found.');
+        $logger->debug('Receipt number '.$payment->getReferenceNumber().' not found.');
 
         return new JsonResponse(
             $serializer->serialize(

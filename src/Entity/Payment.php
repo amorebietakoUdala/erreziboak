@@ -220,7 +220,7 @@ class Payment extends BasePayment implements PaymentInterface
      */
     protected $source = self::SOURCE_MIPAGO;
 
-    public function createPaymentFromJson($json)
+    public static function createPaymentFromJson($json)
     {
         $payment_response = json_decode($json, true);
         $payment = new self();
