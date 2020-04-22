@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f3fa1aadad0c42c7c89be553389d43e7",
+    "content-hash": "42a716b8b9d26d82165f62840f813e8f",
     "packages": [
         {
             "name": "amorebietakoudala/mipago-bundle",
-            "version": "1.0.2",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amorebietakoUdala/mipago-bundle.git",
-                "reference": "c28a0b7b80f3ee8163529e982d7d5dde11eddb95"
+                "reference": "47caed883eaa5794786f8a198029cc2d08952e32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amorebietakoUdala/mipago-bundle/zipball/c28a0b7b80f3ee8163529e982d7d5dde11eddb95",
-                "reference": "c28a0b7b80f3ee8163529e982d7d5dde11eddb95",
+                "url": "https://api.github.com/repos/amorebietakoUdala/mipago-bundle/zipball/47caed883eaa5794786f8a198029cc2d08952e32",
+                "reference": "47caed883eaa5794786f8a198029cc2d08952e32",
                 "shasum": ""
             },
             "require": {
@@ -26,6 +26,7 @@
                 "sensio/framework-extra-bundle": "^4.0|^5.0",
                 "symfony/config": "^4.0|^5.0",
                 "symfony/dom-crawler": "^4.0|^5.0",
+                "symfony/http-foundation": "^4.0|^5.0.7",
                 "symfony/translation": "^4.0|^5.0",
                 "twig/twig": "^2.12|^3.0"
             },
@@ -54,7 +55,7 @@
             "keywords": [
                 "Payments MiPago Basque Government"
             ],
-            "time": "2020-04-15T12:21:42+00:00"
+            "time": "2020-04-22T06:04:53+00:00"
         },
         {
             "name": "doctrine/annotations",
