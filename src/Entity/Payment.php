@@ -229,8 +229,7 @@ class Payment extends BasePayment implements PaymentInterface
         $payment->setSuffix($payment_response['suffix']);
         $payment->setNif($payment_response['dni']);
         $payment->setQuantity($payment_response['Ds_Amount'] / 100);
-        $datetime_str = $payment_response['Ds_Date'].' '.$payment_response['Ds_Hour'];
-        $payment->setTimestamp(date_create_from_format('d/m/Y h:i', $datetime_str));
+        $payment->setTimestamp(new \DateTime());
         $payment->setPaymentDate(str_replace('/', '', $payment_response['Ds_Date']));
         $payment->setPaymentHour(str_replace(':', '', $payment_response['Ds_Hour']));
         $payment->setResponse($json);
