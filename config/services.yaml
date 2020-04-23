@@ -18,6 +18,7 @@ parameters:
     mailer_BCC_email: '%env(MAILER_BCC_EMAIL)%'
     mailer_from: '%env(MAILER_BCC_EMAIL)%'
     send_receiptfile_messages: '%env(bool:SEND_RECEIPTFILE_MESSAGES)%'
+    api_origin: "%env(API_ORIGIN)%"
 
 services:
     

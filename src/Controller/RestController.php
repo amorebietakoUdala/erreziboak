@@ -76,7 +76,12 @@ class RestController extends AbstractController
      */
     public function receiptsConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer)
     {
+        $logger->debug('Origin: '.$request->headers->get('Origin'));
         $logger->debug($request->getContent());
+        if ($request->headers->get('Origin') !== $this->getParameter('api_origin')) {
+            return new \Symfony\Component\HttpFoundation\Response(null, 401);
+        }
+
         if (null === $request->getContent() || empty($request->getContent())) {
             return new JsonResponse(
                 $serializer->serialize(
