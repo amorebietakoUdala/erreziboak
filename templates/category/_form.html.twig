@@ -5,20 +5,18 @@
 {{ form_errors(form) }}
     <div class="form-row align-items-center mb-1"> 
 	<div class="col-lg-2 col-md-2 col-sm-6">
-{#		{{ form_label(form.numeroReferencia, null, { 'label_attr': {'class':'col-form-label-sm' } }) }}#}
 	    {{ form_label(form.name) }}
-	    {{ form_widget(form.name, { 'id': '', 'attr': { 'class' : 'form-control-sm' } }) }}
+	    {{ form_widget(form.name, { 'id': '', 'attr': { 'class' : 'form-control form-control-sm' } }) }}
 	    {{ form_errors(form.name) }}
 	</div>
 	<div class="col-lg-2 col-md-2 col-sm-6">
-{#		{{ form_label(form.numeroReferencia, null, { 'label_attr': {'class':'col-form-label-sm' } }) }}#}
 	    {{ form_label(form.nameEu) }}
-	    {{ form_widget(form.nameEu, { 'id': '', 'attr': { 'class' : 'form-control-sm' } }) }}
+	    {{ form_widget(form.nameEu, { 'id': '', 'attr': { 'class' : 'form-control form-control-sm' } }) }}
 	    {{ form_errors(form.nameEu) }}
 	</div>
 	<div class="col-lg-2 col-md-2 col-sm-6">
 	    {{ form_label(form.concept) }}
-	    {{ form_widget(form.concept, { 'attr': { 'id': '', 'class' : 'form-control-sm' } }) }}
+	    {{ form_widget(form.concept, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm' } }) }}
 	</div>
     </div>
     {% if readonly == false %}

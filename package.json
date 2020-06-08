@@ -2,7 +2,7 @@
     "devDependencies": {
         "@symfony/webpack-encore": "^0.28.2",
         "core-js": "^3.0.0",
-        "node-sass": "^4.13.1",
+        "node-sass": "^4.14.1",
         "regenerator-runtime": "^0.13.2",
         "sass-loader": "7.0.1",
         "webpack-notifier": "^1.6.0"
@@ -27,6 +27,7 @@
         "popper.js": "^1.16.1",
         "select2": "^4.0.13",
         "sweetalert2": "^9.7.1",
-        "tableexport.jquery.plugin": "^1.10.15"
+        "tableexport.jquery.plugin": "^1.10.15",
+        "websocket-extensions": "0.1.4"
     }
 }
