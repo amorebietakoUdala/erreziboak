@@ -94,7 +94,7 @@ class CsvFormatValidator
                     $counters[array_keys($record)[$key]] = $counters[array_keys($record)[$key]] + 1;
                 }
             }
-            if (!is_numeric($record['Importe'])) {
+            if (!is_numeric($record['Importe']) && !is_numeric(str_replace(',', '.', $record['Importe']))) {
                 return [
                     'status' => self::IMPORTE_NOT_NUMBERIC,
                 ];
