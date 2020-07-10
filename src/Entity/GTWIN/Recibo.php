@@ -318,7 +318,10 @@ class Recibo
 
     public function getNombreCompleto()
     {
-        return $this->nombreCompleto;
+        $check = mb_check_encoding($this->nombreCompleto, 'ISO-8859-1');
+        $nombreCompleto = $check ? mb_convert_encoding($this->nombreCompleto, 'UTF-8', 'ISO-8859-1') : $this->nombreCompleto;
+
+        return $nombreCompleto;
     }
 
     public function setId($id)
@@ -570,21 +573,27 @@ class Recibo
 
     public function getNombre()
     {
-        $nombre = substr($this->nombreCompleto, strpos($this->nombreCompleto, ',') + 1);
+        $check = mb_check_encoding($this->nombreCompleto, 'ISO-8859-1');
+        $nombreCompleto = $check ? mb_convert_encoding($this->nombreCompleto, 'UTF-8', 'ISO-8859-1') : $this->nombreCompleto;
+        $nombre = mb_substr($nombreCompleto, mb_strpos($nombreCompleto, ',') + 1);
 
         return $nombre;
     }
 
     public function getApellido1()
     {
-        $apellido1 = substr($this->nombreCompleto, 0, strpos($this->nombreCompleto, '*'));
+        $check = mb_check_encoding($this->nombreCompleto, 'ISO-8859-1');
+        $nombreCompleto = $check ? mb_convert_encoding($this->nombreCompleto, 'UTF-8', 'ISO-8859-1') : $this->nombreCompleto;
+        $apellido1 = mb_substr($nombreCompleto, 0, mb_strpos($nombreCompleto, '*'));
 
         return $apellido1;
     }
 
     public function getApellido2()
     {
-        $apellido2 = substr($this->nombreCompleto, strpos($this->nombreCompleto, '*') + 1, strpos($this->nombreCompleto, '*') - strpos($this->nombreCompleto, ','));
+        $check = mb_check_encoding($this->nombreCompleto, 'ISO-8859-1');
+        $nombreCompleto = $check ? mb_convert_encoding($this->nombreCompleto, 'UTF-8', 'ISO-8859-1') : $this->nombreCompleto;
+        $apellido2 = mb_substr($nombreCompleto, mb_strpos($nombreCompleto, '*') + 1, mb_strpos($nombreCompleto, ',') - mb_strpos($nombreCompleto, '*') - 1);
 
         return $apellido2;
     }
