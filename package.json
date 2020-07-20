@@ -22,12 +22,13 @@
         "bootstrap-table": "^1.15.5",
         "font-awesome": "^4.0",
         "jquery": "^3.5.0",
+        "lodash": "^4.17.19",
         "minimist": "^1.2.5",
         "pc-bootstrap4-datetimepicker": "^4.17.50",
         "popper.js": "^1.16.1",
         "select2": "^4.0.13",
         "sweetalert2": "^9.7.1",
         "tableexport.jquery.plugin": "^1.10.15",
-        "websocket-extensions": "0.1.4"
+        "websocket-extensions": "^0.1.4"
     }
 }
