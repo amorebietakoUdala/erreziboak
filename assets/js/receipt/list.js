@@ -7,7 +7,7 @@ import 'tableexport.jquery.plugin/tableExport';
 import 'bootstrap-table/dist/locale/bootstrap-table-es-ES';
 import 'bootstrap-table/dist/locale/bootstrap-table-eu-EU';
 import {createAlert} from '../common/alert';
-const app_base = '/erreziboak';
+import getAppBase from '../common/app_base';
 const routes = require('../../../public/js/fos_js_routes.json');
 import Routing from '../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js'
 
@@ -47,7 +47,7 @@ $(document).ready(function(){
 
 	$(document).on('click','#js-autoPay',function(e){
         e.preventDefault();
-        createAlert(e, app_base + Routing.generate('receipt_pay', { numeroRecibo: $(e.currentTarget).data('numerorecibo'), dni: $(e.currentTarget).data('dni'), email: $(e.currentTarget).data('email'), _locale: current_locale  } ));
+        createAlert(e, getAppBase() + Routing.generate('receipt_pay', { numeroRecibo: $(e.currentTarget).data('numerorecibo'), dni: $(e.currentTarget).data('dni'), email: $(e.currentTarget).data('email'), _locale: current_locale  } ));
     });
 
     if ($('#js-autoPay').length > 0) { 
@@ -56,7 +56,7 @@ $(document).ready(function(){
 
     $(document).on('click','.js-btnPay',function(e){
         e.preventDefault();
-        createAlert(e, app_base + Routing.generate('receipt_pay', { numeroRecibo: $(e.currentTarget).data('numerorecibo'), dni: $(e.currentTarget).data('dni'), email: $(e.currentTarget).data('email'), _locale: current_locale  } ));
+        createAlert(e, getAppBase() + Routing.generate('receipt_pay', { numeroRecibo: $(e.currentTarget).data('numerorecibo'), dni: $(e.currentTarget).data('dni'), email: $(e.currentTarget).data('email'), _locale: current_locale  } ));
     });
 
 });

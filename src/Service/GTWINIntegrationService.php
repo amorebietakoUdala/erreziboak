@@ -17,6 +17,7 @@ use Psr\Log\LoggerInterface;
 use App\Utils\Validaciones;
 use App\Entity\GTWIN\Person;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Description of MiPagoConstants.
@@ -32,11 +33,13 @@ class GTWINIntegrationService
 
     private $em = null;
     private $logger = null;
+    private $client = null;
 
-    public function __construct(EntityManagerInterface $em, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $em, LoggerInterface $logger, HttpClientInterface $client)
     {
         $this->em = $em;
         $this->logger = $logger;
+        $this->client = $client;
     }
 
     public function findByExample(Recibo $criteria)
@@ -194,6 +197,18 @@ class GTWINIntegrationService
     public function createReciboOpt(\App\Entity\ExamInscription $exam): ?Recibo
     {
         $concept = $exam->getCategory()->getConcept();
+        /* If Concept has a service URL to retrive the price we must get it */
+        if (null !== $concept->getServiceURL()) {
+            try {
+                $response = $this->client->request('GET', $concept->getServiceURL());
+                $actualPrice = json_decode($response->getContent(), true);
+            } catch (Exception $e) {
+                throw new \Exception($e->getMessage());
+            }
+        } else {
+            $actualPrice = $concept->getUnitaryPrice();
+        }
+
         $tipoIngreso = $this->em->getRepository(TipoIngreso::class)->findOneBy([
             'conceptoC60' => $exam->getCategory()->getConcept()->getSuffix(),
         ]);
@@ -208,13 +223,14 @@ class GTWINIntegrationService
             substr($exam->getDni(), 0, -1),
             substr($exam->getDni(), -1),
             (Validaciones::validar_dni($exam->getDni()) ? 'ES' : 'EX'),
-            str_pad($concept->getUnitaryPrice(), '15', ' ', STR_PAD_RIGHT).str_pad(mb_convert_encoding($concept->getName(), 'ISO-8859-1'), '80', ' ', STR_PAD_RIGHT),
+            str_pad($actualPrice, '15', ' ', STR_PAD_RIGHT).str_pad(mb_convert_encoding($concept->getName(), 'ISO-8859-1'), '80', ' ', STR_PAD_RIGHT),
             $tipoIngreso->getTipoDefecto(),
             'P',
             'V',
             'F',
             $concept->getAccountingConcept(),
-            $concept->getUnitaryPrice());
+            $actualPrice
+        );
         $dboid = $this->__insertExternalOperation('CREA_RECIBO', $inputparams);
         $operacionExterna = $this->__waitUntilProcessed($dboid);
         $result = null;

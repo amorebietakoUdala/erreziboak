@@ -14,6 +14,7 @@
 			<th data-sortable="true">{{"concept.accountingConcept" | trans | capitalize}}</th>
 			<th data-sortable="true">{{"concept.name" | trans | capitalize}}</th>
 			<th data-sortable="true">{{"concept.unitaryPrice" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"concept.serviceURL" | trans | capitalize}}</th>
 			<th data-sortable="true" data-field="options">{{"options" | trans | capitalize}}</th>
 		    </tr>
 		</thead>
@@ -31,6 +32,7 @@
 				<td>{{concept.nameEu}}</td>
 			    {%endif%}
 			    <td>{{concept.unitaryPrice}}</td>
+                <td>{{concept.hasServiceURL ? 'messages.si' | trans : 'messages.si' | trans }}</td>
 			    <td>
 				<a href="{{ path ("admin_concept_show",{'id': concept.id })}}"><i class="fa fa-eye"></i></a>
 				&nbsp;<a href="{{ path ("admin_concept_edit",{'id': concept.id })}}"><i class="fa fa-edit"></i></a>

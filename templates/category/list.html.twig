@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 	    <table id="taula" class="table bootstrap-table mt-3">
 		<thead>
-		    <tr class="row">
+		    <tr>
 			<th data-sortable="true">{{"category.id" | trans | capitalize}}</th>
 			<th data-sortable="true">{{"category.name" | trans | capitalize}}</th>
 			<th data-sortable="true">{{"category.concept" | trans | capitalize}}</th>
@@ -20,16 +20,16 @@
 			<tr>
 			    <td>{{category.id}}</td>
 			    {% if app.request.locale ==  'es' %}
-				<td>{{category.name}}</td>
-				<td>{{category.concept.name}}</td>
+                    <td>{{category.name}}</td>
+                    <td>{{category.concept.name}}</td>
 			    {% else %}
-				<td>{{category.nameEu}}</td>
-				<td>{{category.concept.nameEu}}</td>
+                    <td>{{category.nameEu}}</td>
+                    <td>{{category.concept.nameEu}}</td>
 			    {% endif %}
 			    <td>
-				<a href="{{ path ("admin_category_show",{'id': category.id })}}"><i class="fa fa-eye"></i></a>
-				&nbsp;<a href="{{ path ("admin_category_edit",{'id': category.id })}}"><i class="fa fa-edit"></i></a>
-				&nbsp;<a class="js-delete" href="#" data-url='{{ path ("admin_category_delete",{'id': category.id })}}'><i class="fa fa-trash"></i></a>
+                    <a href="{{ path ("admin_category_show",{'id': category.id })}}"><i class="fa fa-eye"></i></a>
+                    &nbsp;<a href="{{ path ("admin_category_edit",{'id': category.id })}}"><i class="fa fa-edit"></i></a>
+                    &nbsp;<a class="js-delete" href="#" data-url='{{ path ("admin_category_delete",{'id': category.id })}}'><i class="fa fa-trash"></i></a>
 			    </td>
 			</tr>
 			{% endfor %}

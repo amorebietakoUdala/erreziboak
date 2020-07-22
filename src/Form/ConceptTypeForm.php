@@ -41,6 +41,10 @@ class ConceptTypeForm extends AbstractType
         'label' => 'concept.unitaryPrice',
         'disabled' => $readonly,
     ])
+    ->add('serviceURL', null, [
+        'label' => 'concept.serviceURL',
+        'disabled' => $readonly,
+    ])
     ->add('suffix', EntityType::class, [
         'class' => TipoIngreso::class,
         'em' => 'oracle',

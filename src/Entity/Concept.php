@@ -38,7 +38,7 @@ class Concept
     /**
      * @var string
      *
-     * @ORM\Column(name="unitaryPrice", type="decimal", precision=6, scale=2)
+     * @ORM\Column(name="unitaryPrice", type="decimal", precision=6, scale=2, nullable=true)
      */
     private $unitaryPrice;
 
@@ -59,6 +59,11 @@ class Concept
      * @ORM\Column(name="acc_concept", type="string", length=5, nullable=false)
      */
     private $accountingConcept;
+
+    /**
+     * @ORM\Column(type="string", length=1024, nullable=true)
+     */
+    private $serviceURL;
 
     /**
      * Get id.
@@ -169,5 +174,22 @@ class Concept
         $this->entity = $entity;
 
         return $this;
+    }
+
+    public function getServiceURL(): ?string
+    {
+        return $this->serviceURL;
+    }
+
+    public function setServiceURL(?string $serviceURL): self
+    {
+        $this->serviceURL = $serviceURL;
+
+        return $this;
+    }
+
+    public function getHasServiceURL(): bool
+    {
+        return null !== $this->serviceURL;
     }
 }

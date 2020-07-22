@@ -32,7 +32,13 @@
         </div>
         <div class="form-group col-lg-1 col-md-2 col-sm-6">
             {{ form_label(form.unitaryPrice) }}
-            {{ form_widget(form.unitaryPrice, { 'attr': { 'id': 'input-dni', 'class' : 'form-control form-control-sm col' } }) }}
+            {{ form_widget(form.unitaryPrice, { 'attr': { 'class' : 'form-control form-control-sm col' } }) }}
+        </div>
+    </div>
+    <div class="form-row mb-1">
+        <div class="form-group col-lg-7 col-md-12 col-sm-12">
+            {{ form_label(form.serviceURL) }}
+            {{ form_widget(form.serviceURL, { 'attr': { 'class' : 'form-control form-control-sm col js-serviceURL' } }) }}
         </div>
     </div>
     {% if readonly == false %}

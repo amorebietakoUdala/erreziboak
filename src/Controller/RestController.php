@@ -146,4 +146,21 @@ class RestController extends AbstractController
 
         return $recibosNoPagados;
     }
+
+    /**
+     * @Route("/category/{id}", name="api_category", methods={"GET"}, options = { "expose" = true })
+     */
+    public function getCategory($id, LoggerInterface $logger, SerializerInterface $serializer)
+    {
+        $em = $this->getDoctrine()->getManager();
+        /* @var $category Category */
+        $category = $em->getRepository(\App\Entity\Category::class)->find($id);
+        $logger->debug('Get category Id: '.$id);
+
+        return new JsonResponse(
+            $serializer->serialize(
+                new ApiResponse('OK', 'Category found', $category), 'json'
+                )
+        );
+    }
 }

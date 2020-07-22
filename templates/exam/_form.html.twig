@@ -36,8 +36,12 @@
         </div>
         <div class="form-group col-lg-2 col-md-2 col-sm-6">
             {{ form_label(form.category) }}
-            {{ form_widget(form.category, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm col' } }) }}
-            <span class='text text-danger'>{{ form_errors(form.category) }}</span>
+            {{ form_widget(form.category, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm col js-category' } }) }}
+            <span class="text text-danger">{{ form_errors(form.category) }}</span>
+        </div>
+        <div class="form-group col-lg-2 col-md-2 col-sm-6">
+            <label>{{ "label.quantity" | trans }}</label>
+            <span class="js-quantity form-control form-control-sm col"></span>
         </div>
     </div>
     <div class="form-row align-items-center mb-1">

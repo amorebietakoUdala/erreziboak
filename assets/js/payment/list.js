@@ -8,7 +8,6 @@ import 'bootstrap-table/dist/locale/bootstrap-table-es-ES';
 import 'bootstrap-table/dist/locale/bootstrap-table-eu-EU';
 import 'pc-bootstrap4-datetimepicker';
 import {createAlert} from '../common/alert';
-const app_base = '/erreziboak';
 const routes = require('../../../public/js/fos_js_routes.json');
 import Routing from '../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js'
 
