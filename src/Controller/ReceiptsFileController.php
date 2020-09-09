@@ -140,12 +140,26 @@ class ReceiptsFileController extends AbstractController
         }
         if ($validationResult['status'] === $validator::IMPORTE_NOT_NUMBERIC) {
             $this->addFlash('error',
-                $translator->trans('importe_not_numeric', [], 'validators')
+                $translator->trans('importe_not_numeric', [
+                    '%invalid_row%' => $validationResult['invalid_row'],
+                    '%invalid_value%' => $validationResult['invalid_value'],
+                ], 'validators')
             );
         }
         if ($validationResult['status'] === $validator::INVALID_DATE) {
             $this->addFlash('error',
-                $translator->trans('invalid_date', ['%invalid_value%' => $validationResult['invalid_value']], 'validators')
+                $translator->trans('invalid_date', [
+                    '%invalid_row%' => $validationResult['invalid_row'],
+                    '%invalid_value%' => $validationResult['invalid_value'],
+                ], 'validators')
+            );
+        }
+        if ($validationResult['status'] === $validator::INVALID_BANK_ACCOUNT) {
+            $this->addFlash('error',
+                $translator->trans('invalid_bank_account', [
+                    '%invalid_row%' => $validationResult['invalid_row'],
+                    '%invalid_value%' => $validationResult['invalid_value'],
+                ], 'validators')
             );
         }
     }

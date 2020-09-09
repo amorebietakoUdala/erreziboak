@@ -26,6 +26,7 @@ class CsvFormatValidator
     public const MISSING_VALUES_ON_REQUIRED_FIELDS = 3;
     public const IMPORTE_NOT_NUMBERIC = 4;
     public const INVALID_DATE = 5;
+    public const INVALID_BANK_ACCOUNT = 6;
 
     private $validHeaders = [
             'Nombre',
@@ -64,6 +65,7 @@ class CsvFormatValidator
 
     public function validate(UploadedFile $file): ?array
     {
+        // TODO validar que el no hay Número de cuenta con menos de 24 caracteres
         $csv = Reader::createFromPath($file->getPath().DIRECTORY_SEPARATOR.$file->getFilename().$file->getExtension(), 'r');
         $csv->setHeaderOffset(0); //set the CSV header offset
         $csv->setDelimiter(';');
@@ -88,6 +90,7 @@ class CsvFormatValidator
 //        ;
         $counters = $this->__createCounters();
         $records = $encoder->convert($csv);
+        $numFila = 2;
         foreach ($records as $record) {
             foreach (array_values($record) as $key => $value) {
                 if (empty($value)) {
@@ -97,20 +100,32 @@ class CsvFormatValidator
             if (!is_numeric($record['Importe']) && !is_numeric(str_replace(',', '.', $record['Importe']))) {
                 return [
                     'status' => self::IMPORTE_NOT_NUMBERIC,
+                    'invalid_value' => $record['Importe'],
+                    'invalid_row' => $numFila,
                 ];
             }
             if (!Validaciones::validateDate($record['Fecha_Inicio_Pago'])) {
                 return [
                     'status' => self::INVALID_DATE,
                     'invalid_value' => $record['Fecha_Inicio_Pago'],
+                    'invalid_row' => $numFila,
                 ];
             }
             if (!Validaciones::validateDate($record['Fecha_Limite_Pago'])) {
                 return [
                     'status' => self::INVALID_DATE,
                     'invalid_value' => $record['Fecha_Limite_Pago'],
+                    'invalid_row' => $numFila,
                 ];
             }
+            if (!empty($record['Cuenta_Corriente']) && 24 != strlen($record['Cuenta_Corriente'])) {
+                return [
+                    'status' => self::INVALID_BANK_ACCOUNT,
+                    'invalid_value' => $record['Cuenta_Corriente'],
+                    'invalid_row' => $numFila,
+                ];
+            }
+            $numFila += 1;
         }
 
         return $this->__checkRequiredFields($counters);
