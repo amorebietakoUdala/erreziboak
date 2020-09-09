@@ -7,28 +7,28 @@
 	{{ form_errors(form) }}
 	<div class="form-row mb-2">
 	    {% if search %}
-		<div class="form-group col-lg-2">
-		    <div class="input-group mb-2">
+		<div class="form-group col-lg-3 col-md-3">
+		    <div class="input-group">
                 {{ form_label(form.date_from) }}
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    {{ form_widget(form.date_from, { 'attr': { 'class' : 'form-control form-control-sm' } }) }}
-                    {{ form_errors(form.date_from) }}
-                </div>
 		    </div>
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                {{ form_widget(form.date_from, { 'attr': { 'class' : 'form-control form-control-sm' } }) }}
+                {{ form_errors(form.date_from) }}
+            </div>
 		</div>
-		<div class="form-group col-lg-2">
-		    <div class="input-group mb-2">
+		<div class="form-group col-lg-3 col-md-3">
+		    <div class="input-group">
                 {{ form_label(form.date_to) }}
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    {{ form_widget(form.date_to, { 'attr': { 'class' : 'form-control form-control-sm' } }) }}
-                    {{ form_errors(form.date_to) }}
-                </div>
 		    </div>
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                {{ form_widget(form.date_to, { 'attr': { 'class' : 'form-control form-control-sm' } }) }}
+                {{ form_errors(form.date_to) }}
+            </div>
 		</div>
 	    {% else %}
-		<div class="form-group col-lg-2">
+		<div class="form-group col-lg-2 col-md-3">
 		    <div class="w-100">{{ form_label(form.timestamp) }}</div>
 		    <div class="input-group mb-2">
 			<div class="input-group-prepend">
@@ -39,17 +39,17 @@
 		    </div>
 		</div>
 	    {% endif %}
-	    <div class="form-group col-lg-2">
+	    <div class="form-group col-lg-2 col-md-3">
 		{{ form_label(form.referenceNumber) }}
 		{{ form_widget(form.referenceNumber, { 'attr': { 'class' : 'form-control form-control-sm col' } }) }}
 		{{ form_errors(form.referenceNumber) }}
 	    </div>
-	    <div class="form-group col-lg-1">
+	    <div class="form-group col-lg-1  col-md-3">
 		{{ form_label(form.suffix) }}
 		{{ form_widget(form.suffix, { 'attr': { 'class' : 'form-control form-control-sm col' } }) }}
 		{{ form_errors(form.suffix) }}
 	    </div>
-	    <div class="form-group col-lg-1">
+	    <div class="form-group col-lg-2 col-md-3">
 		{{ form_label(form.status) }}
 		{{ form_widget(form.status, { 'attr': { 'class' : 'form-control form-control-sm col' } }) }}
 		{{ form_errors(form.status) }}
@@ -63,12 +63,12 @@
 	    {% endif %}
 	</div>
 	<div class="form-row  mb-2 d-flex align-content-lg-start">
-	    <div class="form-group col-lg-2">
+	    <div class="form-group col-lg-2 col-md-3">
 		{{ form_label(form.nif) }}
 		{{ form_widget(form.nif, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm col' } }) }}
 		{{ form_errors(form.nif) }}
 	    </div>
-	    <div class="form-group col-lg-2">
+	    <div class="form-group col-lg-2 col-md-3">
 		{{ form_label(form.email) }}
 		{{ form_widget(form.email, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm col' } }) }}
 		{{ form_errors(form.email) }}
