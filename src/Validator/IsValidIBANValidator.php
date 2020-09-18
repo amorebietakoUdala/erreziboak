@@ -27,7 +27,6 @@ class IsValidIBANValidator extends ConstraintValidator
     {
         $iban = new IBAN($ibanNumber);
         $valid = $iban->Verify();
-        dump($valid);
 
         return $valid;
     }
