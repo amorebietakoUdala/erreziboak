@@ -8,6 +8,7 @@ use App\Entity\GTWIN\Recibo;
 use App\Entity\Payment;
 use App\Form\ReceiptSearchForm;
 use App\Service\GTWINIntegrationService;
+use App\Validator\IsValidIBANValidator;
 use Psr\Log\LoggerInterface;
 use Swift_Mailer;
 use Swift_Message;
@@ -250,5 +251,18 @@ class ReceiptController extends AbstractController
         $gts->paidWithCreditCard($receipt->getNumeroRecibo(), $receipt->getFraccion(), $payment->getQuantity(), $payment->getTimestamp(), $payment->getRegisteredPaymentId());
 
         return 'OK';
+    }
+
+    /**
+     * @Route("/receipts/testIBAN", name="receipt_testIBAN", methods={"GET"})
+     */
+    public function testIBANAction(Request $request, IsValidIBANValidator $validator)
+    {
+        $iban = $request->get('iban');
+        $valid = $validator->validateIBAN($iban);
+
+        return new JsonResponse([
+            'valid' => $valid,
+        ]);
     }
 }

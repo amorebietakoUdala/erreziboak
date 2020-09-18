@@ -12,6 +12,7 @@ use App\Utils\Validaciones;
 use League\Csv\CharsetConverter;
 use League\Csv\Reader;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Validator\IsValidIBANValidator;
 
 /**
  * Description of CsvFormatValidator.
@@ -62,6 +63,13 @@ class CsvFormatValidator
         'Fecha_Inicio_Pago',
         'Fecha_Limite_Pago',
     ];
+
+    private $ibanValidator;
+
+    public function __construct(IsValidIBANValidator $ibanValidator)
+    {
+        $this->ibanValidator = $ibanValidator;
+    }
 
     public function validate(UploadedFile $file): ?array
     {
@@ -118,7 +126,7 @@ class CsvFormatValidator
                     'invalid_row' => $numFila,
                 ];
             }
-            if (!empty($record['Cuenta_Corriente']) && 24 != strlen($record['Cuenta_Corriente'])) {
+            if (!empty($record['Cuenta_Corriente']) && (24 != strlen($record['Cuenta_Corriente']) || !$this->ibanValidator->validateIBAN($record['Cuenta_Corriente']))) {
                 return [
                     'status' => self::INVALID_BANK_ACCOUNT,
                     'invalid_value' => $record['Cuenta_Corriente'],
