@@ -62,7 +62,7 @@ class GTWINIntegrationService
     {
         $em = $this->em;
         $numero = substr($dni, 0, -1);
-        $letra = substr($dni, -1);
+        $letra = strtoupper(substr($dni, -1));
         $numero = $this->__fixDniNumber($numero);
         $recibo = $em->getRepository(Recibo::class)->findByNumReciboDni($numRecibo, $numero, $letra);
 
