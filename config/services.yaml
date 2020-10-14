@@ -21,6 +21,7 @@ parameters:
     api_origin: "%env(API_ORIGIN)%"
     returns_file_upload_directory: '%kernel.project_dir%/public/uploads/returns_files'
     send_returns_file_messages: '%env(bool:SEND_RETURNSFILE_MESSAGES)%'
+    returns_files_notification_email: '%env(RETURNS_FILE_NOTIFICATION_EMAIL)%'
 
     c34_initgpty_name: '%env(C34INITGPTY_NM)%'
     c34_initgpty_orgid_id: '%env(C34INITGPTY_ORGID_ID)%'

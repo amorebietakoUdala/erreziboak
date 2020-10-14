@@ -171,7 +171,7 @@ class ReturnsFileController extends AbstractController
     public function __sendMail(ReturnsFile $returnsFile, \Swift_Mailer $mailer)
     {
         $sent_from = $this->getParameter('mailer_user');
-        $sent_to = $this->getParameter('delivery_addresses');
+        $sent_to = $this->getParameter('returns_files_notification_email');
         $message = (new Swift_Message('Conversión de fichero de devoluciones'))
         ->setFrom($sent_from)
         ->setTo($sent_to)
