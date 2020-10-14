@@ -1,0 +1,6 @@
+{{ 'messages.wait' | trans }}<br/>
+
+{{ 'messages.download' | trans }}<br/>
+<a href="{{ absolute_url(path('returns_file_download', {'returnsFile': returnsFile.id})) }}">{{ absolute_url(path('returns_file_download', {'returnsFile': returnsFile.id})) }}</a><br/>
+
+{{ 'mail.totalAmount' | trans }}: {{ returnsFile.totalAmount }}<br/>

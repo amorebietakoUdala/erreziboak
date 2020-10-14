@@ -48,6 +48,7 @@ security:
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/receipts, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/category/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/(es|eu)/returns, roles: ROLE_USER }
         - { path: ^/api/, role: ROLE_API }
         - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

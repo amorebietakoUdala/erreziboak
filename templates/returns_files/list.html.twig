@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List Returns Files{% endblock %}
+
+{% block body %}
+    <main class="container-fluid" >
+
+		<div class="container-fluid">
+			{% if returnsFiles is defined and returnsFiles|length > 0 %}
+			<table id="taula" class="table bootstrap-table mt-3">
+			<thead>
+				<tr>
+				<th data-sortable="true">{{"returnsFile.id" | trans | capitalize}}</th>
+				<th data-sortable="true">{{"returnsFile.fileName" | trans | capitalize}}</th>
+				<th data-sortable="true">{{"returnsFile.receptionDate" | trans | capitalize}}</th>
+				<th data-sortable="true">{{"returnsFile.processedDate" | trans | capitalize}}</th>
+                <th data-sortable="true">{{"returnsFile.totalAmount" | trans | capitalize}}</th>
+				<th data-sortable="true">{{"returnsFile.status" | trans | capitalize}}</th>
+				<th data-sortable="true" data-field="options">{{"table.options" | trans | capitalize}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for returnsFile in returnsFiles %}
+				<tr>
+					<td>{{returnsFile.id}}</td>
+					<td>{{returnsFile.fileName}}</td>
+					<td>{{returnsFile.receptionDate ? returnsFile.receptionDate | date('Y-m-d H:i:s') : null }}</td>
+					<td>{{returnsFile.processedDate ? returnsFile.processedDate | date('Y-m-d H:i:s') : null }}</td>
+                    <td>{{returnsFile.totalAmount ? returnsFile.totalAmount | number_format(2, ',', '.') : null }}</td>
+					<td>{{ ('returnsFile.status.choices.' ~ returnsFile.status) | trans }}</td>
+					<td>
+						{% if returnsFile.status == constant('App\\Entity\\ReturnsFile::STATUS_PROCESSED') %}
+							<a href="{{ path('returns_file_download', { 'returnsFile': returnsFile.id }) }}"><i class="fa fa-download"></i></a>
+						{% endif %}
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+			</table>
+			{% else %}
+				<div class="mt-2 p-2 border border-black text-center bg-light">{{"messages.results0" | trans }}</div>
+			{% endif %}
+			<span class="pull-right"><a href="{{ path ('returns_file_upload') }}" class="btn btn-primary btn-rounded fixed-bottom-right"><i class="fa fa-plus" title='{{ "btn.new" | trans | capitalize }}'></i></a></span>
+		</div>
+    </main>
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('returnsFiles_list') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('returnsFiles_list') }}
+{% endblock %}

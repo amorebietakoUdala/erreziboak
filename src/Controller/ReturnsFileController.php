@@ -2,85 +2,97 @@
 
 namespace App\Controller;
 
-use App\Entity\ReceiptsFile;
-use App\Form\ReceiptsFileType;
+use App\Entity\ReturnsFile;
+use App\Form\ReturnsFileType;
 use App\Service\CsvFormatValidator;
 use App\Service\FileUploader;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/{_locale}/receipts_file", requirements={
- *	    "_locale": "es|eu|en"
- * })
- * @IsGranted("ROLE_USER")
- * })
+ * @Route("/{_locale}/returns")
  */
-class ReceiptsFileController extends AbstractController
+class ReturnsFileController extends AbstractController
 {
     /**
-     * @Route("/upload", name="receipts_file_upload")
+     * @Route("/", name="returns_file_list")
      */
-    public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, TranslatorInterface $translator, Swift_Mailer $mailer)
+    public function list()
     {
-        $form = $this->createForm(ReceiptsFileType::class);
+        $returnsFiles = $this->getDoctrine()->getRepository(ReturnsFile::class)->findBy([], [
+            'receptionDate' => 'DESC',
+        ]);
+
+        return $this->render('returns_files/list.html.twig', [
+            'returnsFiles' => $returnsFiles,
+        ]);
+    }
+
+    /**
+     * @Route("/upload", name="returns_file_upload")
+     */
+    public function upload(Request $request, CsvFormatValidator $validator, TranslatorInterface $translator, Swift_Mailer $mailer, \App\Service\C34XmlGenerator $generator)
+    {
+        $form = $this->createForm(ReturnsFileType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $receiptsFile */
-            $data = $form->getData();
-            $receiptsFile = $form['file']->getData();
-            if ($receiptsFile) {
-                $validationResult = $validator->validate($receiptsFile);
+            $returnsFile = $form['file']->getData();
+            if ($returnsFile) {
+                $validationResult = $validator->validate($returnsFile);
                 if ($validationResult['status'] !== $validator::VALID) {
                     $this->__addValidationMessages($validationResult, $validator, $translator);
 
-                    return $this->render('receipts_file/upload.html.twig', [
+                    return $this->render('returns_files/upload.html.twig', [
                         'form' => $form->createView(),
                     ]);
                 }
                 try {
-                    $receiptsFileName = $fileUploader->upload($receiptsFile);
-                    $data['receiptsFileName'] = $receiptsFileName;
-                    $receiptsFileObject = ReceiptsFile::createReceiptsFile($data);
+                    $fileUploader = new FileUploader($this->getParameter('returns_file_upload_directory'));
+                    $returnsFileName = $fileUploader->upload($returnsFile);
+                    $data['returnsFileName'] = $returnsFileName;
+                    $returnsFileObject = ReturnsFile::createReturnsFile($data);
+
+                    $totalAmount = $this->processReturnsFile($this->getParameter('returns_file_upload_directory'), $returnsFileObject, $generator);
+                    $returnsFileObject->setProcessedDate(new \DateTime());
+                    $returnsFileObject->setStatus(ReturnsFile::STATUS_PROCESSED);
+                    $returnsFileObject->setTotalAmount($totalAmount);
 
                     $em = $this->getDoctrine()->getManager();
-                    $em->persist($receiptsFileObject);
+                    $em->persist($returnsFileObject);
                     $em->flush();
                     $this->addFlash('success', 'messages.successfullySended');
 
-                    if (true === $this->getParameter('send_receiptfile_messages')) {
-                        $this->__sendMail($receiptsFileObject, $mailer);
+                    if (true === $this->getParameter('send_returns_file_messages')) {
+                        $this->__sendMail($returnsFileObject, $mailer);
                     }
 
-                    return $this->redirectToRoute('receipts_file_list');
+                    return $this->redirectToRoute('returns_file_list');
                 } catch (Exception $e) {
                     $this->addFlash('error', $e->getMessage());
                 }
             }
         }
 
-        return $this->render('receipts_file/upload.html.twig', [
+        return $this->render('returns_files/upload.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{receiptFile}/download", name="receipts_file_download")
+     * @Route("/{returnsFile}/download", name="returns_file_download")
      */
-    public function download(ReceiptsFile $receiptFile)
+    public function download(ReturnsFile $returnsFile)
     {
-        $without_extension = pathinfo($receiptFile->getFileName(), PATHINFO_FILENAME);
-        $fileName = $this->getParameter('receipt_files_directory').'/'.$without_extension.'.zip';
+        $without_extension = pathinfo($returnsFile->getFileName(), PATHINFO_FILENAME);
+        $fileName = $this->getParameter('returns_file_upload_directory').'/'.$without_extension.'.zip';
         $response = new BinaryFileResponse($fileName);
         $response->headers->set('Content-Type', 'application/zip');
         $response->setContentDisposition(
@@ -91,19 +103,11 @@ class ReceiptsFileController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("/", name="receipts_file_list")
-     */
-    public function list()
+    private function processReturnsFile(string $path, ReturnsFile $returnsFile, \App\Service\C34XmlGenerator $generator)
     {
-        $em = $this->getDoctrine()->getManager();
-        $receiptsFiles = $em->getRepository(ReceiptsFile::class)->findBy([], [
-            'receptionDate' => 'DESC',
-        ]);
+        $totalAmount = $generator->createFileFrom($path, $returnsFile);
 
-        return $this->render('receipts_file/list.html.twig', [
-            'receiptsFiles' => $receiptsFiles,
-        ]);
+        return $totalAmount;
     }
 
     private function __addValidationMessages($validationResult, CsvFormatValidator $validator, TranslatorInterface $translator)
@@ -164,17 +168,17 @@ class ReceiptsFileController extends AbstractController
         }
     }
 
-    public function __sendMail(ReceiptsFile $receiptsFile, Swift_Mailer $mailer)
+    public function __sendMail(ReturnsFile $returnsFile, \Swift_Mailer $mailer)
     {
         $sent_from = $this->getParameter('mailer_user');
         $sent_to = $this->getParameter('delivery_addresses');
-        $message = (new Swift_Message('Conversión de ficheros'))
+        $message = (new Swift_Message('Conversión de fichero de devoluciones'))
         ->setFrom($sent_from)
         ->setTo($sent_to)
         ->setBody(
             $this->renderView(
-                'receipts_file/mail.html.twig',
-                ['receiptFile' => $receiptsFile]
+                'returns_files/mail.html.twig',
+                ['returnsFile' => $returnsFile]
             ),
             'text/html'
         );
@@ -182,8 +186,8 @@ class ReceiptsFileController extends AbstractController
         $mailer->send($message);
 
         return $this->render(
-            'emails/mail.html.twig',
-            ['receiptFile' => $receiptsFile])
+            'returns_files/mail.html.twig',
+            ['returnsFile' => $returnsFile])
         ;
     }
 }

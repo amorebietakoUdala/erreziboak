@@ -19,6 +19,17 @@ parameters:
     mailer_from: '%env(MAILER_BCC_EMAIL)%'
     send_receiptfile_messages: '%env(bool:SEND_RECEIPTFILE_MESSAGES)%'
     api_origin: "%env(API_ORIGIN)%"
+    returns_file_upload_directory: '%kernel.project_dir%/public/uploads/returns_files'
+    send_returns_file_messages: '%env(bool:SEND_RETURNSFILE_MESSAGES)%'
+
+    c34_initgpty_name: '%env(C34INITGPTY_NM)%'
+    c34_initgpty_orgid_id: '%env(C34INITGPTY_ORGID_ID)%'
+    c34_dbtr_nm: '%env(C34DBTR_NM)%'
+    c34_dbtr_ctry: '%env(C34DBTR_CTRY)%'
+    c34_dbtr_adrline1: '%env(C34DBTR_ADRLINE1)%'
+    c34_dbtr_adrline2: '%env(C34DBTR_ADRLINE2)%'
+    c34_dbtr_orgid_id: '%env(C34DBTR_ORGID_ID)%'
+    c34_dbtr_acct_id_iban: '%env(C34DBTR_ACCT_ID_IBAN)%'
 
 services:
     
@@ -94,3 +105,8 @@ services:
         class: App\Service\GTWINIntegrationService
         public: true
         arguments: ["@doctrine.orm.oracle_entity_manager", "@monolog.logger"]
+
+    App\Service\C34XmlGenerator:
+        class: App\Service\C34XmlGenerator
+        public: true
+        arguments: ["%kernel.project_dir%/src/Resources/c34.xml", "@parameter_bag"]
