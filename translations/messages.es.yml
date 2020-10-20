@@ -13,6 +13,11 @@ navitem.concepts: "Conceptos"
 navitem.categories: "Categorías de Examen"
 navitem.taxes: "Pago de tasas"
 navitem.exams: "Examenes"
+navitem.debts: "Deudas"
+navitem.debts.upload: "Subir fichero"
+navitem.debts.search: "Consultar"
+navitem.debts.list: "Listado"
+navitem.convertReturnsFile: "Conversión de Ficheros (C34)"
 
 link.logout: "Salir"
 
@@ -67,7 +72,17 @@ returnsFile.processedDate: "Fecha de procesamiento"
 returnsFile.totalAmount: "Montante total"
 returnsFile.status: "Estado"
 
-navitem.convertReturnsFile: Conversión de Ficheros (C34)
+debtsFile.id: "Id"
+debtsFile.fileName: "Fichero"
+debtsFile.receptionDate: "Fecha de recepción"
+debtsFile.processedDate: "Fecha de procesamiento"
+debtsFile.totalAmount: "Montante total"
+debtsFile.status: "Estado"
+debtsFile.status.choices.0: "Sin procesar"
+debtsFile.status.choices.1: "Procesando"
+debtsFile.status.choices.2: "Procesado"
+debtsFile.status.choices.3: "Inválido"
+debtsFile.status.choices.4: "Fallado"
 
 receipt.numeroRecibo: "Nº de recibo"
 receipt.dni: "DNI"
@@ -148,6 +163,7 @@ messages.existingUser: "El nombre de usuario o el email ya existe"
 messages.successfullySended: "El fichero se ha enviado correctamente"
 messages.download: "Puede descargar los ficheros de la siguiente dirección:"
 messages.wait: "La conversión puede tardar unos minutos, espere unos minutos antes de utilizar el enlace."
+messages.fileNotSelected: "Debe seleccionar un fichero"
 
 label.quantity: "Tasa"
 

@@ -134,6 +134,24 @@ class GTWINIntegrationService
     }
 
     /**
+     * Calculate the total debt amount of a person by DNI.
+     *
+     * @param string $dni
+     *
+     * @return float
+     */
+    public function findDeudaTotal($dni)
+    {
+        $numDocumento = substr($dni, 0, -1);
+        $em = $this->em;
+        $importe = $em->getRepository(Recibo::class)->findDeudaByDni(
+            $this->__fixDniNumber($numDocumento)
+        );
+
+        return $importe;
+    }
+
+    /**
      * Return a list of receipt types.
      *
      * @return TipoIngreso

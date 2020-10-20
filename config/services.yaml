@@ -22,6 +22,7 @@ parameters:
     returns_file_upload_directory: '%kernel.project_dir%/public/uploads/returns_files'
     send_returns_file_messages: '%env(bool:SEND_RETURNSFILE_MESSAGES)%'
     returns_files_notification_email: '%env(RETURNS_FILE_NOTIFICATION_EMAIL)%'
+    debts_file_upload_directory: '%kernel.project_dir%/public/uploads/debts_files'
 
     c34_initgpty_name: '%env(C34INITGPTY_NM)%'
     c34_initgpty_orgid_id: '%env(C34INITGPTY_ORGID_ID)%'
@@ -110,4 +111,7 @@ services:
     App\Service\C34XmlGenerator:
         class: App\Service\C34XmlGenerator
         public: true
-        arguments: ["%kernel.project_dir%/src/Resources/c34.xml", "@parameter_bag"]
+        arguments: ["@parameter_bag"]
+    
+    # After 5.1 needs to be defined explicitly if you want autowiring.
+    Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'

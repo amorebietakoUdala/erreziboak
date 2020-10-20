@@ -30,42 +30,47 @@ class ReceiptsFileController extends AbstractController
     /**
      * @Route("/upload", name="receipts_file_upload")
      */
-    public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, TranslatorInterface $translator, Swift_Mailer $mailer)
+    public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, Swift_Mailer $mailer)
     {
         $form = $this->createForm(ReceiptsFileType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $receiptsFile */
+            /** @var UploadedFile $file */
             $data = $form->getData();
-            $receiptsFile = $form['file']->getData();
-            if ($receiptsFile) {
-                $validationResult = $validator->validate($receiptsFile);
-                if ($validationResult['status'] !== $validator::VALID) {
-                    $this->__addValidationMessages($validationResult, $validator, $translator);
+            $file = $form['file']->getData();
+            if (null === $file) {
+                $this->addFlash('error', 'messages.fileNotSelected');
 
-                    return $this->render('receipts_file/upload.html.twig', [
-                        'form' => $form->createView(),
-                    ]);
+                return $this->render('receipts_file/upload.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+            $validationResult = $validator->validate($file);
+            if ($validationResult['status'] !== $validator::VALID) {
+                $this->addFlash('error', $validationResult['message']);
+
+                return $this->render('receipts_file/upload.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+            try {
+                $receiptsFileName = $fileUploader->upload($file);
+                $data['receiptsFileName'] = $receiptsFileName;
+                $receiptsFileObject = ReceiptsFile::createReceiptsFile($data);
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($receiptsFileObject);
+                $em->flush();
+                $this->addFlash('success', 'messages.successfullySended');
+
+                if (true === $this->getParameter('send_receiptfile_messages')) {
+                    $this->__sendMail($receiptsFileObject, $mailer);
                 }
-                try {
-                    $receiptsFileName = $fileUploader->upload($receiptsFile);
-                    $data['receiptsFileName'] = $receiptsFileName;
-                    $receiptsFileObject = ReceiptsFile::createReceiptsFile($data);
 
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($receiptsFileObject);
-                    $em->flush();
-                    $this->addFlash('success', 'messages.successfullySended');
-
-                    if (true === $this->getParameter('send_receiptfile_messages')) {
-                        $this->__sendMail($receiptsFileObject, $mailer);
-                    }
-
-                    return $this->redirectToRoute('receipts_file_list');
-                } catch (Exception $e) {
-                    $this->addFlash('error', $e->getMessage());
-                }
+                return $this->redirectToRoute('receipts_file_list');
+            } catch (Exception $e) {
+                $this->addFlash('error', $e->getMessage());
             }
         }
 
