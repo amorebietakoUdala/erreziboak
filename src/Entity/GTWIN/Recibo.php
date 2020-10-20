@@ -17,6 +17,7 @@ use JMS\Serializer\Annotation as Serializer;
 class Recibo
 {
     public const SITUACION_VOLUNTARIA = 'V';
+    public const SITUACION_EJECUTIVA = 'E';
     public const ESTADO_PENDIENTE = 'P';
     public const ESTADO_COBRADO = 'C';
     /**
@@ -198,6 +199,27 @@ class Recibo
      * @ORM\Column(name="RECTRASPA", type="string", nullable=false)
      */
     private $traspasado;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="RECBAJPRO", type="string", nullable=false)
+     */
+    private $propuestoBaja;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="RECPLPAGO", type="string", nullable=false)
+     */
+    private $incluidoEnPlanDePagos;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="RECPADFRA", type="string", nullable=false)
+     */
+    private $esPadreFracciones;
 
     /**
      * @var string
@@ -627,6 +649,30 @@ class Recibo
         return $this;
     }
 
+    public function getPropuestoBaja(): string
+    {
+        return $this->propuestoBaja;
+    }
+
+    public function getIncluidoEnPlanDePagos(): string
+    {
+        return $this->incluidoEnPlanDePagos;
+    }
+
+    public function setPropuestoBaja(string $propuestoBaja)
+    {
+        $this->propuestoBaja = $propuestoBaja;
+
+        return $this;
+    }
+
+    public function setIncluidoEnPlanDePagos(string $incluidoEnPlanDePagos)
+    {
+        $this->incluidoEnPlanDePagos = $incluidoEnPlanDePagos;
+
+        return $this;
+    }
+
     public function esPagable()
     {
         return empty($this->comprobarCondicionesPago());
@@ -702,6 +748,8 @@ class Recibo
             'letra' => $this->letra,
             'nombreCompleto' => $this->nombreCompleto,
             'traspasado' => $this->traspasado,
+            'propuestoBaja' => $this->propuestoBaja,
+            'incluidoEnPlanDePagos' => $this->incluidoEnPlanDePagos,
             'codigoIBAN' => $this->codigoIBAN,
             'tipoIngreso' => $this->tipoIngreso,
 //            'operaciones' => $this->operaciones,

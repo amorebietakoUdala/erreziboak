@@ -4,6 +4,7 @@ namespace App\Repository\GTWIN;
 
 use App\Entity\GTWIN\Recibo;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 
 /**
  * ReciboRepository.
@@ -95,6 +96,36 @@ class ReciboRepository extends EntityRepository
         $result = $qb->getQuery()->getResult();
 
         return $result;
+    }
+
+    public function findDeudaByDni($dni)
+    {
+        try {
+            $query = $qb = $this->createQueryBuilder('r')
+                ->select('SUM(r.importeTotal) as importe')
+                ->andWhere('r.dni= :dni')
+                ->andWhere('r.estado = :estado')
+                ->andWhere('r.situacion = :situacion')
+                ->andWhere('r.paralizado = :paralizado')
+                ->andWhere('r.propuestoBaja = :propuestoBaja')
+                ->andWhere('r.incluidoEnPlanDePagos = :incluidoEnPlanDePagos')
+                ->andWhere('r.esPadreFracciones = :esPadreFracciones')
+                ->setParameter('dni', $dni)
+                ->setParameter('estado', Recibo::ESTADO_PENDIENTE)
+                ->setParameter('situacion', Recibo::SITUACION_EJECUTIVA)
+                ->setParameter('paralizado', 'F')
+                ->setParameter('propuestoBaja', 'F')
+                ->setParameter('incluidoEnPlanDePagos', 'F')
+                ->setParameter('esPadreFracciones', 'F')
+                ->groupBy('r.dni')
+                ->getQuery();
+
+            $importe = $query->getSingleScalarResult();
+        } catch (NoResultException $e) {
+            return '0';
+        }
+
+        return $importe;
     }
 
     private function __remove_blank_filters($criteria)

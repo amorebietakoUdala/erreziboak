@@ -22,7 +22,7 @@ class C34XmlGenerator
     private $fileName;
     private $params;
 
-    public function __construct(string $fileName, ParameterBagInterface $params)
+    public function __construct(ParameterBagInterface $params)
     {
         $this->params = $params;
     }
@@ -58,7 +58,7 @@ class C34XmlGenerator
     {
         $template = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 file:///var/www/SF5/erreziboak/public/uploads/returns_files/pain.001.001.003.xsd">
         <CstmrCdtTrfInitn>
             {GrpHdr}
             {PmtInf}

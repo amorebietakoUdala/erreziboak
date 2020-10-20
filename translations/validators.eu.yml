@@ -5,6 +5,7 @@
 "fields_with_missing_values": "Hurrengo eremuek baliorik ez duten lerroak dituzte, eta nahitaezkoak dira: %fields%"
 "importe_not_numeric": "Lerroa %invalid_row%: '%invalid_value%' zenbatekoa ez da zuzena. \"Importe\" zutabea zenbakia izan behar da € ikurrik gabe. Excelekin sortu baduzu, mesedez, \"Importe\" zutabea jarri ezazu zenbakia bezala eta ez moneta bezala."
 "invalid_date": "Lerroa %invalid_row%: '%invalid_value%' hau ez da zuzena"
+"invalid_dni": "Lerroa %invalid_row%: '%invalid_value%' hau ez da NAN, AIZ edo IFKa zuzen bat"
 "invalid_bank_account": "Lerroa %invalid_row%: '%invalid_value%' kontu korronte zenbakia ez da zuzena. Gogora ezazu IBAN formatuan egon behar dela (24 karaktere): ESXXXXXXXXXXXXXXXXXXXXXX"
 "El email introducido no es válido": "Sartutako emaila ez da zuzena"
 validation.invalidDNI: "ANA/NAN ez da zuzena"
