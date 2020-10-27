@@ -65,6 +65,7 @@ path = paste0(dirname(args[1]),"/")
 
 data$Fecha_Inicio_Pago = as.POSIXct(data$Fecha_Inicio_Pago, format="%d/%m/%Y")
 data$Fecha_Limite_Pago = as.POSIXct(data$Fecha_Limite_Pago, format="%d/%m/%Y")
+data$Referencia_C19 = as.character(data$Referencia_C19)
 data$Cuerpo1 = as.character(data$Cuerpo1)
 data$Cuerpo2 = as.character(data$Cuerpo2)
 data$Cuerpo3 = as.character(data$Cuerpo3)
@@ -189,9 +190,9 @@ crear_datos_domiciliacion <- function (row) {
  	}
  	if ( length(vectorIBAN) == 6 ) {
  		indicador_domiciliacion = formatearCampo("1",1) # 0: NO domiciliado, 1: Domiciliado
- 		indicador_nombre2 = formatearCampo("",1) #:Titular es el pagador. 2: Apellidos y nombre separados. Los apellidos deben ir separados por "*" y el segundo apellido y el nombre por el carácter ",". P.e.: RODRIGUEZ*GASPAR,SILVIA.	3: Apellidos y nombre.	4: Nombre y apellidos
+ 		indicador_nombre2 = formatearCampo("2",1) # 0:Titular es el pagador. 2: Apellidos y nombre separados. Los apellidos deben ir separados por "*" y el segundo apellido y el nombre por el carácter ",". P.e.: RODRIGUEZ*GASPAR,SILVIA.	3: Apellidos y nombre.	4: Nombre y apellidos
  		personalidad2 = formatearCampo("F",1)
- 		titular_cuenta = formatearCampo("",60)
+ 		titular_cuenta = formatearCampo(paste0(row['Apellido1_Titular'],'*',row['Apellido2_Titular'],',',row['Nombre_Titular']),60)
  		cif = formatearCampo("", 12)
  		dc_cif = formatearCampo("", 1)
  		cod_pais = formatearCampo("108", 3)
