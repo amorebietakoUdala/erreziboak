@@ -127,18 +127,22 @@ trocearCuentaBancaria <- function (cuentaBancaria) {
  	x <- c()
  	if (is.na(cuentaBancaria) || cuentaBancaria == "") {
  		return ("")
- 	} else if (nchar(cuentaBancaria) != 24) {
- 		return ("Invalid")
  	} else {
- 			x <- c(substr(cuentaBancaria,1,2),
- 						 substr(cuentaBancaria,3,4),
- 						 substr(cuentaBancaria,5,8),
- 						 substr(cuentaBancaria,9,12),
- 						 substr(cuentaBancaria,13,14),
- 						 substr(cuentaBancaria,15,24)
- 			)
- 			return (x)
- 	}
+        cuentaBancariaLimpia = gsub(" ", "", cuentaBancaria, fixed = TRUE);
+        cuentaBancariaLimpia = gsub("-", "", cuentaBancariaLimpia, fixed = TRUE);
+        if (nchar(cuentaBancariaLimpia) != 24) {
+            return ("Invalid")
+        } else {
+                x <- c(substr(cuentaBancariaLimpia,1,2),
+                             substr(cuentaBancariaLimpia,3,4),
+                             substr(cuentaBancariaLimpia,5,8),
+                             substr(cuentaBancariaLimpia,9,12),
+                             substr(cuentaBancariaLimpia,13,14),
+                             substr(cuentaBancariaLimpia,15,24)
+                )
+                return (x)
+        }
+    }
  }
  
 crear_datos_generales <- function (tipo_ingreso, cod_institucion, row) {

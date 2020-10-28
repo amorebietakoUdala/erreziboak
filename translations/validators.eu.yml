@@ -1,6 +1,7 @@
 "The password fields must match.": "Pasahitza ezberdina da eremu bietan dira."
 "Select a valid csv file.": "CSV fitxategia zuzen bat hautatu."
 "too_much_fields": "Hurrengo eremuak soberan daude: %invalid_headers%"
+"too_few_fields": "Ondorengo eremuak falta dira: %invalid_headers%"
 "incorrect_field_names": "Hurrengo eremuen izenak ez dira zuzenak: %invalid_headers%"
 "fields_with_missing_values": "Hurrengo eremuek baliorik ez duten lerroak dituzte, eta nahitaezkoak dira: %fields%"
 "importe_not_numeric": "Lerroa %invalid_row%: '%invalid_value%' zenbatekoa ez da zuzena. \"Importe\" zutabea zenbakia izan behar da € ikurrik gabe. Excelekin sortu baduzu, mesedez, \"Importe\" zutabea jarri ezazu zenbakia bezala eta ez moneta bezala."

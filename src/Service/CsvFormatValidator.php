@@ -30,6 +30,7 @@ class CsvFormatValidator
     public const INVALID_DATE = 5;
     public const INVALID_BANK_ACCOUNT = 6;
     public const INVALID_DNI = 7;
+    public const TOO_FEW_FIELDS = 8;
 
     private $validHeaders = [
             'Nombre',
@@ -176,13 +177,19 @@ class CsvFormatValidator
     private function getHeaderValidationErrorMessage($key, $invalidHeaders)
     {
         return $this->translator->trans($key, [
-                '%invalid_headers%' => $invalidHeaders,
+               '%invalid_headers%' => $invalidHeaders,
             ], 'validators'
         );
     }
 
     private function validateHeader($header)
     {
+        if (count($this->validHeaders) > count($header)) {
+            return [
+                'status' => self::TOO_FEW_FIELDS,
+                'message' => $this->getHeaderValidationErrorMessage('too_few_fields', implode(',', array_diff($this->validHeaders, $header))),
+            ];
+        }
         if (count($this->validHeaders) !== count($header)) {
             return [
                 'status' => self::TOO_MUCH_FIELDS,

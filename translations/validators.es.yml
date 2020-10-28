@@ -1,6 +1,7 @@
 "The password fields must match.": "Las contraseñas deben coincidir."
 "Select a valid csv file.": "Introduzca un fichero csv válido."
 "too_much_fields": "Sobran los siguientes campos: %invalid_headers%"
+"too_few_fields": "Faltan los siguientes campos: %invalid_headers%"
 "incorrect_field_names": "Los siguientes campos no son válidos: %invalid_headers%"
 "fields_with_missing_values": "Los siguientes campos contienen valores vacíos que deben ser rellenados: %fields%"
 "importe_not_numeric": "Fila %invalid_row%: El importe '%invalid_value%' no es correcto. La columna \"Importe\" tiene que ser numérica sin símbolos de €. Si lo ha generado con Excel, por favor, ponga la columna \"Importe\" de tipo número en vez de moneda."
