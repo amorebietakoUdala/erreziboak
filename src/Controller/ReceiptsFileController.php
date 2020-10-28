@@ -65,7 +65,7 @@ class ReceiptsFileController extends AbstractController
                 $this->addFlash('success', 'messages.successfullySended');
 
                 if (true === $this->getParameter('send_receiptfile_messages')) {
-                    $this->__sendMail($receiptsFileObject, $mailer);
+                    $this->sendMail($receiptsFileObject, $mailer);
                 }
 
                 return $this->redirectToRoute('receipts_file_list');
@@ -169,7 +169,7 @@ class ReceiptsFileController extends AbstractController
         }
     }
 
-    public function __sendMail(ReceiptsFile $receiptsFile, Swift_Mailer $mailer)
+    public function sendMail(ReceiptsFile $receiptsFile, Swift_Mailer $mailer)
     {
         $sent_from = $this->getParameter('mailer_user');
         $sent_to = $this->getParameter('delivery_addresses');
@@ -186,9 +186,6 @@ class ReceiptsFileController extends AbstractController
 
         $mailer->send($message);
 
-        return $this->render(
-            'emails/mail.html.twig',
-            ['receiptFile' => $receiptsFile])
-        ;
+        return;
     }
 }
