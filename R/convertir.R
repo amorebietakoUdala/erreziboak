@@ -65,7 +65,6 @@ path = paste0(dirname(args[1]),"/")
 
 data$Fecha_Inicio_Pago = as.POSIXct(data$Fecha_Inicio_Pago, format="%d/%m/%Y")
 data$Fecha_Limite_Pago = as.POSIXct(data$Fecha_Limite_Pago, format="%d/%m/%Y")
-data$Referencia_C19 = as.character(data$Referencia_C19)
 data$Cuerpo1 = as.character(data$Cuerpo1)
 data$Cuerpo2 = as.character(data$Cuerpo2)
 data$Cuerpo3 = as.character(data$Cuerpo3)
@@ -205,7 +204,7 @@ crear_datos_domiciliacion <- function (row) {
  		cod_oficina = formatearCampo(vectorIBAN[4], 4)
  		numero_cuenta = formatearCampo(vectorIBAN[6], 10)
  		dc_cuenta = formatearCampo(vectorIBAN[5], 2)
- 		cod_referencia = formatearCampo(row["Referencia_C19"], 12)
+ 		cod_referencia = formatearCampo(sprintf("%12.0f",row["Referencia_C19"]), 12)
  	} else {
  		indicador_domiciliacion = formatearCampo("0",1) # 0: NO domiciliado, 1: Domiciliado
  		indicador_nombre2 = formatearCampo("",1)
