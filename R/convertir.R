@@ -193,11 +193,21 @@ crear_datos_domiciliacion <- function (row) {
  	}
  	if ( length(vectorIBAN) == 6 ) {
  		indicador_domiciliacion = formatearCampo("1",1) # 0: NO domiciliado, 1: Domiciliado
- 		indicador_nombre2 = formatearCampo("2",1) # 0:Titular es el pagador. 2: Apellidos y nombre separados. Los apellidos deben ir separados por "*" y el segundo apellido y el nombre por el carácter ",". P.e.: RODRIGUEZ*GASPAR,SILVIA.	3: Apellidos y nombre.	4: Nombre y apellidos
+        if (row['Dni'] == row['Dni_Titular']) {
+            indicador_nombre2 = formatearCampo("0",1) # 0:Titular es el pagador. 2: Apellidos y nombre separados. Los apellidos deben ir separados por "*" y el segundo apellido y el nombre por el carácter ",". P.e.: RODRIGUEZ*GASPAR,SILVIA.	3: Apellidos y nombre.	4: Nombre y apellidos
+        } else {
+            indicador_nombre2 = formatearCampo("2",1) # 0:Titular es el pagador. 2: Apellidos y nombre separados. Los apellidos deben ir separados por "*" y el segundo apellido y el nombre por el carácter ",". P.e.: RODRIGUEZ*GASPAR,SILVIA.	3: Apellidos y nombre.	4: Nombre y apellidos
+        }
  		personalidad2 = formatearCampo("F",1)
  		titular_cuenta = formatearCampo(paste0(row['Apellido1_Titular'],'*',row['Apellido2_Titular'],',',row['Nombre_Titular']),60)
- 		cif = formatearCampo("", 12)
- 		dc_cif = formatearCampo("", 1)
+        print(row['Dni_Titular'])
+        if ( !is.na(row['Dni_Titular']) ) { 
+            cif = formatearCampo(limpiarNIF(row['Dni_Titular']),12)
+            dc_cif  = formatearCampo(obtener_letra_DNI(row['Dni_Titular']),1)
+        } else {
+            cif = formatearCampo("",12)
+            dc_cif  = formatearCampo("",1)
+        }
  		cod_pais = formatearCampo("108", 3)
  		siglas_pais = formatearCampo(vectorIBAN[1],2)
  		cod_banco = formatearCampo(vectorIBAN[3], 4)

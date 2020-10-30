@@ -31,6 +31,7 @@ class CsvFormatValidator
     public const INVALID_BANK_ACCOUNT = 6;
     public const INVALID_DNI = 7;
     public const TOO_FEW_FIELDS = 8;
+    public const BANK_ACCOUNT_DNI_REQUIRED = 9;
 
     private $validHeaders = [
             'Nombre',
@@ -42,6 +43,7 @@ class CsvFormatValidator
             'Nombre_Titular',
             'Apellido1_Titular',
             'Apellido2_Titular',
+            'Dni_Titular',
             'Referencia_Externa',
             'Presupuesto',
             'Institucion',
@@ -225,9 +227,23 @@ class CsvFormatValidator
         if (null !== $dniValidation) {
             return $dniValidation;
         }
-        $ibanValidation = $this->validateIBAN($numFila, in_array('Cuenta_Corriente', $this->requiredFields) ? $record['Cuenta_Corriente'] : null);
-        if (null !== $ibanValidation) {
-            return $ibanValidation;
+        if (array_key_exists('Dni_Titular', $record)) {
+            $dniTitularValidation = $this->validateDni($numFila, $record['Dni_Titular']);
+            if (null !== $dniTitularValidation) {
+                return $dniTitularValidation;
+            }
+        }
+        if (array_key_exists('Cuenta_Corriente', $record)) {
+            $ibanValidation = $this->validateIBAN($numFila, $record['Cuenta_Corriente']);
+            if (null !== $ibanValidation) {
+                return $ibanValidation;
+            }
+            if (empty($record['Dni_Titular'])) {
+                return [
+                        'status' => self::BANK_ACCOUNT_DNI_REQUIRED,
+                        'message' => $this->getValidationMessage('bank_account_dni_required', $numFila, null),
+                    ];
+            }
         }
 
         return null;
@@ -271,7 +287,7 @@ class CsvFormatValidator
 
     private function validateDni($numFila, $dni)
     {
-        if (in_array('Dni', $this->requiredFields) && !empty($dni) && Validaciones::valida_nif_cif_nie($dni) <= 0) {
+        if (!empty($dni) && Validaciones::valida_nif_cif_nie($dni) <= 0) {
             return [
                     'status' => self::INVALID_DNI,
                     'message' => $this->getValidationMessage('invalid_dni', $numFila, $dni),
