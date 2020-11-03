@@ -34,6 +34,7 @@ class Validaciones
         //Esto es software libre, y puede ser usado y redistribuirdo de acuerdo
         //con la condicion de que el autor jamas sera responsable de su uso.
         //Returns: 1 = NIF ok, 2 = CIF ok, 3 = NIE ok, -1 = NIF bad, -2 = CIF bad, -3 = NIE bad, 0 = ??? bad
+
         $cif = strtoupper($cif);
         for ($i = 0; $i < 9; ++$i) {
             $num[$i] = substr($cif, $i, 1);
@@ -60,21 +61,17 @@ class Validaciones
             }
         }
 
-        //comprobacion de CIFs
-        if (preg_match('/^[ABCDEFGHJNPQRSUVW]{1}/', $cif)) {
-            if ($num[8] == chr(64 + $n) || $num[8] == substr($n, strlen($n) - 1, 1)) {
-                return 2;
-            } else {
-                return -2;
-            }
-        }
-
         //algoritmo para comprobacion de codigos tipo CIF
-        $suma = $num[2] + $num[4] + $num[6];
+        //Sumamos los pares
+        $sumaPares = $num[2] + $num[4] + $num[6];
+        $sumaImpares = 0;
         for ($i = 1; $i < 8; $i += 2) {
-            $suma += substr((2 * $num[$i]), 0, 1) + substr((2 * $num[$i]), 1, 1);
+            $sumaImpares += (2 * $num[$i] % 10) + intdiv(2 * $num[$i], 10);
         }
-        $n = 10 - \substr($suma, \strlen($suma) - 1, 1);
+        $suma = $sumaPares + $sumaImpares;
+
+        $sumaStr = (string) $suma;
+        $n = 10 - intval(substr($sumaStr, -1));
 
         //comprobacion de NIFs especiales (se calculan como CIFs o como NIFs)
         if (preg_match('/^[KLM]{1}/', $cif)) {
@@ -84,6 +81,15 @@ class Validaciones
                 return -1;
             }
         }
+        //comprobacion de CIFs
+        if (preg_match('/^[ABCDEFGHJNPQRSUVW]{1}/', $cif)) {
+            if ($num[8] == chr(64 + $n) || $num[8] == substr($n, strlen($n) - 1, 1)) {
+                return 2;
+            } else {
+                return -2;
+            }
+        }
+
         //si todavia no se ha verificado devuelve error
         return 0;
     }
@@ -115,5 +121,47 @@ class Validaciones
         // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
 
         return $d && $d->format($format) === $date;
+    }
+
+    public function validateCif($cif)
+    {
+        $cif_codes = 'JABCDEFGHI';
+
+        $sum = (string) self::getCifSum($cif);
+        $n = (10 - substr($sum, -1)) % 10;
+
+        if (preg_match('/^[ABCDEFGHJNPQRSUVW]{1}/', $cif)) {
+            if (in_array($cif[0], array('A', 'B', 'E', 'H'))) {
+                // Numerico
+                return $cif[8] == $n;
+            } elseif (in_array($cif[0], array('K', 'P', 'Q', 'S'))) {
+                // Letras
+                return $cif[8] == $cif_codes[$n];
+            } else {
+                // Alfanumérico
+                if (is_numeric($cif[8])) {
+                    return $cif[8] == $n;
+                } else {
+                    return $cif[8] == $cif_codes[$n];
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function getCifSum($cif)
+    {
+        $sum = $cif[2] + $cif[4] + $cif[6];
+
+        for ($i = 1; $i < 8; $i += 2) {
+            $tmp = (string) (2 * $cif[$i]);
+
+            $tmp = $tmp[0] + ((2 == strlen($tmp)) ? $tmp[1] : 0);
+
+            $sum += $tmp;
+        }
+
+        return $sum;
     }
 }
