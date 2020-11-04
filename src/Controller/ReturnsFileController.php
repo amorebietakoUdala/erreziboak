@@ -52,6 +52,7 @@ class ReturnsFileController extends AbstractController
                 ]);
             }
             $validator->setRequiredFields(['Importe', 'Nombre', 'Apellido1', 'Apellido2', 'Cuenta_Corriente', 'Cuerpo1']);
+            $validator->setType(CsvFormatValidator::RETURNS_TYPE);
             $validationResult = $validator->validate($file);
             if ($validationResult['status'] !== $validator::VALID) {
                 $this->addFlash('error', $validationResult['message']);

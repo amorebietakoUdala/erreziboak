@@ -31,7 +31,11 @@ class CsvFormatValidator
     public const INVALID_BANK_ACCOUNT = 6;
     public const INVALID_DNI = 7;
     public const TOO_FEW_FIELDS = 8;
-    public const BANK_ACCOUNT_DNI_REQUIRED = 9;
+    public const BANK_ACCOUNT_OWNER_REQUIRED = 9;
+
+    public const RETURNS_TYPE = 0;
+    public const RECEIPTS_TYPE = 1;
+    public const DEBTS_TYPE = 2;
 
     private $validHeaders = [
             'Nombre',
@@ -63,6 +67,8 @@ class CsvFormatValidator
 
     private $requiredFields = [
         'Dni',
+        'Nombre',
+        'Apellido1',
         'Importe',
         'Referencia_Externa',
         'Institucion',
@@ -74,11 +80,13 @@ class CsvFormatValidator
 
     private $ibanValidator;
     private $translator;
+    private $type;
 
     public function __construct(IsValidIBANValidator $ibanValidator, TranslatorInterface $translator)
     {
         $this->ibanValidator = $ibanValidator;
         $this->translator = $translator;
+        $this->type = self::RECEIPTS_TYPE;
     }
 
     public function getValidHeaders()
@@ -101,6 +109,18 @@ class CsvFormatValidator
     public function setRequiredFields($requiredFields)
     {
         $this->requiredFields = $requiredFields;
+
+        return $this;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -238,10 +258,10 @@ class CsvFormatValidator
             if (null !== $ibanValidation) {
                 return $ibanValidation;
             }
-            if (empty($record['Dni_Titular'])) {
+            if ((empty($record['Dni_Titular']) || empty($record['Nombre_Titular']) || empty($record['Apellido1_Titular'])) && self::RECEIPTS_TYPE === $this->type) {
                 return [
-                        'status' => self::BANK_ACCOUNT_DNI_REQUIRED,
-                        'message' => $this->getValidationMessage('bank_account_dni_required', $numFila, null),
+                        'status' => self::BANK_ACCOUNT_OWNER_REQUIRED,
+                        'message' => $this->getValidationMessage('bank_account_owner_required', $numFila, null),
                     ];
             }
         }

@@ -8,7 +8,7 @@
 "invalid_date": "Fila %invalid_row%: La fecha '%invalid_value%' no es válida"
 "invalid_dni": "Fila %invalid_row%: El DNI, NIE o CIF '%invalid_value%' no es válido"
 "invalid_bank_account": "Fila %invalid_row%: La cuenta corriente '%invalid_value%' no es válida. O no es un IBAN o tiene algún dígito mal."
-"bank_account_dni_required": "Fila %invalid_row%: Si se introduce un número de cuenta, al menos hay que introducir el DNI del titular."
+"bank_account_owner_required": "Fila %invalid_row%: Si se introduce un número de cuenta, deben especificar Dni_Titular, Nombre_Titular y Apellido1_Titular."
 "El email introducido no es válido": "El email introducido no es válido"
 validation.invalidDNI: "El DNI/NIE no es correcto"
 "El número de recibo no es correcto debe ser un número.": "El número de recibo no es correcto debe ser un número."

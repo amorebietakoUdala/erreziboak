@@ -8,7 +8,7 @@
 "invalid_date": "Lerroa %invalid_row%: '%invalid_value%' hau ez da zuzena"
 "invalid_dni": "Lerroa %invalid_row%: '%invalid_value%' hau ez da NAN, AIZ edo IFKa zuzen bat"
 "invalid_bank_account": "Lerroa %invalid_row%: '%invalid_value%' kontu korronte zenbakia ez da zuzena. Edo ez da IBAN bat edo digitoren bat txarto dauka"
-"bank_account_dni_required": "Lerroa %invalid_row%: Kontu korrontea sartzen bada, nahieztaezko da kontu korrontearen titularraren NANa sartzea."
+"bank_account_owner_required": "Lerroa %invalid_row%: Kontu korrontea sartzen bada, nahieztaezko da kontu korrontearen titularraren eremuak sartzea: Dni_Titular, Nombre_Titular eta Apellido1_Titular."
 "El email introducido no es válido": "Sartutako emaila ez da zuzena"
 validation.invalidDNI: "ANA/NAN ez da zuzena"
 "El número de recibo no es correcto debe ser un número.": "Errezibo zenbakia ez da zuzena. Zenbaki bat izan behar da."

@@ -43,7 +43,10 @@ class C34XmlGenerator
             $totalAmount += $amount;
             $cdtr_name = $record['Nombre'].' '.$record['Apellido1'].' '.$record['Apellido2'];
             $cdtrAcct_iban = $record['Cuenta_Corriente'];
-            $concept = $record['Cuerpo1'];
+            $concept = $record['Cuerpo1'].' '.$record['Cuerpo2'].' '.
+                       $record['Cuerpo3'].' '.$record['Cuerpo4'].' '.
+                       $record['Cuerpo5'].' '.$record['Cuerpo6'].' '.
+                       $record['Cuerpo7'];
             $cdtTrfTxInf = $cdtTrfTxInf."\r\n".$this->createCdtTrfTxInf($endToEndId, $amount, $cdtr_name, $cdtrAcct_iban, $concept);
         }
         $grpHdr = $this->createHeader('001', $totalRecords, $totalAmount);
