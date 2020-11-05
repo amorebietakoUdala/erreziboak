@@ -253,7 +253,7 @@ class CsvFormatValidator
                 return $dniTitularValidation;
             }
         }
-        if (array_key_exists('Cuenta_Corriente', $record)) {
+        if (array_key_exists('Cuenta_Corriente', $record) && !empty($record['Cuenta_Corriente'])) {
             $ibanValidation = $this->validateIBAN($numFila, $record['Cuenta_Corriente']);
             if (null !== $ibanValidation) {
                 return $ibanValidation;
