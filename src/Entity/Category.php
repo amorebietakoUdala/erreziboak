@@ -98,16 +98,4 @@ class Category
     {
         return $this->name;
     }
-
-    public function getKk(): ?string
-    {
-        return $this->kk;
-    }
-
-    public function setKk(?string $kk): self
-    {
-        $this->kk = $kk;
-
-        return $this;
-    }
 }
