@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Category of the Exam
+ * Category of the Exam.
  *
  * @ORM\Table(name="category")
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
@@ -40,14 +40,14 @@ class Category
      * @ORM\JoinColumn(name="concept_id", referencedColumnName="id")
      */
     private $concept;
-    
+
     public function getId()
     {
         return $this->id;
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -61,7 +61,7 @@ class Category
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -69,28 +69,45 @@ class Category
     {
         return $this->name;
     }
-    
-    public function getNameEu() {
-	return $this->nameEu;
+
+    public function getNameEu()
+    {
+        return $this->nameEu;
     }
 
-    public function setNameEu($nameEu) {
-	$this->nameEu = $nameEu;
-	return $this;
+    public function setNameEu($nameEu)
+    {
+        $this->nameEu = $nameEu;
+
+        return $this;
     }
 
-    public function getConcept() {
-	return $this->concept;
+    public function getConcept()
+    {
+        return $this->concept;
     }
 
-    public function setConcept($concept) {
-	$this->concept = $concept;
-	return $this;
+    public function setConcept($concept)
+    {
+        $this->concept = $concept;
+
+        return $this;
     }
 
-    public function __toString() {
-	return $this->name;
+    public function __toString()
+    {
+        return $this->name;
     }
 
+    public function getKk(): ?string
+    {
+        return $this->kk;
+    }
+
+    public function setKk(?string $kk): self
+    {
+        $this->kk = $kk;
+
+        return $this;
+    }
 }
-
