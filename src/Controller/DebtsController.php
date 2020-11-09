@@ -59,7 +59,8 @@ class DebtsController extends AbstractController
                 ]);
             }
             $validator->setRequiredFields(['Dni']);
-            $validator->setValidHeaders(['Dni']);
+            $validator->setType(CsvFormatValidator::DEBTS_TYPE);
+//            $validator->setValidHeaders(['Dni']);
             $validationResult = $validator->validate($file);
             if ($validationResult['status'] !== $validator::VALID) {
                 $this->addFlash('error', $validationResult['message']);
@@ -121,9 +122,10 @@ class DebtsController extends AbstractController
         $debts = [];
         foreach ($records as $offset => $record) {
             $dni = $record['Dni'];
-            $importe = $gts->findDeudaTotal($dni);
-            $totalDebt += floatval($importe);
-            $debts[] = [$dni => $importe];
+            $deuda = $gts->findDeudaTotal($dni);
+            $record['Deuda'] = $deuda;
+            $totalDebt += floatval($deuda);
+            $debts[] = [$record];
         }
         $this->writeDebtsCsvFile($path, $debtsFile, $debts);
         $this->zipDebtsFile($path, $debtsFile);
@@ -140,10 +142,10 @@ class DebtsController extends AbstractController
         $csv = \League\Csv\Writer::createFromFileObject(new \SplFileObject($file, 'w'));
         $csv->setDelimiter(';');
         $csv->setNewline("\r\n");
-
-        $csv->insertOne(['Dni', 'Importe']);
+        $headers = array_keys((array_values($deudas)[0])[0]);
+        $csv->insertOne($headers);
         foreach ($deudas as $key => $value) {
-            $csv->insertOne([array_key_first($value), $value[array_key_first($value)]]);
+            $csv->insertOne($value[0]);
         }
         $csv->output();
     }
