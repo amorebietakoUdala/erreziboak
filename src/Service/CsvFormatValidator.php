@@ -243,9 +243,11 @@ class CsvFormatValidator
         if (null !== $fechaLimitePagoValidation) {
             return $fechaLimitePagoValidation;
         }
-        $dniValidation = $this->validateDni($numFila, in_array('Dni', $this->requiredFields) ? $record['Dni'] : null);
-        if (null !== $dniValidation) {
-            return $dniValidation;
+        if (in_array('Dni', $this->requiredFields) && self::RECEIPTS_TYPE === $this->type) {
+            $dniValidation = $this->validateDni($numFila, in_array('Dni', $this->requiredFields) ? $record['Dni'] : null);
+            if (null !== $dniValidation) {
+                return $dniValidation;
+            }
         }
         if (array_key_exists('Dni_Titular', $record)) {
             $dniTitularValidation = $this->validateDni($numFila, $record['Dni_Titular']);

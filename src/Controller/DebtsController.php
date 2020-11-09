@@ -123,7 +123,7 @@ class DebtsController extends AbstractController
         foreach ($records as $offset => $record) {
             $dni = $record['Dni'];
             $deuda = $gts->findDeudaTotal($dni);
-            $record['Deuda'] = $deuda;
+            $record['Deuda'] = number_format($deuda, 2, ',', '.');
             $totalDebt += floatval($deuda);
             $debts[] = [$record];
         }

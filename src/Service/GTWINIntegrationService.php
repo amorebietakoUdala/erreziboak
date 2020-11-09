@@ -142,10 +142,14 @@ class GTWINIntegrationService
      */
     public function findDeudaTotal($dni)
     {
-        $numDocumento = substr($dni, 0, -1);
+        $fixedDocument = $dni;
+        if (Validaciones::valida_nif_cif_nie($dni) > 0) {
+            $numDocumento = substr($dni, 0, -1);
+            $fixedDocument = $this->__fixDniNumber($numDocumento);
+        }
         $em = $this->em;
         $importe = $em->getRepository(Recibo::class)->findDeudaByDni(
-            $this->__fixDniNumber($numDocumento)
+            $fixedDocument
         );
 
         return $importe;
