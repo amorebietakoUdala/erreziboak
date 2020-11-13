@@ -199,7 +199,7 @@ crear_datos_domiciliacion <- function (row) {
             indicador_nombre2 = formatearCampo("2",1) # 0:Titular es el pagador. 2: Apellidos y nombre separados. Los apellidos deben ir separados por "*" y el segundo apellido y el nombre por el carácter ",". P.e.: RODRIGUEZ*GASPAR,SILVIA.	3: Apellidos y nombre.	4: Nombre y apellidos
         }
  		personalidad2 = formatearCampo("F",1)
- 		titular_cuenta = formatearCampo(paste0(row['Apellido1_Titular'],'*',row['Apellido2_Titular'],',',row['Nombre_Titular']),60)
+ 		titular_cuenta = formatearCampo(toupper(paste0(row['Apellido1_Titular'],'*',row['Apellido2_Titular'],',',row['Nombre_Titular'])),60)
         print(row['Dni_Titular'])
         if ( !is.na(row['Dni_Titular']) ) { 
             cif = formatearCampo(limpiarNIF(row['Dni_Titular']),12)
