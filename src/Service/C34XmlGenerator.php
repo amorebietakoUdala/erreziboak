@@ -49,7 +49,7 @@ class C34XmlGenerator
                        $record['Cuerpo7'];
             $cdtTrfTxInf = $cdtTrfTxInf."\r\n".$this->createCdtTrfTxInf($endToEndId, $amount, $cdtr_name, $cdtrAcct_iban, $concept);
         }
-        $grpHdr = $this->createHeader('001', $totalRecords, $totalAmount);
+        $grpHdr = $this->createHeader('001', $totalRecords, number_format($totalAmount, 2, '.', ''));
         $pmtInf = $this->createPmtInf('001', $cdtTrfTxInf);
         $xml = $this->createXML($grpHdr, $pmtInf);
         $this->saveFile($xml, $file);
@@ -223,7 +223,7 @@ XML;
     {
         $without_extension = pathinfo($fullPath, PATHINFO_FILENAME);
         $directory = pathinfo($fullPath, PATHINFO_DIRNAME);
-        file_put_contents($fullPath.'.c34', $fileContent);
+        file_put_contents($fullPath.'.c34', mb_convert_encoding($fileContent, 'UTF-8', 'Windows-1252'));
         $zipFilename = $directory.'/'.$without_extension.'.zip';
         $zip = new \ZipArchive();
         if (true !== $zip->open($zipFilename, \ZipArchive::CREATE)) {
