@@ -18,15 +18,15 @@
         {% if payments is defined and payments|length > 0 %}
 	    <table id="taula" class="table bootstrap-table mt-3">
 		<thead>
-		    <tr class="row">
-			<th data-sortable="true">{{"payment.timestamp" | trans | capitalize}}</th>
-			<th data-sortable="true" data-width="15%">{{"payment.referenceNumber" | trans | capitalize}}</th>
-			<th data-sortable="true">{{"payment.suffix" | trans | capitalize}}</th>
-			<th data-sortable="true">{{"payment.status" | trans | capitalize}}</th>
-			<th data-sortable="true">{{"payment.quantity" | trans | capitalize}}</th>
-			<th data-sortable="true">{{"payment.nif" | trans | capitalize}}</th>
-			<th data-sortable="true">{{"payment.email" | trans | capitalize}}</th>
-			<th data-sortable="true" data-field="options">{{"table.options" | trans | capitalize}}</th>
+		    <tr>
+                <th data-sortable="true">{{"payment.timestamp" | trans | capitalize}}</th>
+                <th data-sortable="true" data-width="15%">{{"payment.referenceNumber" | trans | capitalize}}</th>
+                <th data-sortable="true">{{"payment.suffix" | trans | capitalize}}</th>
+                <th data-sortable="true">{{"payment.status" | trans | capitalize}}</th>
+                <th data-sortable="true">{{"payment.quantity" | trans | capitalize}}</th>
+                <th data-sortable="true">{{"payment.nif" | trans | capitalize}}</th>
+                <th data-sortable="true">{{"payment.email" | trans | capitalize}}</th>
+                <th data-sortable="true" data-field="options">{{"table.options" | trans | capitalize}}</th>
 		    </tr>
 		</thead>
 		<tbody>
