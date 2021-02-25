@@ -32,38 +32,39 @@ class CsvFormatValidator
     public const INVALID_DNI = 7;
     public const TOO_FEW_FIELDS = 8;
     public const BANK_ACCOUNT_OWNER_REQUIRED = 9;
+    public const INVALID_C19REFERENCE = 10;
 
     public const RETURNS_TYPE = 0;
     public const RECEIPTS_TYPE = 1;
     public const DEBTS_TYPE = 2;
 
     private $validHeaders = [
-            'Nombre',
-            'Apellido1',
-            'Apellido2',
-            'Dni',
-            'Importe',
-            'Cuenta_Corriente',
-            'Nombre_Titular',
-            'Apellido1_Titular',
-            'Apellido2_Titular',
-            'Dni_Titular',
-            'Referencia_Externa',
-            'Presupuesto',
-            'Institucion',
-            'Tipo_Ingreso',
-            'Tributo',
-            'Fecha_Inicio_Pago',
-            'Fecha_Limite_Pago',
-            'Referencia_C19',
-            'Cuerpo1',
-            'Cuerpo2',
-            'Cuerpo3',
-            'Cuerpo4',
-            'Cuerpo5',
-            'Cuerpo6',
-            'Cuerpo7',
-        ];
+        'Nombre',
+        'Apellido1',
+        'Apellido2',
+        'Dni',
+        'Importe',
+        'Cuenta_Corriente',
+        'Nombre_Titular',
+        'Apellido1_Titular',
+        'Apellido2_Titular',
+        'Dni_Titular',
+        'Referencia_Externa',
+        'Presupuesto',
+        'Institucion',
+        'Tipo_Ingreso',
+        'Tributo',
+        'Fecha_Inicio_Pago',
+        'Fecha_Limite_Pago',
+        'Referencia_C19',
+        'Cuerpo1',
+        'Cuerpo2',
+        'Cuerpo3',
+        'Cuerpo4',
+        'Cuerpo5',
+        'Cuerpo6',
+        'Cuerpo7',
+    ];
 
     private $requiredFields = [
         'Dni',
@@ -127,7 +128,7 @@ class CsvFormatValidator
 
     public function validate(UploadedFile $file): ?array
     {
-        $csv = Reader::createFromPath($file->getPath().DIRECTORY_SEPARATOR.$file->getFilename().$file->getExtension(), 'r');
+        $csv = Reader::createFromPath($file->getPath() . DIRECTORY_SEPARATOR . $file->getFilename() . $file->getExtension(), 'r');
         $csv->setHeaderOffset(0); //set the CSV header offset
         $csv->setDelimiter(';');
         $header = $csv->getHeader();
@@ -189,18 +190,24 @@ class CsvFormatValidator
 
     private function getValidationMessage($key, $invalidRow, $invalidValue)
     {
-        return $this->translator->trans($key, [
+        return $this->translator->trans(
+            $key,
+            [
                 '%invalid_row%' => $invalidRow,
                 '%invalid_value%' => $invalidValue,
-            ], 'validators'
+            ],
+            'validators'
         );
     }
 
     private function getHeaderValidationErrorMessage($key, $invalidHeaders)
     {
-        return $this->translator->trans($key, [
-               '%invalid_headers%' => $invalidHeaders,
-            ], 'validators'
+        return $this->translator->trans(
+            $key,
+            [
+                '%invalid_headers%' => $invalidHeaders,
+            ],
+            'validators'
         );
     }
 
@@ -262,9 +269,16 @@ class CsvFormatValidator
             }
             if ((empty($record['Dni_Titular']) || empty($record['Nombre_Titular']) || empty($record['Apellido1_Titular'])) && self::RECEIPTS_TYPE === $this->type) {
                 return [
-                        'status' => self::BANK_ACCOUNT_OWNER_REQUIRED,
-                        'message' => $this->getValidationMessage('bank_account_owner_required', $numFila, null),
-                    ];
+                    'status' => self::BANK_ACCOUNT_OWNER_REQUIRED,
+                    'message' => $this->getValidationMessage('bank_account_owner_required', $numFila, null),
+                ];
+            }
+        }
+
+        if (array_key_exists('Referencia_C19', $record) && self::RECEIPTS_TYPE === $this->type) {
+            $c19ReferenceValidation = $this->validateC19Reference($numFila, array_key_exists('Referencia_C19', $record) ? $record['Referencia_C19'] : null);
+            if (null !== $c19ReferenceValidation) {
+                return $c19ReferenceValidation;
             }
         }
 
@@ -275,9 +289,9 @@ class CsvFormatValidator
     {
         if (in_array('Importe', $this->requiredFields) && !is_numeric($importe) && !is_numeric(str_replace(',', '.', $importe))) {
             return [
-                    'status' => self::IMPORTE_NOT_NUMBERIC,
-                    'message' => $this->getValidationMessage('importe_not_numeric', $numFila, $importe),
-                ];
+                'status' => self::IMPORTE_NOT_NUMBERIC,
+                'message' => $this->getValidationMessage('importe_not_numeric', $numFila, $importe),
+            ];
         }
 
         return null;
@@ -287,9 +301,9 @@ class CsvFormatValidator
     {
         if (in_array('Fecha_Inicio_Pago', $this->requiredFields) && !empty($fechaInicioPago) && !Validaciones::validateDate($fechaInicioPago)) {
             return [
-                    'status' => self::INVALID_DATE,
-                    'message' => $this->getValidationMessage('invalid_date', $numFila, $fechaInicioPago),
-                ];
+                'status' => self::INVALID_DATE,
+                'message' => $this->getValidationMessage('invalid_date', $numFila, $fechaInicioPago),
+            ];
         }
 
         return null;
@@ -299,9 +313,9 @@ class CsvFormatValidator
     {
         if (in_array('Fecha_Limite_Pago', $this->requiredFields) && !empty($fechaInicioPago) && !Validaciones::validateDate($fechaInicioPago)) {
             return [
-                    'status' => self::INVALID_DATE,
-                    'message' => $this->getValidationMessage('invalid_date', $numFila, $fechaInicioPago),
-                ];
+                'status' => self::INVALID_DATE,
+                'message' => $this->getValidationMessage('invalid_date', $numFila, $fechaInicioPago),
+            ];
         }
 
         return null;
@@ -311,9 +325,9 @@ class CsvFormatValidator
     {
         if (!empty($dni) && Validaciones::valida_nif_cif_nie($dni) <= 0) {
             return [
-                    'status' => self::INVALID_DNI,
-                    'message' => $this->getValidationMessage('invalid_dni', $numFila, $dni),
-                ];
+                'status' => self::INVALID_DNI,
+                'message' => $this->getValidationMessage('invalid_dni', $numFila, $dni),
+            ];
         }
 
         return null;
@@ -323,11 +337,22 @@ class CsvFormatValidator
     {
         if (!empty($iban) && (24 != strlen($iban) || !$this->ibanValidator->validateIBAN($iban))) {
             return [
-                    'status' => self::INVALID_BANK_ACCOUNT,
-                    'message' => $this->getValidationMessage('invalid_bank_account', $numFila, $iban),
-                ];
+                'status' => self::INVALID_BANK_ACCOUNT,
+                'message' => $this->getValidationMessage('invalid_bank_account', $numFila, $iban),
+            ];
         }
 
+        return null;
+    }
+
+    private function validateC19Reference($numFila, $c19)
+    {
+        if (!empty($c19) && (12 > strlen($c19) || !is_numeric($c19))) {
+            return [
+                'status' => self::INVALID_C19REFERENCE,
+                'message' => $this->getValidationMessage('invalid_c19_reference', $numFila, $c19),
+            ];
+        }
         return null;
     }
 }

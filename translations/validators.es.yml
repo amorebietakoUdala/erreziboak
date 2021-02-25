@@ -4,7 +4,7 @@
 "too_few_fields": "Faltan los siguientes campos: %invalid_headers%"
 "incorrect_field_names": "Los siguientes campos no son válidos: %invalid_headers%"
 "fields_with_missing_values": "Los siguientes campos contienen valores vacíos que deben ser rellenados: %fields%"
-"importe_not_numeric": "Fila %invalid_row%: El importe '%invalid_value%' no es correcto. La columna \"Importe\" tiene que ser numérica sin símbolos de €. Si lo ha generado con Excel, por favor, ponga la columna \"Importe\" de tipo número en vez de moneda."
+"importe_not_numeric": 'Fila %invalid_row%: El importe ''%invalid_value%'' no es correcto. La columna "Importe" tiene que ser numérica sin símbolos de €. Si lo ha generado con Excel, por favor, ponga la columna "Importe" de tipo número en vez de moneda.'
 "invalid_date": "Fila %invalid_row%: La fecha '%invalid_value%' no es válida"
 "invalid_dni": "Fila %invalid_row%: El DNI, NIE o CIF '%invalid_value%' no es válido"
 "invalid_bank_account": "Fila %invalid_row%: La cuenta corriente '%invalid_value%' no es válida. O no es un IBAN o tiene algún dígito mal."
@@ -12,3 +12,4 @@
 "El email introducido no es válido": "El email introducido no es válido"
 validation.invalidDNI: "El DNI/NIE no es correcto"
 "El número de recibo no es correcto debe ser un número.": "El número de recibo no es correcto debe ser un número."
+"invalid_c19_reference": "Fila %invalid_row%: La referencia C19 '%invalid_value%' no es válida. Debe ser un número y no más de 12 dígitos."

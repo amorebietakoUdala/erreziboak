@@ -214,7 +214,11 @@ crear_datos_domiciliacion <- function (row) {
  		cod_oficina = formatearCampo(vectorIBAN[4], 4)
  		numero_cuenta = formatearCampo(vectorIBAN[6], 10)
  		dc_cuenta = formatearCampo(vectorIBAN[5], 2)
- 		cod_referencia = formatearCampo(sprintf("%12.0f",row["Referencia_C19"]), 12)
+		if ( !is.na(row['Referencia_C19']) && !is.na(strtoi(row['Referencia_C19']))) {
+			cod_referencia = formatearCampo(sprintf("%12.0f",row["Referencia_C19"]), 12)	
+		} else {
+			cod_referencia = formatearCampo("", 12)
+		}
  	} else {
  		indicador_domiciliacion = formatearCampo("0",1) # 0: NO domiciliado, 1: Domiciliado
  		indicador_nombre2 = formatearCampo("",1)
