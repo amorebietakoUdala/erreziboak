@@ -12,4 +12,4 @@
 "El email introducido no es válido": "El email introducido no es válido"
 validation.invalidDNI: "El DNI/NIE no es correcto"
 "El número de recibo no es correcto debe ser un número.": "El número de recibo no es correcto debe ser un número."
-"invalid_c19_reference": "Fila %invalid_row%: La referencia C19 '%invalid_value%' no es válida. Debe ser un número y no más de 12 dígitos."
+"invalid_c19_reference": "Fila %invalid_row%: La referencia C19 '%invalid_value%' no es válida. No puede tener más de 12 dígitos."

@@ -347,7 +347,7 @@ class CsvFormatValidator
 
     private function validateC19Reference($numFila, $c19)
     {
-        if (!empty($c19) && (12 > strlen($c19) || !is_numeric($c19))) {
+        if (!empty($c19) && 12 >= strlen($c19)) {
             return [
                 'status' => self::INVALID_C19REFERENCE,
                 'message' => $this->getValidationMessage('invalid_c19_reference', $numFila, $c19),

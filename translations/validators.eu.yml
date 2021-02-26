@@ -12,4 +12,4 @@
 "El email introducido no es válido": "Sartutako emaila ez da zuzena"
 validation.invalidDNI: "ANA/NAN ez da zuzena"
 "El número de recibo no es correcto debe ser un número.": "Errezibo zenbakia ez da zuzena. Zenbaki bat izan behar da."
-"invalid_c19_reference": "Lerroa %invalid_row%: '%invalid_value%' C19 erreferentzia ez da zuzena. Zenbakia izan behar da eta 12 dijito gehienez."
+"invalid_c19_reference": "Lerroa %invalid_row%: '%invalid_value%' C19 erreferentzia ez da zuzena. 12 hizki gehienez izan behar ditu."
