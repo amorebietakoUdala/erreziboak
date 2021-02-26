@@ -347,7 +347,6 @@ class CsvFormatValidator
 
     private function validateC19Reference($numFila, $c19)
     {
-        dd($c19, !empty($c19) && 12 >= strlen($c19), strlen($c19));
         if (!empty($c19) && 12 < strlen($c19)) {
             return [
                 'status' => self::INVALID_C19REFERENCE,
