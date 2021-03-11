@@ -65,8 +65,10 @@ class RestController extends AbstractController
         } else {
             $data = new ApiResponse('KO', 'Not Found', null);
         }
-
-        $response = new JsonResponse($serializer->serialize($data, 'json'), 200);
+        $serialized = $serializer->serialize($data, 'json');
+        $response = new JsonResponse($serialized, 200, [
+            'Content-Type' => 'application/json;charset=utf-8'
+        ], true);
 
         return $response;
     }
@@ -76,7 +78,7 @@ class RestController extends AbstractController
      */
     public function receiptsConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer)
     {
-        $logger->debug('Origin: '.$request->headers->get('Origin'));
+        $logger->debug('Origin: ' . $request->headers->get('Origin'));
         $logger->debug($request->getContent());
         if ($request->headers->get('Origin') !== $this->getParameter('api_origin')) {
             return new \Symfony\Component\HttpFoundation\Response(null, 401);
@@ -85,7 +87,9 @@ class RestController extends AbstractController
         if (null === $request->getContent() || empty($request->getContent())) {
             return new JsonResponse(
                 $serializer->serialize(
-                        new ApiResponse('NOK', 'No response data found', null), 'json')
+                    new ApiResponse('NOK', 'No response data found', null),
+                    'json'
+                )
             );
         }
         $payment = Payment::createPaymentFromJson($request->getContent());
@@ -98,7 +102,9 @@ class RestController extends AbstractController
         if ($existingPayment) {
             return new JsonResponse(
                 $serializer->serialize(
-                        new ApiResponse('OK', 'Receipt already payd', null), 'json')
+                    new ApiResponse('OK', 'Receipt already payd', null),
+                    'json'
+                )
             );
         }
 
@@ -108,25 +114,31 @@ class RestController extends AbstractController
                 $gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $payment->getQuantity(), $payment->getTimeStamp(), '', 'APP');
                 $em->persist($payment);
                 $em->flush();
-                $logger->debug('Receipt number '.$payment->getReferenceNumber().' successfully paid');
+                $logger->debug('Receipt number ' . $payment->getReferenceNumber() . ' successfully paid');
 
                 return new JsonResponse(
                     $serializer->serialize(
-                        new ApiResponse('OK', 'Receipt succesfully payd', null), 'json')
-                    );
+                        new ApiResponse('OK', 'Receipt succesfully payd', null),
+                        'json'
+                    )
+                );
             } catch (Exception $e) {
                 return new JsonResponse(
                     $serializer->serialize(
-                        new ApiResponse('NOK', 'There was and error during the request: '.$e->getMessage(), null), 'json')
+                        new ApiResponse('NOK', 'There was and error during the request: ' . $e->getMessage(), null),
+                        'json'
+                    )
                 );
             }
         }
 
-        $logger->debug('Receipt number '.$payment->getReferenceNumber().' not found.');
+        $logger->debug('Receipt number ' . $payment->getReferenceNumber() . ' not found.');
 
         return new JsonResponse(
             $serializer->serialize(
-                new ApiResponse('NOK', 'Receipt not found', null), 'json')
+                new ApiResponse('NOK', 'Receipt not found', null),
+                'json'
+            )
         );
     }
 
@@ -155,12 +167,13 @@ class RestController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         /* @var $category Category */
         $category = $em->getRepository(\App\Entity\Category::class)->find($id);
-        $logger->debug('Get category Id: '.$id);
+        $logger->debug('Get category Id: ' . $id);
 
         return new JsonResponse(
             $serializer->serialize(
-                new ApiResponse('OK', 'Category found', $category), 'json'
-                )
+                new ApiResponse('OK', 'Category found', $category),
+                'json'
+            )
         );
     }
 }
