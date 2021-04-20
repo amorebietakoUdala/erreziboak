@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "amorebietakoudala/mipago-bundle",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amorebietakoUdala/mipago-bundle.git",
-                "reference": "47caed883eaa5794786f8a198029cc2d08952e32"
+                "reference": "05614fb92478db2d138be1acee2a6414b4c74777"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amorebietakoUdala/mipago-bundle/zipball/47caed883eaa5794786f8a198029cc2d08952e32",
-                "reference": "47caed883eaa5794786f8a198029cc2d08952e32",
+                "url": "https://api.github.com/repos/amorebietakoUdala/mipago-bundle/zipball/05614fb92478db2d138be1acee2a6414b4c74777",
+                "reference": "05614fb92478db2d138be1acee2a6414b4c74777",
                 "shasum": ""
             },
             "require": {
@@ -27,15 +27,11 @@
                 "symfony/config": "^4.0|^5.0",
                 "symfony/dom-crawler": "^4.0|^5.0",
                 "symfony/http-foundation": "^4.0|^5.0.7",
+                "symfony/http-kernel": "^5.1.5",
                 "symfony/translation": "^4.0|^5.0",
                 "twig/twig": "^2.12|^3.0"
             },
             "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "master-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "MiPago\\Bundle\\": ""
@@ -57,9 +53,9 @@
             ],
             "support": {
                 "issues": "https://github.com/amorebietakoUdala/mipago-bundle/issues",
-                "source": "https://github.com/amorebietakoUdala/mipago-bundle/tree/master-dev"
+                "source": "https://github.com/amorebietakoUdala/mipago-bundle/tree/1.0.5"
             },
-            "time": "2020-04-22T06:04:53+00:00"
+            "time": "2021-04-20T08:40:09+00:00"
         },
         {
             "name": "amorebietakoudala/user-bundle",
