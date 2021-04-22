@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "..\\..\\bundles\\user-bundle"
+		},
+		{
+			"path": "..\\..\\bundles\\mipago-bundle"
 		}
 	],
     "settings": {}

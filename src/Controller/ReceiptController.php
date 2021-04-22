@@ -5,10 +5,12 @@ namespace App\Controller;
 //use App\Entity\Receipt;
 
 use App\Entity\GTWIN\Recibo;
+use App\Entity\GTWIN\ReferenciaC60;
 use App\Entity\Payment;
 use App\Form\ReceiptSearchForm;
 use App\Service\GTWINIntegrationService;
 use App\Validator\IsValidIBANValidator;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Swift_Mailer;
 use Swift_Message;
@@ -24,6 +26,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ReceiptController extends AbstractController
 {
+    /**
+     * @Route("/receipts/findReferenciaC60/{referenciac60}", name="receipt_find_referencia_c60", methods={"GET"})
+     */
+    // public function findReferenciaC60(Request $request, $referenciac60, EntityManagerInterface $oracleEntityManager)
+    // {
+    //     $repo = $oracleEntityManager->getRepository(ReferenciaC60::class);
+    //     $result = $repo->findRecibosByNumeroReferenciaC60($referenciac60);
+    //     dd($result->getRecibo()->getNumeroRecibo());
+    // }
+
     /**
      * @Route("/receipts", name="receipt_find", methods={"GET","POST"})
      */
@@ -86,7 +98,7 @@ class ReceiptController extends AbstractController
             ]);
         }
 
-        $logger->debug('<--findReceiptsAction: Results: '.count($results));
+        $logger->debug('<--findReceiptsAction: Results: ' . count($results));
         $logger->debug('<--findReceiptsAction: End OK');
 
         return $this->render('receipt/list.html.twig', [
@@ -109,7 +121,7 @@ class ReceiptController extends AbstractController
                 'citizen_name' => $receipt->getNombre(),
                 'citizen_surname_1' => $receipt->getApellido1(),
                 'citizen_surname_2' => $receipt->getApellido2(),
-                'citizen_nif' => $receipt->getDni().$receipt->getLetra(),
+                'citizen_nif' => $receipt->getDni() . $receipt->getLetra(),
                 'citizen_phone' => null,
                 'citizen_email' => $receipt->getEmail(),
             ],
@@ -134,8 +146,8 @@ class ReceiptController extends AbstractController
             $logger->debug('<--payForwardedReceiptAction: End Recibo no encontrado');
 
             return $this->render('receipt/list.html.twig', [
-            'form' => $form->createView(),
-            'receipts' => [],
+                'form' => $form->createView(),
+                'receipts' => [],
             ]);
         }
         $logger->debug('-->payForwardedReceiptAction: End OK');
@@ -185,25 +197,28 @@ class ReceiptController extends AbstractController
     {
         $logger->debug('-->ReceiptConfirmationAction: Start');
         $payment = $request->get('payment');
-        $reference_number = intval($payment->getReferenceNumber());
-        $logger->info('ReferenceNumber: '.$reference_number.', Status: '.$payment->getStatus().', PaymentId: '.$payment->getId());
-        $receipt = $gts->findByNumRecibo($payment->getReferenceNumber());
-        $this->__sendConfirmationEmails($receipt, $payment, $mailer);
-        $message = $this->__updatePayment($receipt, $payment, $logger, $gts);
+        $reference_number = intval($payment->getReferenceNumberDC());
+        $logger->info('ReferenceNumberDC: ' . $reference_number . ', Status: ' . $payment->getStatus() . ', PaymentId: ' . $payment->getId());
+        /* A reference number can be specify one or more receipts */
+        $recibos = $gts->findRecibosByNumeroReferenciaC60($payment->getReferenceNumberDC());
+        $this->__sendConfirmationEmails($recibos, $payment, $mailer);
+        $message = $this->__updatePayment($recibos, $payment, $logger, $gts);
         $logger->debug('<--ReceiptConfirmationAction: End OK');
 
         return new JsonResponse($message);
     }
 
-    private function __sendConfirmationEmails(Recibo $receipt, Payment $payment, $mailer)
+    private function __sendConfirmationEmails(array $recibos, Payment $payment, $mailer)
     {
-        if (true === $this->getParameter('mailer_sendConfirmation') && !empty($payment->getEmail())) {
-            $emails = [$payment->getEmail()];
-            $this->__sendMessage('Confirmación del Pago / Ordainketaren konfirmazioa', $receipt, $payment, $emails, $mailer);
-        }
-        if (true === $this->getParameter('mailer_sendBCC')) {
-            $bccs = $this->getParameter('mailer_BCC_email');
-            $this->__sendMessage('Confirmación del Pago / Ordainketaren konfirmazioa', $receipt, $payment, $bccs, $mailer);
+        foreach ($recibos as $recibo) {
+            if (true === $this->getParameter('mailer_sendConfirmation') && !empty($payment->getEmail())) {
+                $emails = [$payment->getEmail()];
+                $this->__sendMessage('Confirmación del Pago / Ordainketaren konfirmazioa', $recibo, $payment, $emails, $mailer);
+            }
+            if (true === $this->getParameter('mailer_sendBCC')) {
+                $bccs = $this->getParameter('mailer_BCC_email');
+                $this->__sendMessage('Confirmación del Pago / Ordainketaren konfirmazioa', $recibo, $payment, $bccs, $mailer);
+            }
         }
     }
 
@@ -224,33 +239,43 @@ class ReceiptController extends AbstractController
         $mailer->send($message);
     }
 
-    private function __updatePayment(Recibo $receipt, Payment $payment, LoggerInterface $logger, GTWINIntegrationService $gts)
+    private function __updatePayment($recibos, Payment $payment, LoggerInterface $logger, GTWINIntegrationService $gts)
     {
-        // No need to update
-        if (null === $receipt->getNumeroRecibo()) {
-            $logger->info('No GTWIN reference to update');
+        $errors = [];
+        $allErrors = [];
+        foreach ($recibos as $recibo) {
+            // No need to update
+            if (null === $recibo->getNumeroRecibo()) {
+                $logger->info('Receipt not found: ' . $recibo->getNumeroRecibo());
+                $errors[] =  'Receipt not found: ' . $recibo->getNumeroRecibo();
+                $allErrors[] = 'Receipt not found: ' . $recibo->getNumeroRecibo();
+            }
+            if ($recibo->getEstaPagado()) {
+                $logger->info('Already paid: ' . $recibo->getNumeroRecibo());
+                $errors[] =  'Already paid: ' . $recibo->getNumeroRecibo();
+                $allErrors[] = 'Already paid: ' . $recibo->getNumeroRecibo();
+            }
 
-            return 'Receipt not found';
+            if (null === $payment) {
+                $logger->info('No payment to update status');
+                $errors[] =  'No payment to update status';
+                $allErrors[] =  'No payment to update status';
+            }
+            if (!$payment->isPaymentSuccessfull()) {
+                $logger->info('Payment not successfull');
+                $errors[] =  'Payment not successfull';
+                $allErrors[] =  'Payment not successfull';
+            }
+            if (count($errors) === 0) {
+                $gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $payment->getQuantity(), $payment->getTimestamp(), $payment->getRegisteredPaymentId());
+            }
+            $errors = [];
         }
-        if ($receipt->getEstaPagado()) {
-            $logger->info('Already paid');
-
-            return 'Already paid';
+        if (count($allErrors) > 0) {
+            return 'NOK';
+        } else {
+            return 'OK';
         }
-
-        if (null === $payment) {
-            $logger->info('No payment to update status');
-
-            return 'No payment to update status';
-        }
-        if (!$payment->isPaymentSuccessfull()) {
-            $logger->info('Payment not successfull');
-
-            return 'Payment not successfull';
-        }
-        $gts->paidWithCreditCard($receipt->getNumeroRecibo(), $receipt->getFraccion(), $payment->getQuantity(), $payment->getTimestamp(), $payment->getRegisteredPaymentId());
-
-        return 'OK';
     }
 
     /**

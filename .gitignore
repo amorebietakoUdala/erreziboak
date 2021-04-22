@@ -17,4 +17,5 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 /public/uploads/
 /R/.gitignore
+/composer.json.dev
 

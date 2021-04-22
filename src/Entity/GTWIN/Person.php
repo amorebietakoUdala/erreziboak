@@ -36,7 +36,7 @@ class Person
 
     public function __toString(): string
     {
-        return $this->numDocumento.strtoupper($this->digitoControl);
+        return $this->numDocumento . strtoupper($this->digitoControl);
     }
 
     public function getId()

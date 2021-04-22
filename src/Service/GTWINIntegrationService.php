@@ -16,6 +16,7 @@ use DateTime;
 use Psr\Log\LoggerInterface;
 use App\Utils\Validaciones;
 use App\Entity\GTWIN\Person;
+use App\Entity\GTWIN\ReferenciaC60;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -27,8 +28,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class GTWINIntegrationService
 {
     const INSTITUCIONES = [
-    '480034' => 'AMOREBIE',
-    '481166' => 'AMETX',
+        '480034' => 'AMOREBIE',
+        '481166' => 'AMETX',
     ];
 
     private $em = null;
@@ -79,6 +80,18 @@ class GTWINIntegrationService
         return $recibo;
     }
 
+    public function findRecibosByNumeroReferenciaC60($referencia): array
+    {
+        $recibos = [];
+        $em = $this->em;
+        /* Can be more than one */
+        $referenciasC60 = $em->getRepository(ReferenciaC60::class)->findByReferenciaC60($referencia);
+        foreach ($referenciasC60 as $referencia) {
+            $recibos[] = $referencia->getRecibo();
+        }
+        return $recibos;
+    }
+
     /**
      * Find a person by dni. DNI must come with it's control digit at the end.
      *
@@ -92,8 +105,8 @@ class GTWINIntegrationService
         $numDocumento = substr($dni, 0, -1);
         $em = $this->em;
         $person = $em->getRepository(Person::class)->findOneBy([
-           'numDocumento' => $this->__fixDniNumber($numDocumento),
-           'digitoControl' => $dc,
+            'numDocumento' => $this->__fixDniNumber($numDocumento),
+            'digitoControl' => $dc,
         ]);
 
         return $person;
@@ -182,10 +195,10 @@ class GTWINIntegrationService
 
     public function paidWithCreditCard($numRecibo, $fraccion, $importe, $timestamp, $registeredPaymentId)
     {
-        $insert_template = 'INSERT INTO EXTCALL (DBOID, ACTIONCODE, INPUTPARS, OUTPUTPARS, OUTPARSMEMO, CALLTYPE, NUMRETRIES, QUEUE, PRIORITY, CALLSTATUS, CALLTIME, PROCTIME, CONFTIME, ORIGINOBJ, DESTOBJ, USERBW, MSGERROR, URLOK, URLOKPARAM, CONFSTATUS) VALUES '.
-                                   "('{DBOID}','OPERACION_PAGO_TAR','<NUMREC>{NUMREC}</NUMREC><NUMFRA>{NUMFRA}</NUMFRA><FECOPE>{FECOPE}</FECOPE><IMPORT>{IMPORT}</IMPORT><RECARG>0</RECARG><INTERE>0</INTERE><COSTAS>0</COSTAS><CAJCOB>9</CAJCOB><NUMAUT>{NUMAUT}</NUMAUT><USERBW>{USERBW}</USERBW>',null, null,0,0,0,0,0,TO_DATE('{CALLTIME}','DD/MM/YYYY HH24:MI:SS'),TO_DATE('{PROCTIME}','DD/MM/YYYY HH24:MI:SS'),null,null,null,'{USERBW}',null,null,null,0)";
-        $time_start = substr(''.floatval(microtime(true)) * 10000, 0, 12);
-        $dboid = str_pad('1235'.$time_start, 21, '0', STR_PAD_RIGHT);
+        $insert_template = 'INSERT INTO EXTCALL (DBOID, ACTIONCODE, INPUTPARS, OUTPUTPARS, OUTPARSMEMO, CALLTYPE, NUMRETRIES, QUEUE, PRIORITY, CALLSTATUS, CALLTIME, PROCTIME, CONFTIME, ORIGINOBJ, DESTOBJ, USERBW, MSGERROR, URLOK, URLOKPARAM, CONFSTATUS) VALUES ' .
+            "('{DBOID}','OPERACION_PAGO_TAR','<NUMREC>{NUMREC}</NUMREC><NUMFRA>{NUMFRA}</NUMFRA><FECOPE>{FECOPE}</FECOPE><IMPORT>{IMPORT}</IMPORT><RECARG>0</RECARG><INTERE>0</INTERE><COSTAS>0</COSTAS><CAJCOB>9</CAJCOB><NUMAUT>{NUMAUT}</NUMAUT><USERBW>{USERBW}</USERBW>',null, null,0,0,0,0,0,TO_DATE('{CALLTIME}','DD/MM/YYYY HH24:MI:SS'),TO_DATE('{PROCTIME}','DD/MM/YYYY HH24:MI:SS'),null,null,null,'{USERBW}',null,null,null,0)";
+        $time_start = substr('' . floatval(microtime(true)) * 10000, 0, 12);
+        $dboid = str_pad('1235' . $time_start, 21, '0', STR_PAD_RIGHT);
         $now = new DateTime();
 
         $params = [
@@ -201,7 +214,6 @@ class GTWINIntegrationService
         ];
         $sql = str_replace(array_keys($params), $params, $insert_template);
         $statement = $this->em->getConnection()->prepare($sql);
-
         return $statement->execute();
     }
 
@@ -241,11 +253,11 @@ class GTWINIntegrationService
             $reference,
             $tipoIngreso->getCodigo(),
             $concept->getEntity(),
-            mb_convert_encoding($exam->getApellido1().'*'.$exam->getApellido2().','.$exam->getNombre(), 'ISO-8859-1'),
+            mb_convert_encoding($exam->getApellido1() . '*' . $exam->getApellido2() . ',' . $exam->getNombre(), 'ISO-8859-1'),
             substr($exam->getDni(), 0, -1),
             substr($exam->getDni(), -1),
             (Validaciones::validar_dni($exam->getDni()) ? 'ES' : 'EX'),
-            str_pad($actualPrice, '15', ' ', STR_PAD_RIGHT).str_pad(mb_convert_encoding($concept->getName(), 'ISO-8859-1'), '80', ' ', STR_PAD_RIGHT),
+            str_pad($actualPrice, '15', ' ', STR_PAD_RIGHT) . str_pad(mb_convert_encoding($concept->getName(), 'ISO-8859-1'), '80', ' ', STR_PAD_RIGHT),
             $tipoIngreso->getTipoDefecto(),
             'P',
             'V',
@@ -317,8 +329,8 @@ class GTWINIntegrationService
 
     private function __insertExternalOperation($operation, $inputparams)
     {
-        $time_start = substr(''.floatval(microtime(true)) * 10000, 0, 12);
-        $dboid = str_pad('1235'.$time_start, 21, '0', STR_PAD_RIGHT);
+        $time_start = substr('' . floatval(microtime(true)) * 10000, 0, 12);
+        $dboid = str_pad('1235' . $time_start, 21, '0', STR_PAD_RIGHT);
         $now = new DateTime();
         $insert_template = "INSERT INTO EXTCALL (DBOID, ACTIONCODE, INPUTPARS, OUTPUTPARS, OUTPARSMEMO, CALLTYPE, NUMRETRIES, QUEUE, PRIORITY, CALLSTATUS, CALLTIME, PROCTIME, CONFTIME, ORIGINOBJ, DESTOBJ, USERBW, MSGERROR, URLOK, URLOKPARAM, CONFSTATUS) VALUES ('{DBOID}','{OPERATION}','{INPUTPARAMS}',null, null,0,0,0,0,0,TO_DATE('{CALLTIME}','DD/MM/YYYY HH24:MI:SS'),TO_DATE('{PROCTIME}','DD/MM/YYYY HH24:MI:SS'),null,null,null,'{USERBW}',null,null,null,0)";
         $params = [

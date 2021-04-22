@@ -243,9 +243,15 @@ class Recibo
 
     private $email;
 
+    /**
+     * @ORM\OneToMany(targetEntity="ReferenciaC60", mappedBy="recibo")
+     */
+    private $referenciasC60;
+
     public function __construct()
     {
         $this->operaciones = new ArrayCollection();
+        $this->referenciasC60 = new ArrayCollection();
     }
 
     public function getId()
@@ -622,7 +628,7 @@ class Recibo
 
     public function __toString()
     {
-        return ''.$this->$numeroRecibo;
+        return '' . $this->$numeroRecibo;
     }
 
     public function getOperaciones()
@@ -718,7 +724,7 @@ class Recibo
 
     public function getEstaPagado()
     {
-        return  (self::ESTADO_COBRADO === $this->estado) || $this->tieneOperacionesDePagoConTarjeta();
+        return (self::ESTADO_COBRADO === $this->estado) || $this->tieneOperacionesDePagoConTarjeta();
     }
 
     public function __toArray()
@@ -752,7 +758,7 @@ class Recibo
             'incluidoEnPlanDePagos' => $this->incluidoEnPlanDePagos,
             'codigoIBAN' => $this->codigoIBAN,
             'tipoIngreso' => $this->tipoIngreso,
-//            'operaciones' => $this->operaciones,
+            //            'operaciones' => $this->operaciones,
         ];
     }
 
@@ -764,6 +770,26 @@ class Recibo
     public function setEmail($email)
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of referenciasC60
+     */
+    public function getReferenciasC60()
+    {
+        return $this->referenciasC60;
+    }
+
+    /**
+     * Set the value of referenciasC60
+     *
+     * @return  self
+     */
+    public function setReferenciasC60($referenciasC60)
+    {
+        $this->referenciasC60 = $referenciasC60;
 
         return $this;
     }

@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "amorebietakoudala/mipago-bundle",
-            "version": "1.0.5",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amorebietakoUdala/mipago-bundle.git",
-                "reference": "05614fb92478db2d138be1acee2a6414b4c74777"
+                "reference": "8bfaa6a7d6c6aa50be00ebadf2b7b142e31e08c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amorebietakoUdala/mipago-bundle/zipball/05614fb92478db2d138be1acee2a6414b4c74777",
-                "reference": "05614fb92478db2d138be1acee2a6414b4c74777",
+                "url": "https://api.github.com/repos/amorebietakoUdala/mipago-bundle/zipball/8bfaa6a7d6c6aa50be00ebadf2b7b142e31e08c1",
+                "reference": "8bfaa6a7d6c6aa50be00ebadf2b7b142e31e08c1",
                 "shasum": ""
             },
             "require": {
@@ -53,9 +53,9 @@
             ],
             "support": {
                 "issues": "https://github.com/amorebietakoUdala/mipago-bundle/issues",
-                "source": "https://github.com/amorebietakoUdala/mipago-bundle/tree/1.0.5"
+                "source": "https://github.com/amorebietakoUdala/mipago-bundle/tree/1.0.6"
             },
-            "time": "2021-04-20T08:40:09+00:00"
+            "time": "2021-04-22T08:36:14+00:00"
         },
         {
             "name": "amorebietakoudala/user-bundle",
