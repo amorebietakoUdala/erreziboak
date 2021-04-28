@@ -11,13 +11,6 @@
 				{{ form_widget(form.referenciaC60, { 'id': 'input-numeroRecibo', 'attr': { 'class' : 'form-control form-control-sm' } }) }}
 				{{ form_errors(form.referenciaC60) }}
 			</div>
-			{% if is_granted('ROLE_ADMIN') %}
-				<div class="col-lg-2 col-md-2 col-sm-6">
-					{{ form_label(form.dni) }}
-					{{ form_widget(form.dni, { 'attr': { 'id': 'input-dni', 'class' : 'form-control form-control-sm' } }) }}
-					<span class='text text-danger'>{{ form_errors(form.dni) }}</span>
-				</div>
-			{% endif %}
 			<div class="col-lg-2 col-md-2 col-sm-6">
 				{{ form_label(form.email) }}
 				{{ form_widget(form.email, { 'attr': { 'id': 'input-email', 'class' : 'form-control form-control-sm' } }) }}

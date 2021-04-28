@@ -11,7 +11,10 @@
 		</div>
 		<div class="container-fluid">
 			{% if references|length > 0 %}
-				<div id="js-payMultiple" data-referencia="{{ referenciaC60 }}" data-concepto="{{ 'messages.many' | trans({'%number%' : references|length}) }}" data-importe="{{ importeTotal|number_format(2, ',', '.') }}" data-ultimodiapago="{{ fechaLimitePagoBanco }}" data-email="{{ email }}"></div>
+				{% if references|length > 1 %}
+					{% set concepto = 'messages.many' | trans({'%number%' : references|length}) %}
+				{% endif %}
+				<div id="js-payMultiple" data-referencia="{{ referenciaC60 }}" data-concepto="{{ concepto }}" data-importe="{{ importeTotal|number_format(2, ',', '.') }}" data-ultimodiapago="{{ fechaLimitePagoBanco }}" data-email="{{ email }}"></div>
 			{% endif %}
 		</div>
 	</main>

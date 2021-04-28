@@ -76,8 +76,12 @@ class ReceiptController extends AbstractController
             } else {
                 $importeTotal = 0;
                 $fechaLimitePagoBanco = $references[0]->getFechaLimitePagoBanco();
+                $concepto = 'many';
+                if (count($references) === 1) {
+                    $concepto = $references[0]->getRecibo()->getTipoIngreso()->getDescripcion();
+                }
                 foreach ($references as $reference) {
-                    $importeTotal += ($reference->getCostas() + $reference->getIntereses() + $reference->getPrincipal());
+                    $importeTotal += ($reference->getCostas() + $reference->getRecargo()  + $reference->getIntereses() + $reference->getPrincipal());
                 }
             }
             if ($fechaLimitePagoBanco < new \DateTime()) {
@@ -93,6 +97,7 @@ class ReceiptController extends AbstractController
                 'importeTotal' => $importeTotal,
                 'referenciaC60' => $data['referenciaC60'],
                 'references' => $references,
+                'concepto' => $concepto,
                 'email' => $data['email'],
             ]);
         }

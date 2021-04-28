@@ -26,15 +26,6 @@ class ReceiptSearchForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // $roles = $options['data']['roles'];
-        // if (in_array('ROLE_ADMIN', $roles)) {
-        //     $builder->add('dni', null, [
-        //         'label' => 'receipt.dni',
-        //         'constraints' => [
-        //             new IsValidDNI(),
-        //         ],
-        //     ]);
-        // }
         $builder->add('referenciaC60', TextType::class, [
             'label' => 'receipt.referenciaC60',
         ]);
