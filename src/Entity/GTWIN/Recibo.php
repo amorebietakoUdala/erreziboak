@@ -599,6 +599,16 @@ class Recibo
         return false;
     }
 
+    public function fechaLimitePagoBancoVencida()
+    {
+        $fechaLimitePagoBanco = clone $this->fechaLimitePagoBanco;
+        if ($fechaLimitePagoBanco->modify('+1 day') < new \DateTime()) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function getNombre()
     {
         $check = mb_check_encoding($this->nombreCompleto, 'ISO-8859-1');
@@ -692,20 +702,23 @@ class Recibo
 
             return $errores;
         }
-        if ($this->periodoPagoVoluntarioVencido()) {
-            $errores[] = 'El periodo de pago voluntario vencido.';
-        }
+        // if ($this->periodoPagoVoluntarioVencido()) {
+        //     $errores[] = 'El periodo de pago voluntario vencido.';
+        // }
         if ($this->estaParalizado()) {
             $errores[] = 'El recibo está paralizado.';
         }
         if ($this->estaTraspasado()) {
             $errores[] = 'El recibo está traspasado.';
         }
-        if ($this->estaDomiciliado()) {
-            $errores[] = 'El recibo está domiciliado.';
-        }
-        if (null !== $this->tipoIngreso && $this->tipoIngreso->esPlanPlago()) {
-            $errores[] = 'El recibo es un plan de pago.';
+        // if ($this->estaDomiciliado()) {
+        //     $errores[] = 'El recibo está domiciliado.';
+        // }
+        // if (null !== $this->tipoIngreso && $this->tipoIngreso->esPlanPlago()) {
+        //     $errores[] = 'El recibo es un plan de pago.';
+        // }
+        if ($this->fechaLimitePagoBancoVencida()) {
+            $errores[] = 'El periodo de pago ha vencido.';
         }
 
         return $errores;

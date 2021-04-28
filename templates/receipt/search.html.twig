@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{'messages.appTitle' | trans }}
+{% endblock %}
+
+{% block body %}
+	<main class="container-fluid">
+		<div class="mt-2">
+			{{ include('receipt/_searchForm.html.twig',{}) }}
+		</div>
+		<div class="container-fluid">
+			{% if references|length > 0 %}
+				<div id="js-payMultiple" data-referencia="{{ referenciaC60 }}" data-concepto="{{ 'messages.many' | trans({'%number%' : references|length}) }}" data-importe="{{ importeTotal|number_format(2, ',', '.') }}" data-ultimodiapago="{{ fechaLimitePagoBanco }}" data-email="{{ email }}"></div>
+			{% endif %}
+		</div>
+	</main>
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('receipt_search') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('receipt_search') }}
+{% endblock %}

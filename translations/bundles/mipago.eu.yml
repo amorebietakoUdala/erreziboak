@@ -1,0 +1,33 @@
+Already payd: Jadanik ordainduta
+"Suffix, not allowed. The allowed suffixes are: %suffixes%": Atzizki okerra. Baimendutako atzizkiak %suffixes% dira
+"Unable to access this page!": "Ezin da orrialde horretara sartu"
+"Payment could not be initialized. Probably incorrect suffix.": "Ordainketa ezin izan hasieratu, ziurrenik atzizkia ez dago zuzena."
+"El pago se ha realizado correctamente": "Ordainketa behar bezala egin da"
+
+payment.from: Noiztik
+payment.to: Nora
+payment.reference_number: Erreferentzia
+btn.search: Bilatu
+
+payment.timestamp: Data
+payment.suffix: Atzizkia
+payment.registered_payment_id: C60
+payment.status: Egoera
+payment.status_message: Mezua
+payment.name: Izena
+payment.surname_1: 1. Abizena
+payment.surname_2: 2. Abizena
+payment.nif: IFZ
+payment.phone: Telefonoa
+payment.email: Emaila
+payment.operation_number: Eragiketa zk.
+payment.quantity: Zenbatekoa
+
+btn.back: Itzuli
+messages.results0: Ez da emaitzarik aurkitu
+label.options: Aukerak
+
+status.any: Edozein
+status.initialized: Hasieratua
+status.paid: Ordaindua
+status.unpaid: Ordaintzeke

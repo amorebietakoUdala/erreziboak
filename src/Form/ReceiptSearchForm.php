@@ -26,32 +26,36 @@ class ReceiptSearchForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('dni', null, [
-                    'label' => 'receipt.dni',
-                    'constraints' => [
-                        new IsValidDNI(),
-                    ],
-                    ]);
-        $builder->add('numeroRecibo', TextType::class, [
-                    'label' => 'receipt.numeroRecibo',
-                    ]);
+        // $roles = $options['data']['roles'];
+        // if (in_array('ROLE_ADMIN', $roles)) {
+        //     $builder->add('dni', null, [
+        //         'label' => 'receipt.dni',
+        //         'constraints' => [
+        //             new IsValidDNI(),
+        //         ],
+        //     ]);
+        // }
+        $builder->add('referenciaC60', TextType::class, [
+            'label' => 'receipt.referenciaC60',
+        ]);
         $builder->add('email', TextType::class, [
-                    'label' => 'receipt.email',
-                    'required' => false,
-                    'constraints' => [
-                        new Email(),
-                    ],
-                    ]);
+            'label' => 'receipt.email',
+            'required' => false,
+            'constraints' => [
+                new Email(),
+            ],
+        ]);
         $builder->add('search', SubmitType::class, [
             'label' => 'receipt.search',
-                ]);
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-        'csrf_protection' => true,
-        'data_class' => Recibo::class,
-    ]);
+            'roles' => null,
+            'csrf_protection' => true,
+            'data_class' => null,
+        ]);
     }
 }

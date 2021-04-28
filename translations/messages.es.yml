@@ -25,13 +25,13 @@ security.login.username: "Nombre de usuario"
 security.login.password: "Password"
 security.login.remember_me: "Recordarme"
 security.login.submit: "Entrar"
-security.login.invalid_credentials: 'El usuario y contraseña no son correctos'
-security.login.system_error: 'Debido a un error del sistema, no se puede comprobar el usuario'
-security.login.remember_password: 'Se te ha olvidado la contraseña?'
+security.login.invalid_credentials: "El usuario y contraseña no son correctos"
+security.login.system_error: "Debido a un error del sistema, no se puede comprobar el usuario"
+security.login.remember_password: "Se te ha olvidado la contraseña?"
 security.password:
-security.resetted: 'La contraseña se ha cambiado'
-btn.loginera.itzuli: 'Volver a la página de login'
-'Credenciales no válidas.': 'Credenciales no válidas.'
+security.resetted: "La contraseña se ha cambiado"
+btn.loginera.itzuli: "Volver a la página de login"
+"Credenciales no válidas.": "Credenciales no válidas."
 
 user.id: "Id"
 user.username: "Nombre de usuario"
@@ -40,7 +40,6 @@ user.roles: "Roles"
 user.email: "Email"
 user.new_password: "Nueva contraseña"
 user.repeat_new_password: "Repetir nueva contraseña"
-
 
 receiptsFile.id: "Id"
 receiptsFile.fileName: "Fichero"
@@ -94,6 +93,7 @@ receipt.apellidos: "Apellidos"
 receipt.ultimoDiaPago: "Limite Pago"
 receipt.payd: "Pagado"
 receipt.email: "Email de notificación"
+receipt.referenciaC60: "Referencia"
 options: "Opciones"
 
 inscription.dni: "DNI"
@@ -145,12 +145,12 @@ choice.pending: "Pendientes"
 choice.validated: "Validados"
 
 btn.cancel: "Volver"
+btn.close: "Cerrar"
 btn.save: "Guardar"
 btn.new: "Nuevo"
 btn.send: "Enviar"
 btn.search: "Buscar"
 btn.pay: "Pagar"
-
 
 messages.confirmacion: "Confirmación"
 messages.confirmationDetail: "¿Esta seguro de que desea eliminar el registro?"
@@ -164,6 +164,10 @@ messages.successfullySended: "El fichero se ha enviado correctamente"
 messages.download: "Puede descargar los ficheros de la siguiente dirección:"
 messages.wait: "La conversión puede tardar unos minutos, espere unos minutos antes de utilizar el enlace."
 messages.fileNotSelected: "Debe seleccionar un fichero"
+messages.numbersWhere: "¿Dónde están los números?"
+messages.many: "Varios (%number%)"
+messages.referenceNotFound: "No se ha encontrado la referencia del recibo"
+messages.fechaLimitePagoBancoVencida: "Ha vencido la fecha límite de pago al banco"
 
 label.quantity: "Tasa"
 

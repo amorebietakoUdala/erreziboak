@@ -80,6 +80,14 @@ class GTWINIntegrationService
         return $recibo;
     }
 
+    public function findReferenciaC60($referenciaC60): array
+    {
+        $em = $this->em;
+        /* Can be more than one */
+        $referenciasC60 = $em->getRepository(ReferenciaC60::class)->findByReferenciaC60($referenciaC60);
+        return $referenciasC60;
+    }
+
     public function findRecibosByNumeroReferenciaC60($referencia): array
     {
         $recibos = [];
@@ -89,6 +97,23 @@ class GTWINIntegrationService
         foreach ($referenciasC60 as $referencia) {
             $recibos[] = $referencia->getRecibo();
         }
+        return $recibos;
+    }
+
+    public function findRecibosByNumeroReferenciaC60AndDni($referenciaC60, $dni): array
+    {
+        $recibos = [];
+        $em = $this->em;
+        $numero = null;
+        $letra = null;
+        if (null !== $dni) {
+            $numero = substr($dni, 0, -1);
+            $letra = substr($dni, -1);
+            $numero = $this->__fixDniNumber($numero);
+        }
+        /* Can be more than one */
+        $recibos = $em->getRepository(Recibo::class)->findByReferenciaC60AndDni($referenciaC60, $numero, $letra);
+        //        dd($recibos);
         return $recibos;
     }
 
@@ -193,12 +218,12 @@ class GTWINIntegrationService
         return $numero;
     }
 
-    public function paidWithCreditCard($numRecibo, $fraccion, $importe, $timestamp, $registeredPaymentId)
+    public function paidWithCreditCard($numRecibo, $fraccion, $importe, $timestamp, $registeredPaymentId, $index)
     {
         $insert_template = 'INSERT INTO EXTCALL (DBOID, ACTIONCODE, INPUTPARS, OUTPUTPARS, OUTPARSMEMO, CALLTYPE, NUMRETRIES, QUEUE, PRIORITY, CALLSTATUS, CALLTIME, PROCTIME, CONFTIME, ORIGINOBJ, DESTOBJ, USERBW, MSGERROR, URLOK, URLOKPARAM, CONFSTATUS) VALUES ' .
             "('{DBOID}','OPERACION_PAGO_TAR','<NUMREC>{NUMREC}</NUMREC><NUMFRA>{NUMFRA}</NUMFRA><FECOPE>{FECOPE}</FECOPE><IMPORT>{IMPORT}</IMPORT><RECARG>0</RECARG><INTERE>0</INTERE><COSTAS>0</COSTAS><CAJCOB>9</CAJCOB><NUMAUT>{NUMAUT}</NUMAUT><USERBW>{USERBW}</USERBW>',null, null,0,0,0,0,0,TO_DATE('{CALLTIME}','DD/MM/YYYY HH24:MI:SS'),TO_DATE('{PROCTIME}','DD/MM/YYYY HH24:MI:SS'),null,null,null,'{USERBW}',null,null,null,0)";
         $time_start = substr('' . floatval(microtime(true)) * 10000, 0, 12);
-        $dboid = str_pad('1235' . $time_start, 21, '0', STR_PAD_RIGHT);
+        $dboid = str_pad('1235' . $time_start . $index, 21, '0', STR_PAD_RIGHT);
         $now = new DateTime();
 
         $params = [

@@ -1,31 +1,52 @@
 <div class="card">
-    <div
-        class="card-body p-1">
-        {{ form_start(form, {'attr': {'class': 'container-fluid form-group',
+	<div class="card-body p-1">
+		{{ form_start(form, {'attr': {'class': 'container-fluid form-group',
 						 'novalidate': 'novalidate'
 						} 
 				       }) }}
-        {{ form_errors(form) }}
-            <div class="form-row align-items-center mb-1">
-                <div class="col-lg-2 col-md-2 col-sm-6">
-                    {{ form_label(form.numeroRecibo) }}
-                    {{ form_widget(form.numeroRecibo, { 'id': 'input-numeroRecibo', 'attr': { 'class' : 'form-control form-control-sm' } }) }}
-                    {{ form_errors(form.numeroRecibo) }}
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-6">
-                    {{ form_label(form.dni) }}
-                    {{ form_widget(form.dni, { 'attr': { 'id': 'input-dni', 'class' : 'form-control form-control-sm' } }) }}
-                    <span class='text text-danger'>{{ form_errors(form.dni) }}</span>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-6">
-                    {{ form_label(form.email) }}
-                    {{ form_widget(form.email, { 'attr': { 'id': 'input-email', 'class' : 'form-control form-control-sm' } }) }}
-                    <span class='text text-danger'>{{ form_errors(form.email) }}</span>
-                </div>                
-                <div class="col-lg-2 col-md-2 col-sm-6">
-                    {{ form_widget(form.search, { 'attr': { 'class' : 'btn btn-primary' } }) }}
-                </div>
-            </div>
-            {{ form_end(form) }}
-    </div>
+		{{ form_errors(form) }}
+		<div class="form-row align-items-center mb-1">
+			<div class="col-lg-2 col-md-2 col-sm-6">
+				{{ form_label(form.referenciaC60) }}
+				{{ form_widget(form.referenciaC60, { 'id': 'input-numeroRecibo', 'attr': { 'class' : 'form-control form-control-sm' } }) }}
+				{{ form_errors(form.referenciaC60) }}
+			</div>
+			{% if is_granted('ROLE_ADMIN') %}
+				<div class="col-lg-2 col-md-2 col-sm-6">
+					{{ form_label(form.dni) }}
+					{{ form_widget(form.dni, { 'attr': { 'id': 'input-dni', 'class' : 'form-control form-control-sm' } }) }}
+					<span class='text text-danger'>{{ form_errors(form.dni) }}</span>
+				</div>
+			{% endif %}
+			<div class="col-lg-2 col-md-2 col-sm-6">
+				{{ form_label(form.email) }}
+				{{ form_widget(form.email, { 'attr': { 'id': 'input-email', 'class' : 'form-control form-control-sm' } }) }}
+				<span class='text text-danger'>{{ form_errors(form.email) }}</span>
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-6">
+				{{ form_widget(form.search, { 'attr': { 'class' : 'btn btn-primary' } }) }}&nbsp;
+				<i id="info-btn" class="fa fa-info btn btn-primary btn-rounded" title="{{ "messages.numbersWhere" | trans }}" data-toggle="modal" data-target="#myModal"></i>
+			</div>
+		</div>
+		{{ form_end(form) }}
+
+		<div id="myModal" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">{{ "messages.numbersWhere" | trans }}</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<img src="{{ asset('build/images/errezibo_goiburua.png') }}"/>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">{{'btn.close' | trans}}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

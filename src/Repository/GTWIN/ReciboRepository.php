@@ -3,8 +3,10 @@
 namespace App\Repository\GTWIN;
 
 use App\Entity\GTWIN\Recibo;
+use App\Entity\GTWIN\ReferenciaC60;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * ReciboRepository.
@@ -33,45 +35,71 @@ class ReciboRepository extends EntityRepository
     public function findByNumReciboDni($numRecibo, $dni, $letra): ?Recibo
     {
         $qb = $this->createQueryBuilder('r')
-        ->andWhere('r.numeroRecibo = :numeroRecibo')
-        ->andWhere('r.dni= :dni')
-        ->andWhere('r.letra= :letra')
-        ->setParameter('numeroRecibo', $numRecibo)
-        ->setParameter('dni', $dni)
-        ->setParameter('letra', $letra);
+            ->andWhere('r.numeroRecibo = :numeroRecibo')
+            ->andWhere('r.dni= :dni')
+            ->andWhere('r.letra= :letra')
+            ->setParameter('numeroRecibo', $numRecibo)
+            ->setParameter('dni', $dni)
+            ->setParameter('letra', $letra);
         $result = $qb->getQuery()->getOneOrNullResult();
 
         return $result;
     }
 
-//    public function findPendienteNumReciboDni($numRecibo, $dni, $letra): ?Recibo
-//    {
-//        $qb = $this->createQueryBuilder('r')
-//        ->andWhere('r.numeroRecibo = :numeroRecibo')
-//        ->andWhere('r.dni= :dni')
-//        ->andWhere('r.letra= :letra')
-//        ->andWhere('r.situacion = :situacion')
-//        ->andWhere('r.estado = :estado')
-//        ->setParameter('numeroRecibo', $numRecibo)
-//        ->setParameter('dni', $dni)
-//        ->setParameter('letra', $letra)
-//        ->setParameter('situacion', 'V')
-//        ->setParameter('estado', 'P');
-//        $result = $qb->getQuery()->getOneOrNullResult();
-//
-//        return $result;
-//    }
+    public function findByReferenciaC60AndDni($referenciaC60, $dni, $letra): array
+    {
+        if (null !== $referenciaC60 && strlen($referenciaC60) !== 12) {
+            $referenciaC60 = str_pad($referenciaC60, 12,  "0", STR_PAD_LEFT);
+        }
+        $qb = $this->createQueryBuilder('r')
+            ->innerjoin('r.referenciasC60', 'c60');
+        if (null !== $referenciaC60) {
+            $qb->andWhere('c60.referenciaC60 = :referenciaC60')
+                ->setParameter('referenciaC60', $referenciaC60);
+        }
+        if (null !== $dni) {
+            $qb->andWhere('r.dni= :dni')
+                ->andWhere('r.letra = :letra')
+                ->setParameter('dni', $dni)
+                ->setParameter('letra', $letra);
+        }
+        $qb->andWhere('c60.indClaveCobroAnulada = :anulada')
+            ->setParameter('anulada', ReferenciaC60::NO_ANULADA)
+            ->orderBy('c60.referenciaC60', 'DESC');
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+
+    //    public function findPendienteNumReciboDni($numRecibo, $dni, $letra): ?Recibo
+    //    {
+    //        $qb = $this->createQueryBuilder('r')
+    //        ->andWhere('r.numeroRecibo = :numeroRecibo')
+    //        ->andWhere('r.dni= :dni')
+    //        ->andWhere('r.letra= :letra')
+    //        ->andWhere('r.situacion = :situacion')
+    //        ->andWhere('r.estado = :estado')
+    //        ->setParameter('numeroRecibo', $numRecibo)
+    //        ->setParameter('dni', $dni)
+    //        ->setParameter('letra', $letra)
+    //        ->setParameter('situacion', 'V')
+    //        ->setParameter('estado', 'P');
+    //        $result = $qb->getQuery()->getOneOrNullResult();
+    //
+    //        return $result;
+    //    }
 
     public function findByNumRecibo($numRecibo): ?Recibo
     {
         $qb = $this->createQueryBuilder('r')
-        ->andWhere('r.numeroRecibo = :numeroRecibo')
-//        ->andWhere('r.situacion = :situacion')
-//        ->andWhere('r.estado = :estado')
-        ->setParameter('numeroRecibo', $numRecibo)
-//        ->setParameter('situacion', 'V')
-//        ->setParameter('estado', 'P')
-            ;
+            ->andWhere('r.numeroRecibo = :numeroRecibo')
+            //        ->andWhere('r.situacion = :situacion')
+            //        ->andWhere('r.estado = :estado')
+            ->setParameter('numeroRecibo', $numRecibo)
+            //        ->setParameter('situacion', 'V')
+            //        ->setParameter('estado', 'P')
+        ;
         $result = $qb->getQuery()->getOneOrNullResult();
 
         return $result;
@@ -85,14 +113,14 @@ class ReciboRepository extends EntityRepository
     public function findByRecibosDni($dni, $letra, $estado = Recibo::ESTADO_PENDIENTE, $situacion = Recibo::SITUACION_VOLUNTARIA)
     {
         $qb = $this->createQueryBuilder('r')
-        ->andWhere('r.dni= :dni')
-        ->andWhere('r.letra= :letra')
-        ->andWhere('r.situacion = :situacion')
-        ->andWhere('r.estado = :estado')
-        ->setParameter('dni', $dni)
-        ->setParameter('letra', $letra)
-        ->setParameter('situacion', $situacion)
-        ->setParameter('estado', $estado);
+            ->andWhere('r.dni= :dni')
+            ->andWhere('r.letra= :letra')
+            ->andWhere('r.situacion = :situacion')
+            ->andWhere('r.estado = :estado')
+            ->setParameter('dni', $dni)
+            ->setParameter('letra', $letra)
+            ->setParameter('situacion', $situacion)
+            ->setParameter('estado', $estado);
         $result = $qb->getQuery()->getResult();
 
         return $result;
