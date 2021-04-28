@@ -42,68 +42,67 @@ class ReceiptController extends AbstractController
     public function findReceiptsAction(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts)
     {
         $logger->debug('-->findReceiptsAction: Start');
-        $user = $this->getUser();
-        $numeroRecibo = $request->get('numeroRecibo');
-        $dni = $request->get('dni');
+        $referenciaC60 = $request->get('referenciaC60');
         $email = $request->get('email');
-        $recibo = new Recibo();
-        $recibo->setDni($dni);
-        $recibo->setNumeroRecibo($numeroRecibo);
-        $form = $this->createForm(ReceiptSearchForm::class, $recibo);
+        $form = $this->createForm(ReceiptSearchForm::class, [
+            'referenciaC60' => $referenciaC60,
+            'email' => $email,
+        ]);
         $results = [];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /* @var $data Recibo */
             $data = $form->getData();
 
-            $email = $recibo->getEmail();
-            if (null === $user && (null === $data->getDni() || null === $data->getNumeroRecibo())) {
-                $this->addFlash('error', 'El dni y el número de recibo son obligatorios');
+            $email = $data['email'];
+            if (null === $data['referenciaC60']) {
+                $this->addFlash('error', 'Debe especificar una referencia');
 
                 return $this->render('receipt/list.html.twig', [
                     'form' => $form->createView(),
                     'receipts' => $results,
                 ]);
             }
-            if (!is_numeric($data->getNumeroRecibo())) {
-                $this->addFlash('error', 'El número de recibo no es correcto debe ser un número.');
+            if (null !== $data['referenciaC60'] && !is_numeric($data['referenciaC60'])) {
+                $this->addFlash('error', 'La refrencia no es correcta debe ser un número.');
 
                 return $this->render('receipt/list.html.twig', [
                     'form' => $form->createView(),
                     'receipts' => $results,
                 ]);
             }
-            /* @var $result Recibo */
-            $result = $gts->findByExample($data);
-            $receipts = [];
-            if (null === $result || 0 === count($result)) {
-                $this->addFlash('error', 'Recibo no encontrado');
-            }
-            if (null !== $result && 1 === count($result)) {
-                $errores = $result[0]->comprobarCondicionesPago();
-                foreach ($errores as $error) {
-                    $this->addFlash('error', $error);
-                }
-                if (0 === sizeof($errores)) {
-                    $receipts = $result;
-                }
+            $references = $gts->findReferenciaC60($data['referenciaC60']);
+            if (null === $references || 0 === count($references)) {
+                $this->addFlash('error', 'messages.referenceNotFound');
             } else {
-                $receipts = $result;
+                $importeTotal = 0;
+                $fechaLimitePagoBanco = $references[0]->getFechaLimitePagoBanco();
+                foreach ($references as $reference) {
+                    $importeTotal += ($reference->getCostas() + $reference->getIntereses() + $reference->getPrincipal());
+                }
             }
-
-            return $this->render('receipt/list.html.twig', [
+            if ($fechaLimitePagoBanco < new \DateTime()) {
+                $this->addFlash('error', 'messages.fechaLimitePagoBancoVencida');
+                return $this->render('receipt/search.html.twig', [
+                    'form' => $form->createView(),
+                    'references' => [],
+                ]);
+            }
+            return $this->render('receipt/search.html.twig', [
                 'form' => $form->createView(),
-                'receipts' => $receipts,
-                'email' => $email,
+                'fechaLimitePagoBanco' => $fechaLimitePagoBanco->format('Y/m/d'),
+                'importeTotal' => $importeTotal,
+                'referenciaC60' => $data['referenciaC60'],
+                'references' => $references,
+                'email' => $data['email'],
             ]);
         }
 
         $logger->debug('<--findReceiptsAction: Results: ' . count($results));
         $logger->debug('<--findReceiptsAction: End OK');
 
-        return $this->render('receipt/list.html.twig', [
+        return $this->render('receipt/search.html.twig', [
             'form' => $form->createView(),
-            'receipts' => $results,
+            'references' => $results,
             'search' => true,
             'readonly' => false,
         ]);
@@ -131,6 +130,33 @@ class ReceiptController extends AbstractController
         return $params;
     }
 
+    private function __createMiPagoParametersArrayFromC60Reference(array $referenciasC60, $email)
+    {
+        $importeTotal = 0;
+        foreach ($referenciasC60 as $referencia) {
+            $importeTotal += $referencia->getRecibo()->getImporteTotal();
+        }
+        $referencia = $referenciasC60[0];
+
+        $params = [
+            'reference_number' => substr($referencia->getReferenciaC60(), 0, -2),
+            'payment_limit_date' => $referencia->getFechaLimitePagoBanco()->format('Ymd'),
+            'sender' => $this->getParameter('mipago.sender'),
+            'suffix' => $referencia->getConcepto(),
+            'quantity' => $importeTotal,
+            'extra' => [
+                // 'citizen_name' => $receipt->getNombre(),
+                // 'citizen_surname_1' => $receipt->getApellido1(),
+                // 'citizen_surname_2' => $receipt->getApellido2(),
+                // 'citizen_nif' => $receipt->getDni() . $receipt->getLetra(),
+                // 'citizen_phone' => null,
+                'citizen_email' => $email,
+            ],
+            'receipt' => $referenciasC60,
+        ];
+        return $params;
+    }
+
     /**
      * @Route("/pay/{receipt}", name="receipt_forwarded_pay", methods={"POST"})
      */
@@ -151,6 +177,38 @@ class ReceiptController extends AbstractController
             ]);
         }
         $logger->debug('-->payForwardedReceiptAction: End OK');
+    }
+
+    /**
+     * @Route("/pay/reference/{referencia}", name="referenciac60_pay", methods={"GET", "POST"}, options={"expose"=true})
+     */
+    public function payForwardedC60ReferenceAction(Request $request, $referencia, LoggerInterface $logger, GTWINIntegrationService $gts)
+    {
+        $logger->debug('-->payForwardedC60ReferenceAction: Start');
+        $email = $request->get('email');
+        $references = $gts->findReferenciaC60($referencia);
+        if (count($references) === 0) {
+            $this->addFlash('error', 'messages.referenceNotFound');
+            return $this->redirectToRoute('receipt_find', [
+                'referenciaC60' => $referencia,
+                'email' => $email,
+            ]);
+        }
+
+        if (null !== $references) {
+            $logger->debug('<--payForwardedC60ReferenceAction: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequestAction');
+
+            return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequestAction', $this->__createMiPagoParametersArrayFromC60Reference($references, $email));
+        } else {
+            $this->addFlash('error', 'Recibo no encontrado');
+            $logger->debug('<--payForwardedC60ReferenceAction: End Recibo no encontrado');
+
+            return $this->redirectToRoute('receipt_find', [
+                'referenciaC60' => $referencia,
+                'email' => $email,
+            ]);
+        }
+        $logger->debug('-->payForwardedC60ReferenceAction: End OK');
     }
 
     /**
@@ -243,6 +301,7 @@ class ReceiptController extends AbstractController
     {
         $errors = [];
         $allErrors = [];
+        $index = 1;
         foreach ($recibos as $recibo) {
             // No need to update
             if (null === $recibo->getNumeroRecibo()) {
@@ -267,9 +326,10 @@ class ReceiptController extends AbstractController
                 $allErrors[] =  'Payment not successfull';
             }
             if (count($errors) === 0) {
-                $gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $payment->getQuantity(), $payment->getTimestamp(), $payment->getRegisteredPaymentId());
+                $gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $recibo->getImporteTotal(), $payment->getTimestamp(), $payment->getRegisteredPaymentId(), $index);
             }
             $errors = [];
+            $index += 1;
         }
         if (count($allErrors) > 0) {
             return 'NOK';

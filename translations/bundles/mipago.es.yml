@@ -1,0 +1,33 @@
+Already payd: Ya pagado
+"Suffix, not allowed. The allowed suffixes are: %suffixes%": "Sufijo no permitido. Los sufijos permitidos son: %suffixes%"
+"Unable to access this page!": "No se puede acceder a esa página"
+"Payment could not be initialized. Probably incorrect suffix.": "No se pudo inicializar el pago posiblemente el sufijo es incorrecto."
+"El pago se ha realizado correctamente": "El pago se ha realizado correctamente"
+
+payment.from: Desde
+payment.to: Hasta
+payment.reference_number: Referencia
+btn.search: Buscar
+
+payment.timestamp: Fecha
+payment.suffix: Sufijo
+payment.registered_payment_id: C60
+payment.status: Estado
+payment.status_message: Mensaje
+payment.name: Nombre
+payment.surname_1: Apellido 1
+payment.surname_2: Apellido 2
+payment.nif: Nif
+payment.phone: Teléfono
+payment.email: Email
+payment.operation_number: Num. operación
+payment.quantity: Importe
+
+btn.back: Volver
+messages.results0: No se han encontrado resultados
+label.options: Opciones
+
+status.any: Cualquiera
+status.initialized: Inicializado
+status.paid: Pagado
+status.unpaid: No pagado

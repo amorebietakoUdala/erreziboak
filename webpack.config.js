@@ -32,7 +32,7 @@ Encore
     .addEntry('receiptsFile_list', './assets/js/receipts_file/list.js')
     .addEntry('returnsFiles_upload', './assets/js/returns_files/upload.js')
     .addEntry('returnsFiles_list', './assets/js/returns_files/list.js')
-    .addEntry('receipt_list', './assets/js/receipt/list.js')
+    .addEntry('receipt_search', './assets/js/receipt/search.js')
     .addEntry('payment_list', './assets/js/payment/list.js')
     .addEntry('payment_show', './assets/js/payment/show.js')
     .addEntry('exam_new', './assets/js/exam/new.js')

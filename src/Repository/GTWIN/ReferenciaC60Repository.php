@@ -19,8 +19,27 @@ class ReferenciaC60Repository extends \Doctrine\ORM\EntityRepository
 
     public function findByReferenciaC60($referenciaC60): array
     {
+        if (strlen($referenciaC60) !== 12) {
+            $referenciaC60 = str_pad($referenciaC60, 12,  "0", STR_PAD_LEFT);
+        }
         $qb = $this->createQueryBuilder('r')
+            ->andWhere('r.indClaveCobroAnulada = :anulada')
+            ->setParameter('anulada', ReferenciaC60::NO_ANULADA)
             ->andWhere('r.referenciaC60 = :referenciaC60')
+            ->setParameter('referenciaC60', $referenciaC60)
+            ->orderBy('r.referenciaC60', 'DESC');
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+    public function findByReferenciaC60AndDni($referenciaC60, $dni, $letra): array
+    {
+        if (strlen($referenciaC60) !== 12) {
+            $referenciaC60 = str_pad($referenciaC60, 12,  "0", STR_PAD_LEFT);
+        }
+        $qb = $this->createQueryBuilder('c60')
+            ->andWhere('c60.referenciaC60 = :referenciaC60')
             ->setParameter('referenciaC60', $referenciaC60);
         $result = $qb->getQuery()->getResult();
 

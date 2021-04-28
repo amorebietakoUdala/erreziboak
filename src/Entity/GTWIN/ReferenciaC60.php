@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ReferenciaC60
 {
+    const ANULADA = "T";
+    const NO_ANULADA = "F";
     /**
      * @var int
      *
@@ -57,16 +59,16 @@ class ReferenciaC60
     private $expediente;
 
     /**
-     * @var string
+     * @var datetime
      *
-     * @ORM\Column(name="C60FECFIN", type="string", nullable=true)
+     * @ORM\Column(name="C60FECFIN", type="datetime", nullable=true)
      */
     private $fechaFinInteres;
 
     /**
-     * @var string
+     * @var datetime
      *
-     * @ORM\Column(name="C60FECLIM", type="string", nullable=false)
+     * @ORM\Column(name="C60FECLIM", type="datetime", nullable=false)
      */
     private $fechaLimitePagoBanco;
 
@@ -268,9 +270,9 @@ class ReferenciaC60
     /**
      * Get the value of fechaFinInteres
      *
-     * @return  string
+     * @return  \Datetime
      */
-    public function getFechaFinInteres(): string
+    public function getFechaFinInteres(): \Datetime
     {
         return $this->fechaFinInteres;
     }
@@ -282,7 +284,7 @@ class ReferenciaC60
      *
      * @return  self
      */
-    public function setFechaFinInteres(string $fechaFinInteres)
+    public function setFechaFinInteres(\Datetime $fechaFinInteres): self
     {
         $this->fechaFinInteres = $fechaFinInteres;
 
@@ -292,9 +294,9 @@ class ReferenciaC60
     /**
      * Get the value of fechaLimitePagoBanco
      *
-     * @return  string
+     * @return  \Datetime
      */
-    public function getFechaLimitePagoBanco(): string
+    public function getFechaLimitePagoBanco(): \Datetime
     {
         return $this->fechaLimitePagoBanco;
     }
@@ -306,7 +308,7 @@ class ReferenciaC60
      *
      * @return  self
      */
-    public function setFechaLimitePagoBanco(string $fechaLimitePagoBanco)
+    public function setFechaLimitePagoBanco(\Datetime $fechaLimitePagoBanco): self
     {
         $this->fechaLimitePagoBanco = $fechaLimitePagoBanco;
 
@@ -539,5 +541,24 @@ class ReferenciaC60
         $this->costas = $costas;
 
         return $this;
+    }
+
+    public function fechaLimitePagoBancoVencida()
+    {
+        $fechaLimitePagoBanco = clone $this->fechaLimitePagoBanco;
+        if ($fechaLimitePagoBanco->modify('+1 day') < new \DateTime()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function esPagable()
+    {
+        if ($this->indClaveCobroAnulada === $this->NO_ANULADA && !$this->fechaLimitePagoBancoVencida()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

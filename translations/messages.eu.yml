@@ -19,20 +19,19 @@ navitem.debts.search: "Bilatu"
 navitem.debts.list: "Zerrenda"
 navitem.convertReturnsFile: "Fitxategien eraldaketa (C34)"
 
-
 link.logout: "Irten"
 
 security.login.username: "Erabiltzailea"
 security.login.password: "Pasahitza"
 security.login.remember_me: "Gogora nazazu"
 security.login.submit: "Sartu"
-security.login.invalid_credentials: 'Erabiltzailea eta pasahitza ez dira zuzenak'
-security.login.system_error: 'Sistema akatsa dela eta, ezin da erabiltzailea konprobatu'
-security.login.remember_password: 'Pasahitza ahaztu al zaizu?'
+security.login.invalid_credentials: "Erabiltzailea eta pasahitza ez dira zuzenak"
+security.login.system_error: "Sistema akatsa dela eta, ezin da erabiltzailea konprobatu"
+security.login.remember_password: "Pasahitza ahaztu al zaizu?"
 security.password:
-security.resetted: 'Pasahitza aldatu egin da'
-btn.loginera.itzuli: 'Login orrialdera itzuli'
-'Credenciales no válidas.': 'Erabiltzailea eta pasahitz ezegokiak.'
+security.resetted: "Pasahitza aldatu egin da"
+btn.loginera.itzuli: "Login orrialdera itzuli"
+"Credenciales no válidas.": "Erabiltzailea eta pasahitz ezegokiak."
 
 user.id: "Id"
 user.username: "Erabiltzailea"
@@ -41,7 +40,6 @@ user.roles: "Rolak"
 user.email: "Emaila"
 user.new_password: "Pasahitz berria"
 user.repeat_new_password: "Errepikatu pasahitza"
-
 
 receiptsFile.id: "Id"
 receiptsFile.fileName: "Fitxategia"
@@ -85,7 +83,6 @@ debtsFile.status.choices.2: "Prozesatuta"
 debtsFile.status.choices.3: "Ezegokia"
 debtsFile.status.choices.4: "Akatsduna"
 
-
 receipt.numeroRecibo: "Errezibo zenbakia"
 receipt.dni: "NAN"
 receipt.search: "Bilatu"
@@ -96,6 +93,7 @@ receipt.apellidos: "Abizenak"
 receipt.ultimoDiaPago: "Ordaintzeko azken eguna"
 receipt.payd: "Ordainduta"
 receipt.email: "Jakinarazpen emaila"
+receipt.referenciaC60: "Erreferentzia"
 options: "Aukerak"
 
 inscription.dni: "NAN"
@@ -146,6 +144,7 @@ choice.pending: "Zain"
 choice.validated: "Balioztatuak"
 
 btn.cancel: "Itzuli"
+btn.close: "Itxi"
 btn.save: "Gorde"
 btn.new: "Berria"
 btn.send: "Bidali"
@@ -164,6 +163,10 @@ messages.successfullySended: "Fitxategia ondo bidali da"
 messages.download: "Fitxategiak hurrengo helbidean jaitsi ditzakezu:"
 messages.wait: "Konbertsioak minutu batzuk iraun ditzake, itxoin apur baten helbidea erabili aurretik."
 messages.fileNotSelected: "Fitxategi bat hautatu behar duzu"
+messages.numbersWhere: "Non daude zenbakiak?"
+messages.many: "Hainbat (%number%)"
+messages.referenceNotFound: "Erreziboaren erreferentzia ez da aurkitu"
+messages.fechaLimitePagoBancoVencida: "Ordaintzeko epea pasatu egin da"
 
 label.quantity: "Tasa"
 
