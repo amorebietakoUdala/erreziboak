@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>
+			{% block title %}{% endblock %}
+		</title>
+		<link rel="icon" type="image/x-icon" href="{{ absolute_url(asset('build/images/favicon.ico')) }}"/>
+		<style>
+			html {
+				margin: 0;
+			}
+			body {
+				font-family: "Times New Roman", serif;
+				margin: 45mm 8mm 2mm;
+				height: 100%;
+			}
+			table {
+				font-size: 12px;
+				width: 100%;
+			}
+			.bordered {
+				border: 1px solid;
+			}
+			th {
+				font-weight: bold;
+			}
+			.logo {
+				height: 90px;
+				width: auto;
+			}
+			h1 {
+				font-size: 15px;
+				height: 90px;
+				width: auto;
+			}
+			.seal {
+				height: 90px;
+				width: auto;
+				margin-top: 100px;
+			}
+			.text-center {
+				text-align: center;
+			}
+			.text-right {
+				text-align: right;
+			}
+			.text-right {
+				text-align: left;
+			}
+			.text-uppercase {
+				text-transform: uppercase;
+			}
+			.width-auto {
+				width: auto;
+			}
+			.justify {
+				text-align: justify;
+				text-justify: auto;
+			}
+		</style>
+	</head>
+	<body id="content">
+		<main>
+			{% block header %}
+				<header>
+					<table>
+						<tbody>
+							<tr>
+								<td style="width: 100px"><img class="logo width-auto" alt="Udaletxearen logoa" src="{{ absolute_url(asset('build/images/logo.jpg')) }}"></td>
+								<td class="width-auto text-center">
+									<br/>
+									<h1>DIRUZAINTZA ETA ZERGA KUDEAKETA Saila<br/>
+										Departamento: TESORERÍA Y GESTIÓN TRIBUTARIA</h1>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</header>
+				<article>
+					<p>&nbsp;</p>
+					<table>
+						<tbody>
+							<tr>
+								<td class="text-center">ORDAINKETETAN EGUNEAN EGOTEA ZIURTATZEN DUEN DILIGENTZIA</td>
+								<td class="text-center">DILIGENCIA ACREDITATIVA DE ESTAR AL CORRIENTE DE PAGO</td>
+							</tr>
+						</tbody>
+					</table>
+					<p>&nbsp;</p>
+					<table>
+						<tbody>
+							<tr>
+								<td class="justify">Udal Diruzaintza - Bilketa Sail honetan dauden datuak azterturik, dokumentu hau luzatzen den egunera arte,</td>
+								<td class="justify">Consultados los datos obrantes en este Departamento de Tesorería-Recaudación Municipal, hasta el día de la fecha de expedición del presente documento,</td>
+							</tr>
+						</tbody>
+					</table>
+					<p>&nbsp;</p>
+					<table>
+						<tbody>
+							<tr>
+								<td class="justify">Azpian identifikatzen diren zergadunek EZ DUTE ORDAINTZEKO DAGOEN  INOLAKO EPEZ KANPOKO ZORRIK:</td>
+								<td class="justify">NO EXISTE PENDIENTE DE PAGO NINGUNA DEUDA VENCIDA de los sujetos pasivos que se identifican a continuación:</td>
+							</tr>
+						</tbody>
+					</table>
+					<p>&nbsp;</p>
+					<table cellpadding="8">
+						<tbody>
+							<tr>
+								<td class="bordered text-center">Identifikazio-dokumentua<br/>Documento de identificación</td>
+								<td class="bordered text-center">ZERGADUNA<br/>SUJETO PASIVO:</td>
+							</tr>
+							<tr>
+								<td class="bordered text-center">{{person.numDocumento}}{{person.digitoControl}}</td>
+								<td class="bordered text-center">{{person.nombreCompleto}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<p>&nbsp;</p>
+					<table>
+						<tbody>
+							<tr>
+								<td class="justify">Eta horrela adierazten da, dagokion ondorio eta ezagutza izan ditzan. Amorebieta-Etxanon:</td>
+								<td class="justify">Lo que se hace constar para su conocimiento y efectos oportunos. En Amorebieta-Etxano:</td>
+							</tr>
+							<tr>
+								<td colspan="2" style="height: 20px">&nbsp;</td>
+							</tr>
+							<tr>
+								<td colspan="2" class="text-center">{{ "now"|date("Y-m-d") }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</article>
+				<p>&nbsp;</p>
+				<footer>
+					<p class="text-center">UDAL DIRUZAINTZAK,<br/>LA TESORERÍA MUNICIPAL,</p>
+					<div class="text-center"><img style="height: 80px;" alt="Amorebieta-Etxanoko Zigilua" src="{{ absolute_url(asset('build/images/zigilua.jpg')) }}"></div>
+				</footer>
+			{% endblock %}
+			{% block body %}{% endblock %}
+		</main>
+		{% block oharra %}{% endblock %}
+	</body>
+</html>

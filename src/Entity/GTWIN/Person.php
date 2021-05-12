@@ -34,6 +34,34 @@ class Person
      */
     private $digitoControl;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="NAME", type="string", nullable=false)
+     */
+    private $nombre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="FAMILYNAME", type="string", nullable=false)
+     */
+    private $apellido1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SECONDNAME", type="string", nullable=false)
+     */
+    private $apellido2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="FULLNAME", type="string", nullable=false)
+     */
+    private $nombreCompleto;
+
     public function __toString(): string
     {
         return $this->numDocumento . strtoupper($this->digitoControl);
@@ -71,6 +99,105 @@ class Person
     public function setDigitoControl($digitoControl)
     {
         $this->digitoControl = $digitoControl;
+
+        return $this;
+    }
+
+
+
+
+    /**
+     * Get the value of nombre
+     *
+     * @return  string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set the value of nombre
+     *
+     * @param  string  $nombre
+     *
+     * @return  self
+     */
+    public function setNombre(string $nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of apellido1
+     *
+     * @return  string
+     */
+    public function getApellido1()
+    {
+        return $this->apellido1;
+    }
+
+    /**
+     * Set the value of apellido1
+     *
+     * @param  string  $apellido1
+     *
+     * @return  self
+     */
+    public function setApellido1(string $apellido1)
+    {
+        $this->apellido1 = $apellido1;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of apellido2
+     *
+     * @return  string
+     */
+    public function getApellido2()
+    {
+        return $this->apellido2;
+    }
+
+    /**
+     * Set the value of apellido2
+     *
+     * @param  string  $apellido2
+     *
+     * @return  self
+     */
+    public function setApellido2(string $apellido2)
+    {
+        $this->apellido2 = $apellido2;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nombreCompleto
+     *
+     * @return  string
+     */
+    public function getNombreCompleto()
+    {
+        return $this->nombreCompleto;
+    }
+
+    /**
+     * Set the value of nombreCompleto
+     *
+     * @param  string  $nombreCompleto
+     *
+     * @return  self
+     */
+    public function setNombreCompleto(string $nombreCompleto)
+    {
+        $this->nombreCompleto = $nombreCompleto;
 
         return $this;
     }

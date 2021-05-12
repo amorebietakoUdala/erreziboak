@@ -127,3 +127,5 @@ services:
 
   # After 5.1 needs to be defined explicitly if you want autowiring.
   Symfony\Component\DependencyInjection\ContainerInterface: "@service_container"
+
+  Qipsius\TCPDFBundle\Controller\TCPDFController: "@qipsius.tcpdf"

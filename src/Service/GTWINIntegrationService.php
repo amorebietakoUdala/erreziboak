@@ -176,7 +176,7 @@ class GTWINIntegrationService
      *
      * @param string $dni
      *
-     * @return float
+     * @return string
      */
     public function findDeudaTotal($dni)
     {
