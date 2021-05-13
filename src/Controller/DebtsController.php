@@ -178,15 +178,22 @@ class DebtsController extends AbstractController
 
         if ($deuda === "0") {
             $person = $gts->findByDni($dni);
+            if (null === $person) {
+                return $this->json([
+                    'dni' => $dni,
+                    'msg' => 'Ez da herritarra aurkitu',
+                ]);
+            }
             $html =  $this->renderView('debts_files/pdf.html.twig', [
                 'person' => $person
             ]);
             $this->createPdf($html, $pdfService);
-
-            return new Response($html);
+            //            return new Response($html);
         }
-
-        return new Response('You got debts');
+        return $this->json([
+            'dni' => $dni,
+            'msg' => 'Zorrak dauzka',
+        ]);
     }
 
     private function createPdf($html, TCPDFController $pdfService)

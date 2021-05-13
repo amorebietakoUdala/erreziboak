@@ -133,7 +133,6 @@ class GTWINIntegrationService
             'numDocumento' => $this->__fixDniNumber($numDocumento),
             'digitoControl' => $dc,
         ]);
-
         return $person;
     }
 
