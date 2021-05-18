@@ -293,7 +293,7 @@ class ReceiptController extends AbstractController
         $message->setFrom($from);
         $message->setTo($emails);
         $message->setBody(
-            $this->renderView('/receipt/PaymentConfirmationMail.html.twig', [
+            $this->renderView('receipt/PaymentConfirmationMail.html.twig', [
                 'receipt' => $receipt,
                 'payment' => $payment,
             ])

@@ -1,65 +1,66 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{'messages.appTitle' | trans }}
+	{{'messages.appTitle' | trans }}
 {% endblock %}
 
 {% block error %}
-    {{ exception.message | trans({'%suffixes%' : suffixes},"mipago", app.request.locale) }}
+	{{ exception.message | trans({'%suffixes%' : suffixes},"mipago", app.request.locale) }}
 {% endblock %}
 
 {% block body %}
-    <main class="container-fluid">
-	<div class="mt-2">
-	{{ include('/payment/_form.html.twig',{
+	<main class="container-fluid">
+		<div class="mt-2">
+			{{ include('payment/_form.html.twig',{
 			    }) }}
-	</div>
-	<div class="container-fluid">
-        {% if payments is defined and payments|length > 0 %}
-	    <table id="taula" class="table bootstrap-table mt-3">
-		<thead>
-		    <tr>
-                <th data-sortable="true">{{"payment.timestamp" | trans | capitalize}}</th>
-                <th data-sortable="true" data-width="15%">{{"payment.referenceNumber" | trans | capitalize}}</th>
-                <th data-sortable="true">{{"payment.suffix" | trans | capitalize}}</th>
-                <th data-sortable="true">{{"payment.status" | trans | capitalize}}</th>
-                <th data-sortable="true">{{"payment.quantity" | trans | capitalize}}</th>
-                <th data-sortable="true">{{"payment.nif" | trans | capitalize}}</th>
-                <th data-sortable="true">{{"payment.email" | trans | capitalize}}</th>
-                <th data-sortable="true" data-field="options">{{"table.options" | trans | capitalize}}</th>
-		    </tr>
-		</thead>
-		<tbody>
-			{% for payment in payments %}
-			<tr>
-			    <td>{{payment.timestamp | date('Y-m-d H:i:s') }}</td>
-			    <td>{{payment.referenceNumber }}</td>
-			    <td data-width="15%">{{payment.suffix }}</td>
-			    <td>{{ constant('App\\Entity\\Payment::PAYMENT_STATUS_DESCRIPTION')[payment.status] | trans | capitalize }}</td>
-			    <td>{{payment.quantity}}</td>
-			    <td>{{payment.nif}}</td>
-			    <td>{{payment.email}}</td>
-			    <td><a href="{{path("admin_show_payment", {
-				    'id': payment.id,
-				})}}"><i class="fa fa-eye"></i></a>
-			    </td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	    </table>
-        {% else %}
-            <div class="mt-2 p-2 border border-black text-center bg-light">{{"messages.results0" | trans }}</div>
-        {% endif %}
-	</div>
-    </main>
+		</div>
+		<div class="container-fluid">
+			{% if payments is defined and payments|length > 0 %}
+				<table id="taula" class="table bootstrap-table mt-3">
+					<thead>
+						<tr>
+							<th data-sortable="true">{{"payment.timestamp" | trans | capitalize}}</th>
+							<th data-sortable="true" data-width="15%">{{"payment.referenceNumber" | trans | capitalize}}</th>
+							<th data-sortable="true">{{"payment.suffix" | trans | capitalize}}</th>
+							<th data-sortable="true">{{"payment.status" | trans | capitalize}}</th>
+							<th data-sortable="true">{{"payment.quantity" | trans | capitalize}}</th>
+							<th data-sortable="true">{{"payment.nif" | trans | capitalize}}</th>
+							<th data-sortable="true">{{"payment.email" | trans | capitalize}}</th>
+							<th data-sortable="true" data-field="options">{{"table.options" | trans | capitalize}}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for payment in payments %}
+							<tr>
+								<td>{{payment.timestamp | date('Y-m-d H:i:s') }}</td>
+								<td>{{payment.referenceNumber }}</td>
+								<td data-width="15%">{{payment.suffix }}</td>
+								<td>{{ constant('App\\Entity\\Payment::PAYMENT_STATUS_DESCRIPTION')[payment.status] | trans | capitalize }}</td>
+								<td>{{payment.quantity}}</td>
+								<td>{{payment.nif}}</td>
+								<td>{{payment.email}}</td>
+								<td>
+									<a href="{{path("admin_show_payment", { 'id': payment.id, })}}">
+										<i class="fa fa-eye"></i>
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+				<div class="mt-2 p-2 border border-black text-center bg-light">{{"messages.results0" | trans }}</div>
+			{% endif %}
+		</div>
+	</main>
 {% endblock body %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('payment_list') }}
+	{{ parent() }}
+	{{ encore_entry_link_tags('payment_list') }}
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('payment_list') }}
+	{{ parent() }}
+	{{ encore_entry_script_tags('payment_list') }}
 {% endblock %}

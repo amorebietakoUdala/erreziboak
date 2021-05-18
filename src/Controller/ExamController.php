@@ -26,9 +26,9 @@ class ExamController extends AbstractController
     {
         $logger->debug('-->newExamAction: Start');
         $form = $this->createForm(ExamInscriptionTypeForm::class, new ExamInscription(), [
-        'readonly' => false,
-        'locale' => $request->getLocale(),
-    ]);
+            'readonly' => false,
+            'locale' => $request->getLocale(),
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /* @var $exam ExamInscription */
@@ -44,25 +44,25 @@ class ExamController extends AbstractController
                     'receipt' => $recibo,
                 ]);
             } catch (Exception $e) {
-                $logger->debug('-->newExamAction: Error: '.$e->getMessage());
+                $logger->debug('-->newExamAction: Error: ' . $e->getMessage());
                 $this->addFlash('error', $e->getMessage());
             }
         }
         $logger->debug('-->newExamAction: End');
 
-        return $this->render('/exam/new.html.twig', [
-        'form' => $form->createView(),
-        'readonly' => false,
-    ]);
+        return $this->render('exam/new.html.twig', [
+            'form' => $form->createView(),
+            'readonly' => false,
+        ]);
     }
 
     private function createReceiptFromInscriptionData(ExamInscription $exam)
     {
         $recibo = new Recibo();
         $recibo->setDni(strtoupper($exam->getDni()));
-        $recibo->setNombreCompleto(strtoupper($exam->getNombre().'*'.$exam->getApellido1().'*'.$exam->getApellido2()));
+        $recibo->setNombreCompleto(strtoupper($exam->getNombre() . '*' . $exam->getApellido1() . '*' . $exam->getApellido2()));
         $recibo->setEmail($exam->getEmail());
-//        $recibo->setTelefono($exam->getTelefono());
+        //        $recibo->setTelefono($exam->getTelefono());
 
         return $recibo;
     }

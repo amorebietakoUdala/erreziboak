@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Upload File{% endblock %}
+{% block title %}Upload File
+{% endblock %}
 
 {% block body %}
-    <main class="container-fluid" >
-		{{ include ('/debts_files/_form.html.twig') }}
-    </main>
+	<main class="container-fluid">
+		{{ include ('debts_files/_form.html.twig') }}
+	</main>
 {% endblock %}
 
 {% block stylesheets %}
