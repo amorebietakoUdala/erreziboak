@@ -26,8 +26,8 @@ class CategoryController extends AbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(CategoryTypeForm::class, new Category(), [
-        'readonly' => false,
-    ]);
+            'readonly' => false,
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $category = $form->getData();
@@ -39,10 +39,10 @@ class CategoryController extends AbstractController
         }
         $logger->debug('<--newAction: End OK');
 
-        return $this->render('/category/new.html.twig', [
-        'form' => $form->createView(),
-        'readonly' => false,
-    ]);
+        return $this->render('category/new.html.twig', [
+            'form' => $form->createView(),
+            'readonly' => false,
+        ]);
     }
 
     /**
@@ -54,8 +54,8 @@ class CategoryController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $categorys = $em->getRepository(Category::class)->findAll();
 
-        return $this->render('/category/list.html.twig', [
-        'categorys' => $categorys,
+        return $this->render('category/list.html.twig', [
+            'categorys' => $categorys,
         ]);
     }
 
@@ -67,14 +67,14 @@ class CategoryController extends AbstractController
         $logger->debug('-->showAction: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
         $form = $this->createForm(CategoryTypeForm::class, $id, [
-        'readonly' => true,
-    ]);
+            'readonly' => true,
+        ]);
         $logger->debug('<--showAction: End OK');
 
-        return $this->render('/category/show.html.twig', [
-        'form' => $form->createView(),
-        'readonly' => true,
-    ]);
+        return $this->render('category/show.html.twig', [
+            'form' => $form->createView(),
+            'readonly' => true,
+        ]);
     }
 
     /**
@@ -85,8 +85,8 @@ class CategoryController extends AbstractController
         $logger->debug('-->CategoryEditAction: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
         $form = $this->createForm(CategoryTypeForm::class, $id, [
-        'readonly' => false,
-    ]);
+            'readonly' => false,
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $category = $form->getData();
@@ -97,11 +97,11 @@ class CategoryController extends AbstractController
         }
         $logger->debug('<--CategoryEditAction: End OK');
 
-        return $this->render('/category/edit.html.twig', [
-        'form' => $form->createView(),
-        'readonly' => false,
-        'new' => false,
-    ]);
+        return $this->render('category/edit.html.twig', [
+            'form' => $form->createView(),
+            'readonly' => false,
+            'new' => false,
+        ]);
     }
 
     /**
