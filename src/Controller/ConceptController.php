@@ -29,8 +29,8 @@ class ConceptController extends AbstractController
         $logger->debug('-->newAction: Start');
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(ConceptTypeForm::class, new Concept(), [
-        'readonly' => false,
-    ]);
+            'readonly' => false,
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Concept $concept */
@@ -43,10 +43,10 @@ class ConceptController extends AbstractController
         }
         $logger->debug('<--newAction: End OK');
 
-        return $this->render('/concept/new.html.twig', [
-        'form' => $form->createView(),
-        'readonly' => false,
-    ]);
+        return $this->render('concept/new.html.twig', [
+            'form' => $form->createView(),
+            'readonly' => false,
+        ]);
     }
 
     /**
@@ -59,8 +59,8 @@ class ConceptController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $concepts = $em->getRepository(Concept::class)->findAll();
 
-        return $this->render('/concept/list.html.twig', [
-        'concepts' => $concepts,
+        return $this->render('concept/list.html.twig', [
+            'concepts' => $concepts,
         ]);
     }
 
@@ -73,14 +73,14 @@ class ConceptController extends AbstractController
         $logger->debug('-->showAction: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
         $form = $this->createForm(ConceptTypeForm::class, $id, [
-        'readonly' => true,
-    ]);
+            'readonly' => true,
+        ]);
         $logger->debug('<--showAction: End OK');
 
-        return $this->render('/concept/show.html.twig', [
-        'form' => $form->createView(),
-        'readonly' => true,
-    ]);
+        return $this->render('concept/show.html.twig', [
+            'form' => $form->createView(),
+            'readonly' => true,
+        ]);
     }
 
     /**
@@ -92,8 +92,8 @@ class ConceptController extends AbstractController
         $logger->debug('-->ConceptEditAction: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
         $form = $this->createForm(ConceptTypeForm::class, $id, [
-        'readonly' => false,
-    ]);
+            'readonly' => false,
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $concept = $form->getData();
@@ -104,11 +104,11 @@ class ConceptController extends AbstractController
         }
         $logger->debug('<--ConceptEditAction: End OK');
 
-        return $this->render('/concept/edit.html.twig', [
-        'form' => $form->createView(),
-        'readonly' => false,
-        'new' => false,
-    ]);
+        return $this->render('concept/edit.html.twig', [
+            'form' => $form->createView(),
+            'readonly' => false,
+            'new' => false,
+        ]);
     }
 
     /**
