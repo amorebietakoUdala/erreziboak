@@ -3,7 +3,7 @@ import '../../css/payment/list.scss';
 import $ from 'jquery';
 import 'bootstrap-table';
 import 'bootstrap-table/dist/extensions/export/bootstrap-table-export'
-import 'tableexport.jquery.plugin/tableExport';
+import 'tableexport.jquery.plugin/tableExport.min';
 import 'bootstrap-table/dist/locale/bootstrap-table-es-ES';
 import 'bootstrap-table/dist/locale/bootstrap-table-eu-EU';
 import 'pc-bootstrap4-datetimepicker';
