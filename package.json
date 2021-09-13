@@ -40,7 +40,6 @@
         "ssri": "^8.0.1",
         "sweetalert2": "^9.7.1",
         "tableexport.jquery.plugin": "^1.10.15",
-        "websocket-extensions": "^0.1.4",
-        "xmldom": "^0.5.0"
+        "websocket-extensions": "^0.1.4"
     }
 }
