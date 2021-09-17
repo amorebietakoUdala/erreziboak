@@ -257,9 +257,6 @@
             "config/packages/dev/debug.yaml"
         ]
     },
-    "symfony/debug-pack": {
-        "version": "v1.0.8"
-    },
     "symfony/dependency-injection": {
         "version": "v5.0.4"
     },
@@ -376,8 +373,8 @@
     "symfony/options-resolver": {
         "version": "v5.0.4"
     },
-    "symfony/orm-pack": {
-        "version": "v1.0.7"
+    "symfony/password-hasher": {
+        "version": "v5.3.7"
     },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.18.1"
@@ -400,11 +397,11 @@
     "symfony/polyfill-php80": {
         "version": "v1.18.0"
     },
+    "symfony/polyfill-php81": {
+        "version": "v1.23.0"
+    },
     "symfony/process": {
         "version": "v5.0.4"
-    },
-    "symfony/profiler-pack": {
-        "version": "v1.0.4"
     },
     "symfony/property-access": {
         "version": "v5.0.4"

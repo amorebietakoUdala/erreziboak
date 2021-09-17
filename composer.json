@@ -6,7 +6,12 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "amorebietakoudala/mipago-bundle": "^1.0",
-        "amorebietakoudala/user-bundle": "^1.1",
+        "amorebietakoudala/user-bundle": "^1.1.5",
+        "composer/package-versions-deprecated": "1.11.99.4",
+        "doctrine/common": "^2",
+        "doctrine/doctrine-bundle": "^2",
+        "doctrine/doctrine-migrations-bundle": "^2",
+        "doctrine/orm": "^2",
         "friendsofsymfony/jsrouting-bundle": "^2.5",
         "globalcitizen/php-iban": "^4.0",
         "jms/serializer-bundle": "^3.5",
@@ -26,7 +31,6 @@
         "symfony/ldap": "5.*",
         "symfony/mime": "5.*",
         "symfony/monolog-bundle": "^3.5",
-        "symfony/orm-pack": "^1.0",
         "symfony/process": "5.*",
         "symfony/routing": "5.*",
         "symfony/security-bundle": "5.*",
@@ -42,9 +46,10 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "fzaninotto/faker": "^1.9",
-        "symfony/debug-pack": "^1.0",
+        "symfony/debug-bundle": "^5.3",
         "symfony/maker-bundle": "^1.14",
-        "symfony/profiler-pack": "^1.0"
+        "symfony/stopwatch": "^5.3",
+        "symfony/web-profiler-bundle": "^5.3"
     },
     "config": {
         "preferred-install": {
