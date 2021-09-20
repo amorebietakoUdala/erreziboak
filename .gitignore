@@ -18,4 +18,5 @@ yarn-error.log
 /public/uploads/
 /R/.gitignore
 /composer.json.dev
+/composer.json.prod
 

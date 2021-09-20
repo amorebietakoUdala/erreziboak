@@ -63,7 +63,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../bundles/user-bundle",
-                "reference": "f16852c630bae317fce289e46899d22cb6074147"
+                "reference": "fea1d4f9f577a3956c5e2cc0237d340e8289638d"
             },
             "require": {
                 "doctrine/doctrine-bundle": "^2.1",
