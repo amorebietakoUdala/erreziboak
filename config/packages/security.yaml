@@ -1,5 +1,7 @@
 security:
+    # https://symfony.com/doc/current/security/authenticator_manager.html
     enable_authenticator_manager: true
+    # https://symfony.com/doc/current/security.html#c-hashing-passwords
     password_hashers:
         legacy_bcrypt:
             algorithm: bcrypt
@@ -8,6 +10,8 @@ security:
             algorithm: auto
             migrate_from: 
                 - legacy_bcrypt
+
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
