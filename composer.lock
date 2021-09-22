@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "545eb0b8bd6a1770bf9201ec225c237d",
+    "content-hash": "d2bb2d4951c0f76ffb09c89a438aa101",
     "packages": [
         {
             "name": "amorebietakoudala/mipago-bundle",
@@ -59,11 +59,17 @@
         },
         {
             "name": "amorebietakoudala/user-bundle",
-            "version": "dev-SF5.3",
+            "version": "1.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/amorebietakoUdala/user-bundle.git",
+                "reference": "590d0677da5a1385c14ca9ca8efee367e1d3d31d"
+            },
             "dist": {
-                "type": "path",
-                "url": "../../bundles/user-bundle",
-                "reference": "fea1d4f9f577a3956c5e2cc0237d340e8289638d"
+                "type": "zip",
+                "url": "https://api.github.com/repos/amorebietakoUdala/user-bundle/zipball/590d0677da5a1385c14ca9ca8efee367e1d3d31d",
+                "reference": "590d0677da5a1385c14ca9ca8efee367e1d3d31d",
+                "shasum": ""
             },
             "require": {
                 "doctrine/doctrine-bundle": "^2.1",
@@ -84,11 +90,7 @@
                     "AMREU\\UserBundle\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "AMREU\\UserBundle\\Tests\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Amorebietako Udala",
@@ -96,9 +98,11 @@
                 }
             ],
             "description": "AmorebietakoUdala erabiltzaile bundlela",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/amorebietakoUdala/user-bundle/issues",
+                "source": "https://github.com/amorebietakoUdala/user-bundle/tree/1.1.7"
+            },
+            "time": "2021-09-20T11:44:10+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
@@ -8863,9 +8867,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "amorebietakoudala/user-bundle": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
