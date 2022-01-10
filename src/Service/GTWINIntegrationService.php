@@ -40,7 +40,9 @@ class GTWINIntegrationService
     {
         $this->em = $em;
         $this->logger = $logger;
-        $this->client = $client;
+        $this->client = $client->withOptions([
+            'verify_peer' => false            
+        ]);
     }
 
     public function findByExample(Recibo $criteria)
