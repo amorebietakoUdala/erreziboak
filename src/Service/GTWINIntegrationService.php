@@ -41,7 +41,8 @@ class GTWINIntegrationService
         $this->em = $em;
         $this->logger = $logger;
         $this->client = $client->withOptions([
-            'verify_peer' => false            
+            'verify_peer' => false,
+            'verify_host' => false
         ]);
     }
 
