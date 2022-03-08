@@ -78,11 +78,11 @@ class RestController extends AbstractController
      */
     public function receiptsConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer)
     {
-        $logger->debug('Origin: ' . $request->headers->get('Origin'));
-        $logger->debug($request->getContent());
-        if ($request->headers->get('Origin') !== $this->getParameter('api_origin')) {
-            return new \Symfony\Component\HttpFoundation\Response(null, 401);
-        }
+        // $logger->debug('Origin: ' . $request->headers->get('Origin'));
+        // $logger->debug($request->getContent());
+        // if ($request->headers->get('Origin') !== $this->getParameter('api_origin')) {
+        //     return new \Symfony\Component\HttpFoundation\Response(null, 401);
+        // }
 
         if (null === $request->getContent() || empty($request->getContent())) {
             return new JsonResponse(
@@ -111,7 +111,7 @@ class RestController extends AbstractController
         $recibo = $gts->findByNumReciboDni($payment->getReferenceNumber(), $payment->getNif());
         if (null !== $recibo) {
             try {
-                $gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $payment->getQuantity(), $payment->getTimeStamp(), '', 'APP');
+                $gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $payment->getQuantity(), $payment->getTimeStamp(), '', 1);
                 $em->persist($payment);
                 $em->flush();
                 $logger->debug('Receipt number ' . $payment->getReferenceNumber() . ' successfully paid');
