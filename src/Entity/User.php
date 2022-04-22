@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use AMREU\UserBundle\Model\UserInterface as AMREUserInterface;
 use AMREU\UserBundle\Model\User as BaseUser;
@@ -55,4 +57,44 @@ class User extends BaseUser implements AMREUserInterface, PasswordAuthenticatedU
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $lastLogin;
+
+    /**
+     * @ORM\OneToMany(targetEntity=AccountTitularityCheck::class, mappedBy="user")
+     */
+    private $accountTitularityChecks;
+
+    public function __construct()
+    {
+        $this->accountTitularityChecks = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, AccountTitularityCheck>
+     */
+    public function getAccountTitularityChecks(): Collection
+    {
+        return $this->accountTitularityChecks;
+    }
+
+    public function addAccountTitularityCheck(AccountTitularityCheck $accountTitularityCheck): self
+    {
+        if (!$this->accountTitularityChecks->contains($accountTitularityCheck)) {
+            $this->accountTitularityChecks[] = $accountTitularityCheck;
+            $accountTitularityCheck->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccountTitularityCheck(AccountTitularityCheck $accountTitularityCheck): self
+    {
+        if ($this->accountTitularityChecks->removeElement($accountTitularityCheck)) {
+            // set the owning side to null (unless already changed)
+            if ($accountTitularityCheck->getUser() === $this) {
+                $accountTitularityCheck->setUser(null);
+            }
+        }
+
+        return $this;
+    }
 }

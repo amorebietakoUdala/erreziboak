@@ -18,7 +18,7 @@ class IsValidIBANValidator extends ConstraintValidator
 
         if (!$this->validateIBAN($value)) {
             $this->context->buildViolation($constraint->message)
-                ->setParameter('{{ value }}', $value)
+                ->setParameter('{value}', $value)
                 ->addViolation();
         }
     }

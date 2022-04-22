@@ -44,6 +44,7 @@ Encore
     .addEntry('category_edit', './assets/js/category/edit.js')
     .addEntry('debtsFiles_list', './assets/js/debts/list.js')
     .addEntry('debtsFiles_upload', './assets/js/debts/upload.js')
+    .addEntry('account_list', './assets/js/account/list.js')
 
 //.addEntry('page2', './assets/js/page2.js')
 

@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'messages.appTitle' | trans }}{% endblock %}
+
+{% block body %}
+<main class="container-fluid">
+	<div class="container-fluid">
+      <div id="toolbar" class="d-flex justify-content-end">
+         <a href="{{ path('app_account_titularity_index') }}" id="refresh" class="btn btn-primary">{{ 'btn.refresh' | trans }}</a>
+      </div>
+	   <table id="taula" class="table bootstrap-table mt-3" data-toolbar="#toolbar">
+		<thead>
+		   <tr>
+            <th data-sortable="true">{{"check.id" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"check.idNumber" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"check.accountNumber" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"check.checked" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"check.authorized" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"check.details" | trans | capitalize}}</th>
+            {# <th data-sortable="true">{{"check.error" | trans | capitalize}}</th> #}
+            <th data-sortable="true">{{"check.user" | trans | capitalize}}</th>
+            {# <th data-sortable="true" data-field="options">{{"options" | trans | capitalize}}</th> #}
+		   </tr>
+		</thead>
+		<tbody>
+		   {% if checks is defined and checks|length > 0 %}
+            {% for check in checks %}
+               <tr {{ check.checked ? ( check.authorized is not null and check.authorized ? 'class="row-success"' : 'class="row-danger"') : ''}}>
+                  <td>{{ check.id }}</td>
+                  <td>{{ check.idNumber }}</td>
+                  <td>{{ check.accountNumber }}</td>
+                  <td>{{ check.checked == true ? 'messages.si' | trans : 'messages.no' | trans }}</td>
+                  <td>{{ check.authorized == true ? 'messages.si' | trans : 'messages.no' | trans}}</td>
+                  <td>{{ check.certCode != null ? ('accountTitularityCheck.const.'~check.certCode) | trans({'%alternateAccount%': check.alternateAccount}) : '' }}</td>
+                  {# <td>{{ check.error == true ? 'messages.si' | trans : 'messages.no' | trans }}</td> #}
+                  <td>{{ check.user }}</td>
+                  {# <td>
+                        <a href="#"><i class="fa fa-eye"></i></a>
+                        &nbsp;<a href="#"><i class="fa fa-edit"></i></a>
+                        &nbsp;<a class="js-delete" href="#" data-url='#'><i class="fa fa-trash"></i></a>
+                  </td> #}
+               </tr>
+            {% endfor %}
+		   {% else %}
+			   <tr><td colspan="7">{{"messages.results0" | trans }}</td></tr>
+		   {% endif %}
+		</tbody>
+	   </table>
+	   <span class="pull-right"><a href="{{ path ('app_account_titularity_check') }}" class="btn btn-primary btn-rounded fixed-bottom-right"><i class="fa fa-plus" title='{{ "btn.new" | trans | capitalize }}'></i></a></span>
+	</div>
+</main>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('account_list') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('account_list') }}
+{% endblock %}

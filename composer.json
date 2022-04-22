@@ -5,7 +5,7 @@
         "php": "^7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "amorebietakoudala/mipago-bundle": "^1.0",
+        "amorebietakoudala/mipago-bundle": "*@dev",
         "amorebietakoudala/user-bundle": "^1.0",
         "composer/package-versions-deprecated": "1.11.99.4",
         "doctrine/common": "^2",
@@ -64,7 +64,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "MiPago\\Bundle\\": "/var/www/bundles/mipago-bundle/src/"
         }
     },
     "autoload-dev": {
@@ -72,6 +73,13 @@
             "App\\Tests\\": "tests/"
         }
     },
+    "repositories": [
+        {
+            "type" : "path",
+            "url" : "/var/www/bundles/mipago-bundle/"
+        }   
+    ],
+    "minimum-stability": "dev",
     "replace": {
         "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",

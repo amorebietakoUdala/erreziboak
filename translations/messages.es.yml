@@ -18,6 +18,9 @@ navitem.debts.upload: "Subir fichero"
 navitem.debts.search: "Consultar"
 navitem.debts.list: "Listado"
 navitem.convertReturnsFile: "Conversión de Ficheros (C34)"
+navitem.titularity: "Titularidad"
+navitem.titularity.check: "Consultar"
+navitem.titularity.list: "Listado"
 
 link.logout: "Salir"
 
@@ -141,8 +144,29 @@ status.initialized: Inicializado
 status.paid: Pagado
 status.unpaid: No pagado
 
+accountTitularityCheck.idNumber: "DNI-NIE-NIF-Pasaporte"
+accountTitularityCheck.type: "Tipo"
+accountTitularityCheck.accountNumber: "Número de cuenta"
+accountTitularityCheck.const.1: "El DNI es titular/cotitular de la cuenta"
+accountTitularityCheck.const.2: "El DNI está autorizado en la cuenta"
+accountTitularityCheck.const.-1: "El DNI NO está autorizado en la cuenta"
+accountTitularityCheck.const.-2: "El DNI está autorizado en la cuenta pero ya no es válida, se requiere el número de cuenta actualizado. El número de cuenta alternativo es: %alternateAccount%"
+accountTitularityCheck.const.-1000: "Se producido un error en la petición"
+
 choice.pending: "Pendientes"
 choice.validated: "Validados"
+choice.iban: "IBAN"
+choice.cc: "CC"
+
+check.id: "Id"
+check.idNumber: "Núm. Documento"
+check.type: "Tipo"
+check.accountNumber: "Número cuenta"
+check.checked: "Checkeado"
+check.authorized: "Authorized"
+check.error: "Error"
+check.user: "Usuario"
+check.details: "Detalles"
 
 btn.cancel: "Volver"
 btn.close: "Cerrar"
@@ -150,6 +174,7 @@ btn.save: "Guardar"
 btn.new: "Nuevo"
 btn.send: "Enviar"
 btn.search: "Buscar"
+btn.refresh: "Refrescar"
 btn.pay: "Pagar"
 
 messages.confirmacion: "Confirmación"
@@ -168,6 +193,7 @@ messages.numbersWhere: "¿Dónde están los números?"
 messages.many: "Varios (%number%)"
 messages.referenceNotFound: "No se ha encontrado la referencia del recibo"
 messages.fechaLimitePagoBancoVencida: "Ha vencido la fecha límite de pago al banco"
+messages.successfullySent: "La petición se ha enviado con éxito. La comprobación puede tardar unos minutos, refresque el listado para actualizarlo"
 
 label.quantity: "Tasa"
 

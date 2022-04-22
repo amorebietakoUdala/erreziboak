@@ -1,0 +1,34 @@
+{{ form_start(form) }}
+<div class="container-fluid m-0">
+	<div class="row m-1">
+		<div class="col">
+			<div class="form-row">
+				<div class="col-lg-2 form-group">
+					{{ form_label(form.idNumber) }}
+					{{ form_widget(form.idNumber, {'attr': {'class': 'form-control form-control-sm'}}) }}
+				</div>
+				<div class="col-lg-1 form-group">
+					<span class="text-danger">{{ form_errors(form.type) }}</span>
+					{{ form_label(form.type) }}
+					{{ form_widget(form.type, {'attr': {'class': 'form-control form-control-sm'}}) }}
+				</div>
+				<div class="col-lg-3 form-group">
+					<span class="text-danger">{{ form_errors(form.accountNumber) }}</span>
+					{{ form_label(form.accountNumber) }}
+					{{ form_widget(form.accountNumber, {'attr': {'class': 'form-control form-control-sm'}}) }}
+				</div>
+				<div class="col-lg-3 form-group d-flex align-items-center">
+					<button class="btn btn-primary ml-2 js-save" type="submit">{{ "btn.send" | trans }}</button>
+					<button class="btn btn-primary ml-2 js-back" type="button" data-url="{{ path('app_account_titularity_index') }}">{{ "btn.cancel" | trans }}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Token CSRF -->
+{{ form_widget(form._token) }}
+{{ form_end(form, {'render_rest': false, 
+				   'attr': {'class': '',
+			       } 
+}) }}

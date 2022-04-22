@@ -18,6 +18,10 @@ navitem.debts.upload: "Fitxategia igo"
 navitem.debts.search: "Bilatu"
 navitem.debts.list: "Zerrenda"
 navitem.convertReturnsFile: "Fitxategien eraldaketa (C34)"
+navitem.titularity: "Titularitatea"
+navitem.titularity.check: "Kontsultatu"
+navitem.titularity.list: "Zerrenda"
+
 
 link.logout: "Irten"
 
@@ -140,8 +144,29 @@ status.initialized: Hasieratua
 status.paid: Ordaindua
 status.unpaid: Ordaintzeke
 
+accountTitularityCheck.idNumber: "NAN-AIZ-IFZ-Pasaportea"
+accountTitularityCheck.type: "Mota"
+accountTitularityCheck.accountNumber: "Kontu zenbakia"
+accountTitularityCheck.const.1: "NAN zenbakia kontuaren titularra edo kotitularra da"
+accountTitularityCheck.const.2: "NAN zenbakia kontuan baimenduta dago"
+accountTitularityCheck.const.-1: "NAN zenbakia EZ dago kontuan baimenduta"
+accountTitularityCheck.const.-2: "NAN zenbakia kontuan baimenduta dago baina kontua zaharkituta dago, zenbaki eguneratua behar da. Zenbaki eguneratua hurrengoa da: %alternateAccount%"
+accountTitularityCheck.const.-1000: "Eskakizunean akatsen bat egon da"
+
 choice.pending: "Zain"
 choice.validated: "Balioztatuak"
+choice.iban: "IBAN"
+choice.cc: "CC"
+
+check.id: "Id"
+check.idNumber: "Dokumentu zb."
+check.type: "Mota"
+check.accountNumber: "Kontu korrontea"
+check.checked: "Txekeatuta"
+check.authorized: "Baimendua"
+check.error: "Akatsa"
+check.user: "Erabiltzailea"
+check.details: "Xehetasunak"
 
 btn.cancel: "Itzuli"
 btn.close: "Itxi"
@@ -149,6 +174,7 @@ btn.save: "Gorde"
 btn.new: "Berria"
 btn.send: "Bidali"
 btn.search: "Bilatu"
+btn.refresh: "Taula eguneratu"
 btn.pay: "Ordaindu"
 
 messages.confirmacion: "Konfirmazioa"
@@ -167,6 +193,7 @@ messages.numbersWhere: "Non daude zenbakiak?"
 messages.many: "Hainbat (%number%)"
 messages.referenceNotFound: "Erreziboaren erreferentzia ez da aurkitu"
 messages.fechaLimitePagoBancoVencida: "Ordaintzeko epea pasatu egin da"
+messages.successfullySent: "Eskakizuna behar bezala bidali da. Konprobaketak minutu batzu eraman ditzake, zerrenda eguneratu noizean behin"
 
 label.quantity: "Tasa"
 
