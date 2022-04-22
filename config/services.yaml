@@ -34,6 +34,10 @@ parameters:
   c34_dbtr_orgid_id: "%env(C34DBTR_ORGID_ID)%"
   c34_dbtr_acct_id_iban: "%env(C34DBTR_ACCT_ID_IBAN)%"
 
+  titularity_check_endpoint: "%env(TITULARITY_CHECK_ENDPOINT)%"
+  titularity_check_show_last: 1
+  request_admin_id: "%env(REQUEST_ADMIN_ID)%"
+
 services:
   Symfony\Component\Ldap\Ldap:
     arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']

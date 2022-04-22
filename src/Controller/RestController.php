@@ -13,6 +13,7 @@ use App\Utils\ApiResponse;
 use Exception;
 use JMS\Serializer\SerializerInterface;
 use App\Entity\Payment;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -162,7 +163,7 @@ class RestController extends AbstractController
     /**
      * @Route("/category/{id}", name="api_category", methods={"GET"}, options = { "expose" = true })
      */
-    public function getCategory($id, LoggerInterface $logger, SerializerInterface $serializer)
+    public function getCategory($id, LoggerInterface $logger, SerializerInterface $serializer, EntityManagerInterface $em)
     {
         $em = $this->getDoctrine()->getManager();
         /* @var $category Category */
