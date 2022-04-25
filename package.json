@@ -38,7 +38,7 @@
         "select2": "^4.0.13",
         "ssri": "^8.0.1",
         "sweetalert2": "^9.7.1",
-        "tableexport.jquery.plugin": "^1.10.15",
+        "tableexport.jquery.plugin": "^1.25.0",
         "websocket-extensions": "^0.1.4"
     }
 }
