@@ -10,9 +10,11 @@ namespace App\Controller;
 
 use App\Service\GTWINIntegrationService;
 use App\Utils\ApiResponse;
+use App\Entity\Category;
 use Exception;
 use JMS\Serializer\SerializerInterface;
 use App\Entity\Payment;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,7 +47,9 @@ class RestController extends AbstractController
         } else {
             $data = new ApiResponse('KO', 'Not Found', null);
         }
-        $response = new JsonResponse($serializer->serialize($data, 'json'), 200);
+        $response = new JsonResponse($serializer->serialize($data, 'json'), 200, [
+            'Content-Type' => 'application/json;charset=utf-8'
+        ], true);
 
         return $response;
     }
@@ -163,18 +167,17 @@ class RestController extends AbstractController
     /**
      * @Route("/category/{id}", name="api_category", methods={"GET"}, options = { "expose" = true })
      */
-    public function getCategory($id, LoggerInterface $logger, SerializerInterface $serializer, EntityManagerInterface $em)
+    public function getCategory($id, LoggerInterface $logger, SerializerInterface $serializer, CategoryRepository $repo)
     {
-        $em = $this->getDoctrine()->getManager();
-        /* @var $category Category */
-        $category = $em->getRepository(\App\Entity\Category::class)->find($id);
+        /** @var Category $category */
+        $category = $repo->find($id);
         $logger->debug('Get category Id: ' . $id);
 
         return new JsonResponse(
-            $serializer->serialize(
-                new ApiResponse('OK', 'Category found', $category),
-                'json'
-            )
+            $serializer->serialize(new ApiResponse('OK', 'Category found', $category),'json'), 
+            200, [
+                'Content-Type' => 'application/json;charset=utf-8'
+            ], true
         );
     }
 }
