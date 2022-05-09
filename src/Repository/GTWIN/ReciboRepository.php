@@ -126,11 +126,14 @@ class ReciboRepository extends EntityRepository
         return $result;
     }
 
+    /**
+     * Retrieves the principal de debt amount
+     */
     public function findDeudaByDni($dni)
     {
         try {
             $query = $qb = $this->createQueryBuilder('r')
-                ->select('SUM(r.importeTotal) as importe')
+                ->select('SUM(r.importe) as importe')
                 ->andWhere('r.dni= :dni')
                 ->andWhere('r.estado = :estado')
                 ->andWhere('r.situacion = :situacion')
@@ -150,7 +153,7 @@ class ReciboRepository extends EntityRepository
 
             $importe = $query->getSingleScalarResult();
         } catch (NoResultException $e) {
-            return '0';
+            return null;
         }
 
         return $importe;

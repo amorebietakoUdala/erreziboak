@@ -1,5 +1,7 @@
 messages.appTitle: "Recibos"
 
+title.debts.search: "Consulta individual de deudas"
+
 navitem.administration: "Administración"
 navitem.users: "Usuarios"
 navitem.receipts: "Recibos"
@@ -17,6 +19,7 @@ navitem.debts: "Deudas"
 navitem.debts.upload: "Subir fichero"
 navitem.debts.search: "Consultar"
 navitem.debts.list: "Listado"
+navitem.debts.single_search: "Consulta individual"
 navitem.convertReturnsFile: "Conversión de Ficheros (C34)"
 navitem.titularity: "Titularidad"
 navitem.titularity.check: "Consultar"
@@ -85,6 +88,9 @@ debtsFile.status.choices.1: "Procesando"
 debtsFile.status.choices.2: "Procesado"
 debtsFile.status.choices.3: "Inválido"
 debtsFile.status.choices.4: "Fallado"
+
+debts.idNumber: "DNI-NIE-NIF-Pasaporte"
+debts.principalAmount: "Importe principal"
 
 receipt.numeroRecibo: "Nº de recibo"
 receipt.dni: "DNI"
@@ -194,6 +200,9 @@ messages.many: "Varios (%number%)"
 messages.referenceNotFound: "No se ha encontrado la referencia del recibo"
 messages.fechaLimitePagoBancoVencida: "Ha vencido la fecha límite de pago al banco"
 messages.successfullySent: "La petición se ha enviado con éxito. La comprobación puede tardar unos minutos, refresque el listado para actualizarlo"
+messages.noIdNumber: "No se ha especificado DNI-NIE-NIF-Pasaporte"
+messages.plusInterestAndSurcharge: "(más recargos e intereses)"
+messages.noDebt: "No tiene deuda"
 
 label.quantity: "Tasa"
 

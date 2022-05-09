@@ -90,6 +90,7 @@ class Recibo
      * @var float
      *
      * @ORM\Column(name="RECIMPORT", type="decimal", precision=11, scale=2, nullable=false)
+     * @Serializer\Expose
      */
     private $importe;
 

@@ -44,6 +44,7 @@
 			{{ 'navitem.debts' | trans | capitalize }}
 		  </a>
 		  <div class="dropdown-menu" aria-labelledby="navbarCheckDebts">
+			  <a class="dropdown-item" href="{{ path('debts_search') }}">{{ 'navitem.debts.single_search' | trans |capitalize }}</a>
 			  <a class="dropdown-item" href="{{ path('debts_file_upload') }}">{{ 'navitem.debts.upload' | trans |capitalize }}</a>
 			  <a class="dropdown-item" href="{{ path('debts_file_list') }}">{{ 'navitem.debts.search' | trans |capitalize }}</a>
 		  </div>

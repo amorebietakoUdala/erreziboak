@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Audit;
 use App\Entity\DebtsFile;
 use App\Entity\GTWIN\Person;
 use App\Entity\ReturnsFile;
 use App\Form\DebtsFileType;
+use App\Form\DebtsSearchFormType;
 use App\Service\CsvFormatValidator;
 use App\Service\FileUploader;
 use App\Service\GTWINIntegrationService;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -21,16 +24,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Qipsius\TCPDFBundle\Controller\TCPDFController;
 
 /**
- * @Route("/{_locale}/debts_file", requirements={
- *	    "_locale": "es|eu|en"
- * })
  * @IsGranted("ROLE_USER")
  * })
  */
 class DebtsController extends AbstractController
 {
     /**
-     * @Route("/", name="debts_file_list")
+     * @Route("/{_locale}/debts_file/", name="debts_file_list")
      */
     public function list()
     {
@@ -45,7 +45,45 @@ class DebtsController extends AbstractController
     }
 
     /**
-     * @Route("/upload", name="debts_file_upload")
+     * @Route("/{_locale}/debts/search", name="debts_search")
+     */
+    public function search(Request $request, EntityManagerInterface $em, GTWINIntegrationService $gts)
+    {
+        $form = $this->createForm(DebtsSearchFormType::class);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            if (!array_key_exists('idNumber', $data)){
+                $this->addFlash('error', 'messages.noIdNumber');
+                return $this->renderForm('debts_files/individualSearch.html.twig', [
+                    'form' => $form,
+                ]);
+            }
+            $principalAmount = $gts->findDeudaTotal($data['idNumber']);
+            $audit = $this->createAudit($data, 'debt_individual_consultation');
+            $em->persist($audit);
+            $em->flush();
+            
+            $debt = [
+                'idNumber' => $data['idNumber'],
+                'principalAmount' => $principalAmount,
+            ];
+            return $this->renderForm('debts_files/individualSearch.html.twig', [
+                'form' => $form,
+                'debt' => $debt,
+            ]);
+            
+
+        }
+
+        return $this->renderForm('debts_files/individualSearch.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/{_locale}/debts_file/upload", name="debts_file_upload")
      */
     public function upload(Request $request, CsvFormatValidator $validator, GTWINIntegrationService $gts)
     {
@@ -98,7 +136,7 @@ class DebtsController extends AbstractController
     }
 
     /**
-     * @Route("/{debtsFile}/download", name="debts_file_download")
+     * @Route("/{_locale}/debts_file/{debtsFile}/download", name="debts_file_download")
      */
     public function download(DebtsFile $debtsFile)
     {
@@ -170,7 +208,7 @@ class DebtsController extends AbstractController
     }
 
     /**
-     * @Route("/{dni}/pdf", name="debts_free_pdf_download")
+     * @Route("/{_locale}/debts_file/{dni}/pdf", name="debts_free_pdf_download")
      */
     public function getDebtsFreePaper(string $dni, GTWINIntegrationService $gts, TCPDFController $pdfService)
     {
@@ -234,5 +272,14 @@ class DebtsController extends AbstractController
         );
         //$pdf->Output($filename . '.pdf', 'D');
         $pdf->Output($filename . '.pdf', 'I');
+    }
+
+    private function createAudit($data, $operation) {
+        $audit = new Audit();
+        $audit->setDate(new \DateTime());
+        $audit->setIdNumber($data['idNumber']);
+        $audit->setOperation($operation);
+        $audit->setUser($this->getUser());
+        return $audit;
     }
 }

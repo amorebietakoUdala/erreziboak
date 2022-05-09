@@ -63,9 +63,15 @@ class User extends BaseUser implements AMREUserInterface, PasswordAuthenticatedU
      */
     private $accountTitularityChecks;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Audit::class, mappedBy="user")
+     */
+    private $audits;
+
     public function __construct()
     {
         $this->accountTitularityChecks = new ArrayCollection();
+        $this->audits = new ArrayCollection();
     }
 
     /**
@@ -92,6 +98,36 @@ class User extends BaseUser implements AMREUserInterface, PasswordAuthenticatedU
             // set the owning side to null (unless already changed)
             if ($accountTitularityCheck->getUser() === $this) {
                 $accountTitularityCheck->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Audit>
+     */
+    public function getAudits(): Collection
+    {
+        return $this->audits;
+    }
+
+    public function addAudit(Audit $audit): self
+    {
+        if (!$this->audits->contains($audit)) {
+            $this->audits[] = $audit;
+            $audit->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAudit(Audit $audit): self
+    {
+        if ($this->audits->removeElement($audit)) {
+            // set the owning side to null (unless already changed)
+            if ($audit->getUser() === $this) {
+                $audit->setUser(null);
             }
         }
 

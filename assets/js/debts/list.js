@@ -11,8 +11,6 @@ const routes = require('../../../public/js/fos_js_routes.json');
 import Routing from '../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
 
 $(document).ready(function(){
-	console.log("ReturnsFile list view!!!!");
-
 	$('#taula').bootstrapTable({
 		cache : false,
 		showExport: true,

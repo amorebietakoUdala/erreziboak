@@ -1,5 +1,7 @@
 messages.appTitle: "Erreziboak"
 
+title.debts.search: "Zor indibidualen bilaketa"
+
 navitem.administration: "Administrazioa"
 navitem.users: "Erabiltzaileak"
 navitem.receipts: "Erreziboak"
@@ -15,6 +17,7 @@ navitem.taxes: "Tasa ordainketa"
 navitem.exams: "Azterketak"
 navitem.debts: "Zorrak"
 navitem.debts.upload: "Fitxategia igo"
+navitem.debts.single_search: "Banakako bilaketa"
 navitem.debts.search: "Bilatu"
 navitem.debts.list: "Zerrenda"
 navitem.convertReturnsFile: "Fitxategien eraldaketa (C34)"
@@ -86,6 +89,9 @@ debtsFile.status.choices.1: "Prozesatzen"
 debtsFile.status.choices.2: "Prozesatuta"
 debtsFile.status.choices.3: "Ezegokia"
 debtsFile.status.choices.4: "Akatsduna"
+
+debts.idNumber: "NAN-AIZ-IFZ-Pasaportea"
+debts.principalAmount: "Zenbateko printzipala"
 
 receipt.numeroRecibo: "Errezibo zenbakia"
 receipt.dni: "NAN"
@@ -194,6 +200,9 @@ messages.many: "Hainbat (%number%)"
 messages.referenceNotFound: "Erreziboaren erreferentzia ez da aurkitu"
 messages.fechaLimitePagoBancoVencida: "Ordaintzeko epea pasatu egin da"
 messages.successfullySent: "Eskakizuna behar bezala bidali da. Konprobaketak minutu batzu eraman ditzake, zerrenda eguneratu noizean behin"
+messages.noIdNumber: "NAN-AIZ-IFZ-Pasaportea ez da zehaztu"
+messages.plusInterestAndSurcharge: "(gehi errekargu eta interesak)"
+messages.noDebt: "Ez dauka zorrik"
 
 label.quantity: "Tasa"
 

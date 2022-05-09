@@ -175,13 +175,13 @@ class GTWINIntegrationService
     }
 
     /**
-     * Calculate the total debt amount of a person by DNI.
+     * Calculate the principal debt amount of a person by DNI.
      *
      * @param string $dni
      *
-     * @return string
+     * @return null|string
      */
-    public function findDeudaTotal($dni)
+    public function findDeudaTotal($dni): ?string
     {
         $fixedDocument = $dni;
         if (Validaciones::valida_nif_cif_nie($dni) > 0) {
@@ -192,7 +192,6 @@ class GTWINIntegrationService
         $importe = $em->getRepository(Recibo::class)->findDeudaByDni(
             $fixedDocument
         );
-
         return $importe;
     }
 
