@@ -116,6 +116,12 @@ class AccountTitularityCheck
         return $this->accountNumber;
     }
 
+    public function getAccountNumberBase64(): ?string
+    {
+        return base64_encode($this->accountNumber);
+    }
+
+
     public function setAccountNumber(string $accountNumber): self
     {
         $iban = str_replace(' ', '', $accountNumber);
