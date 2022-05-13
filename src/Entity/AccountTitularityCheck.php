@@ -89,6 +89,11 @@ class AccountTitularityCheck
      */
     private $alternateAccount;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $errorMessage;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -248,6 +253,18 @@ class AccountTitularityCheck
     public function setAlternateAccount(?string $alternateAccount): self
     {
         $this->alternateAccount = $alternateAccount;
+
+        return $this;
+    }
+
+    public function getErrorMessage(): ?string
+    {
+        return $this->errorMessage;
+    }
+
+    public function setErrorMessage(string $errorMessage): self
+    {
+        $this->errorMessage = $errorMessage;
 
         return $this;
     }

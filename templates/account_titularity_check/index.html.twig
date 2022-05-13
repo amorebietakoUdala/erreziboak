@@ -31,7 +31,16 @@
                   <td>{{ check.accountNumber }}</td>
                   <td>{{ check.checked == true ? 'messages.si' | trans : 'messages.no' | trans }}</td>
                   <td>{{ check.authorized == true ? 'messages.si' | trans : 'messages.no' | trans}}</td>
-                  <td>{{ check.certCode != null ? ('accountTitularityCheck.const.'~check.certCode) | trans({'%alternateAccount%': check.alternateAccount}) : '' }}</td>
+                  <td>
+                     {% if check.certCode != null %}
+                        {% if check.alternateAccount != null %}
+                           {{ ('accountTitularityCheck.const.'~check.certCode) | trans({'%alternateAccount%': check.alternateAccount}) }}
+                        {% endif %}
+                        {% if check.errorMessage != null %}
+                           {{ ('accountTitularityCheck.const.'~check.certCode) | trans }} : {{ check.errorMessage }}
+                        {% endif %}
+                     {% endif %}
+                  </td>
                   {# <td>{{ check.error == true ? 'messages.si' | trans : 'messages.no' | trans }}</td> #}
                   <td>{{ check.user }}</td>
                   {# <td>

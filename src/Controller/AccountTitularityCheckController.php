@@ -56,7 +56,7 @@ class AccountTitularityCheckController extends AbstractController
     public function confirmation(Request $request, EntityManagerInterface $em, AccountTitularityCheckRepository $repo, LoggerInterface $logger): Response
     {
         $response = $request->getContent();
-        //$response = urldecode("module=certGateway&holderCertCertifiedData=%3CholderCertCertifiedData%3E%3CholderCertData+accountNumberFormat%3D%27cc%27+encType%3D%27base64%27+type%3D%27accountNumber%27%3E%3CaditionalDataList%3E%3CaditionalData%3E%3Cname%3EId%3C%2Fname%3E%3Cvalue%3E%3C%21%5BCDATA%5B48%5D%5D%3E%3C%2Fvalue%3E%3C%2FaditionalData%3E%3CaditionalData%3E%3Cname%3EfinantialOrgId%3C%2Fname%3E%3Cvalue%3E%3C%21%5BCDATA%5B9999%5D%5D%3E%3C%2Fvalue%3E%3C%2FaditionalData%3E%3C%2FaditionalDataList%3E%3CrequestAdminID%3E04800300800%3C%2FrequestAdminID%3E%3CrequestID%3E048003008000000000004527220422%3C%2FrequestID%3E%3CitemToCertNumber%3E%3C%21%5BCDATA%5B99990000191111111115%5D%5D%3E%3C%2FitemToCertNumber%3E%3CcitizenId%3E1111111115%3C%2FcitizenId%3E%3C%2FholderCertData%3E%3CholderCertResponse%3E%3CfinantialOrgCode%3E9999%3C%2FfinantialOrgCode%3E%3Cnrc%3E9999000000000083739806C70F2%3C%2Fnrc%3E%3CtimeStamp%3E1650619157584%3C%2FtimeStamp%3E%3CcertCode%3E-2%3C%2FcertCode%3E%3CupdatedHolderCertData+accountNumberFormat%3D%27cc%27+encType%3D%27base64%27+type%3D%27accountNumber%27%3E%3CitemToCertNumber%3E%3C%21%5BCDATA%5B99995619991111111115%5D%5D%3E%3C%2FitemToCertNumber%3E%3C%2FupdatedHolderCertData%3E%3C%2FholderCertResponse%3E%3C%2FholderCertCertifiedData%3E&function=holderCertified");
+//        $response = urldecode("module=certGateway&holderCertCertifiedData=%3CholderCertCertifiedData%3E%3CholderCertData+accountNumberFormat%3D%27iban%27+encType%3D%27base64%27+type%3D%27accountNumber%27%3E%3CaditionalDataList%3E%3CaditionalData%3E%3Cname%3EerrorExcel%3C%2Fname%3E%3Cvalue%3E%3C%21%5BCDATA%5BLa+EEFF+no+esta+adherida%5D%5D%3E%3C%2Fvalue%3E%3C%2FaditionalData%3E%3CaditionalData%3E%3Cname%3EId%3C%2Fname%3E%3Cvalue%3E%3C%21%5BCDATA%5B6%5D%5D%3E%3C%2Fvalue%3E%3C%2FaditionalData%3E%3C%2FaditionalDataList%3E%3CrequestAdminID%3E04800300002%3C%2FrequestAdminID%3E%3CrequestID%3E048003000020000000000473130522%3C%2FrequestID%3E%3CitemToCertNumber%3E%3C%21%5BCDATA%5BES6402390806780027853522%5D%5D%3E%3C%2FitemToCertNumber%3E%3CcitizenId%3E30659881F%3C%2FcitizenId%3E%3C%2FholderCertData%3E%3CholderCertResponse%3E%3CfinantialOrgCode%3E0239%3C%2FfinantialOrgCode%3E%3CtimeStamp%3E1652424865841%3C%2FtimeStamp%3E%3CcertCode%3E-1000%3C%2FcertCode%3E%3C%2FholderCertResponse%3E%3C%2FholderCertCertifiedData%3E&function=holderCertified");
         $logger->info('Respuesta recibida: '. $response);
         parse_str($response, $params);
         $xmlString = $params['holderCertCertifiedData'];
@@ -74,7 +74,8 @@ class AccountTitularityCheckController extends AbstractController
         } else {
             $accountTitularityCheck->setAuthorized(null);
             $accountTitularityCheck->setError(true);
-            $accountTitularityCheck->setErrorCode(array_key_exists('errorCode',$responseArray) ? $responseArray['errorCode']: null);
+            $accountTitularityCheck->setErrorCode(array_key_exists('errorCode',$responseArray) ? $responseArray['errorCode'] : null);
+            $accountTitularityCheck->setErrorMessage(array_key_exists('errorExcel',$responseArray) ? $responseArray['errorExcel'] : null);
             $accountTitularityCheck->setAlternateAccount(array_key_exists('alternateAccount',$responseArray) ? $responseArray['alternateAccount']: null);
         }
         $accountTitularityCheck->setChecked(true);
