@@ -15,22 +15,20 @@
 			<thead>
 				<tr>
                <th data-sortable="true">{{"debts.idNumber" | trans }}</th>
-               <th data-sortable="true">{{"debts.principalAmount" | trans }}</th>
+               <th data-sortable="true">{{"messages.hasDebt" | trans }}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td>{{debt.idNumber}}</td>
                {% if null != debt.principalAmount %}
-					   <td>{{debt.principalAmount }}&nbsp;€&nbsp;{{"messages.plusInterestAndSurcharge" | trans}}</td>
+						<td class="bg-danger text-white">{{ 'messages.si' | trans }}{#&nbsp;{{debt.principalAmount }}&nbsp;€&nbsp;{{"messages.plusInterestAndSurcharge" | trans}}#}</td>
                {% else %}
-                  <td>{{"messages.noDebt" | trans}}</td>
+                  <td>{{ 'messages.no' | trans }}</td>
                {% endif %}
 				</tr>
 			</tbody>
 			</table>
-			{% else %}
-				<div class="mt-2 p-2 border border-black text-center bg-light">{{"messages.results0" | trans }}</div>
 			{% endif %}
 		</div>
     </main>

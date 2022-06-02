@@ -15,5 +15,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class IsValidDNI extends Constraint
 {
-    public $message = 'validation.invalidDNI';
+    public $message = 'validation.invalidDNI-NIE-NIF';
 }

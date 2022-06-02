@@ -89,7 +89,7 @@ debtsFile.status.choices.2: "Procesado"
 debtsFile.status.choices.3: "Inválido"
 debtsFile.status.choices.4: "Fallado"
 
-debts.idNumber: "DNI-NIE-NIF-Pasaporte"
+debts.idNumber: "DNI-NIE-NIF"
 debts.principalAmount: "Importe principal"
 
 receipt.numeroRecibo: "Nº de recibo"
@@ -200,9 +200,11 @@ messages.many: "Varios (%number%)"
 messages.referenceNotFound: "No se ha encontrado la referencia del recibo"
 messages.fechaLimitePagoBancoVencida: "Ha vencido la fecha límite de pago al banco"
 messages.successfullySent: "La petición se ha enviado con éxito. La comprobación puede tardar unos minutos, refresque el listado para actualizarlo"
-messages.noIdNumber: "No se ha especificado DNI-NIE-NIF-Pasaporte"
+messages.noIdNumber: "No se ha especificado DNI-NIE-NIF"
 messages.plusInterestAndSurcharge: "(más recargos e intereses)"
 messages.noDebt: "No tiene deuda"
+messages.noDebtsFound: "No consta en GTWIN ningún recibo pendiente de pago para el DNI, NIE o CIF '%idNumber%'"
+messages.hasDebt: "¿Tiene recibos pendientes en GTWIN?"
 
 label.quantity: "Tasa"
 

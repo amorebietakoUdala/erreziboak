@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Audit;
 use App\Entity\DebtsFile;
-use App\Entity\GTWIN\Person;
 use App\Entity\ReturnsFile;
 use App\Form\DebtsFileType;
 use App\Form\DebtsSearchFormType;
@@ -22,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Qipsius\TCPDFBundle\Controller\TCPDFController;
+use Symfony\Component\Translation\TranslatableMessage;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -65,16 +65,22 @@ class DebtsController extends AbstractController
             $em->persist($audit);
             $em->flush();
             
-            $debt = [
-                'idNumber' => $data['idNumber'],
-                'principalAmount' => $principalAmount,
-            ];
+            
+            if (null !== $principalAmount) {
+                $debt = [
+                    'idNumber' => $data['idNumber'],
+                    'principalAmount' => $principalAmount,
+                ];
+            } else {
+                $debt = null;
+                $this->addFlash('success', new TranslatableMessage('messages.noDebtsFound',[
+                    '%idNumber%' => $data['idNumber'], 
+                ]));
+            }
             return $this->renderForm('debts_files/individualSearch.html.twig', [
                 'form' => $form,
                 'debt' => $debt,
             ]);
-            
-
         }
 
         return $this->renderForm('debts_files/individualSearch.html.twig', [

@@ -6,6 +6,9 @@
 				<div class="col-lg-2 form-group">
 					{{ form_label(form.idNumber) }}
 					{{ form_widget(form.idNumber, {'attr': {'class': 'form-control form-control-sm'}}) }}
+					<span class="text-danger">
+						{{ form_errors(form.idNumber) }}
+					</span>
 				</div>
 				<div class="col-lg-3 form-group d-flex align-items-center">
 					<button class="btn btn-primary" type="submit">{{ "btn.send" | trans }}</button>

@@ -189,9 +189,7 @@ class GTWINIntegrationService
             $fixedDocument = $this->__fixDniNumber($numDocumento);
         }
         $em = $this->em;
-        $importe = $em->getRepository(Recibo::class)->findDeudaByDni(
-            $fixedDocument
-        );
+        $importe = $em->getRepository(Recibo::class)->findDeudaByDni($fixedDocument);
         return $importe;
     }
 

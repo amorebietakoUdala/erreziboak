@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Validator\IsValidDNI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,6 +15,9 @@ class DebtsSearchFormType extends AbstractType
             ->add('idNumber',null,[
                 'label' => 'debts.idNumber',
                 'required' => true,
+                'constraints' => [
+                    new IsValidDNI(),
+                ]
             ])
         ;
     }

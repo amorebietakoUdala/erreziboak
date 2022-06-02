@@ -90,7 +90,7 @@ debtsFile.status.choices.2: "Prozesatuta"
 debtsFile.status.choices.3: "Ezegokia"
 debtsFile.status.choices.4: "Akatsduna"
 
-debts.idNumber: "NAN-AIZ-IFZ-Pasaportea"
+debts.idNumber: "NAN-AIZ-IFZ"
 debts.principalAmount: "Zenbateko printzipala"
 
 receipt.numeroRecibo: "Errezibo zenbakia"
@@ -200,9 +200,11 @@ messages.many: "Hainbat (%number%)"
 messages.referenceNotFound: "Erreziboaren erreferentzia ez da aurkitu"
 messages.fechaLimitePagoBancoVencida: "Ordaintzeko epea pasatu egin da"
 messages.successfullySent: "Eskakizuna behar bezala bidali da. Konprobaketak minutu batzu eraman ditzake, zerrenda eguneratu noizean behin"
-messages.noIdNumber: "NAN-AIZ-IFZ-Pasaportea ez da zehaztu"
+messages.noIdNumber: "NAN-AIZ-IFZ ez da zehaztu"
 messages.plusInterestAndSurcharge: "(gehi errekargu eta interesak)"
 messages.noDebt: "Ez dauka zorrik"
+messages.noDebtsFound: "NAN, ANA o IFZ horretarako ('%idNumber%') ez da ordaindu gabeko erreziborik aurkitu GTWIN-en"
+messages.hasDebt: "¿Ordaindu gabeko erreziborik dauka GTWIN-en?"
 
 label.quantity: "Tasa"
 
