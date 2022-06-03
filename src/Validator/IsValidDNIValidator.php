@@ -65,12 +65,35 @@ class IsValidDNIValidator extends ConstraintValidator
                 return -1;
             }
         }
+
+        //comprobacion de NIEs
+        if (preg_match('/^[XYZ]{1}/', $cif)) {
+            if ($num[8] == substr('TRWAGMYFPDXBNJZSQVHLCKE', substr(str_replace(array('X', 'Y', 'Z'), array('0', '1', '2'), $cif), 0, 8) % 23, 1)) {
+                return 3;
+            } else {
+                return -3;
+            }
+        }
+
         //algoritmo para comprobacion de codigos tipo CIF
         $suma = $num[2] + $num[4] + $num[6];
         for ($i = 1; $i < 8; $i += 2) {
-            $suma += substr((2 * $num[$i]), 0, 1) + substr((2 * $num[$i]), 1, 1);
+            $suma += substr((2 * $num[$i]), 0, 1);
+            // Si tiene 2 dígitos, se hace la multiplicación del segundo número, sino no.
+            if ( 2 * $num[$i] >= 10) {
+                $suma += substr((2 * $num[$i]), 1, 1);
+            }
         }
         $n = 10 - \substr($suma, \strlen($suma) - 1, 1);
+        
+        //comprobacion de CIFs
+        if (preg_match('/^[ABCDEFGHJNPQRSUVW]{1}/', $cif)) {
+            if ($num[8] == chr(64 + $n) || $num[8] == substr($n, strlen($n) - 1, 1)) {
+                return 2;
+            } else {
+                return -2;
+            }
+        }
 
         //comprobacion de NIFs especiales (se calculan como CIFs o como NIFs)
         if (preg_match('/^[KLM]{1}/', $cif)) {
@@ -80,22 +103,7 @@ class IsValidDNIValidator extends ConstraintValidator
                 return -1;
             }
         }
-        //comprobacion de CIFs
-        if (preg_match('/^[ABCDEFGHJNPQRSUVW]{1}/', $cif)) {
-            if ($num[8] == chr(64 + $n) || $num[8] == substr($n, strlen($n) - 1, 1)) {
-                return 2;
-            } else {
-                return -2;
-            }
-        }
-        //comprobacion de NIEs
-        if (preg_match('/^[XYZ]{1}/', $cif)) {
-            if ($num[8] == substr('TRWAGMYFPDXBNJZSQVHLCKE', substr(str_replace(array('X', 'Y', 'Z'), array('0', '1', '2'), $cif), 0, 8) % 23, 1)) {
-                return 3;
-            } else {
-                return -3;
-            }
-        }
+
         //si todavia no se ha verificado devuelve error
         return 0;
     }
