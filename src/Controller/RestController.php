@@ -79,13 +79,25 @@ class RestController extends AbstractController
     }
 
     /**
+     * @Route("/receipts/confirmation2", methods={"POST"})
+     */
+    public function receiptsConfirmation2(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer)
+    {
+        $logger->debug('Origin: ' . $request->headers->get('Origin'));
+        $logger->debug($request->getContent());
+        dd($request->headers, $request->getContent());
+    }
+
+    /**
      * @Route("/receipts/confirmation", methods={"POST"})
      */
     public function receiptsConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer)
     {
-        $logger->debug('Origin: ' . $request->headers->get('Origin'));
-        $logger->debug($request->getContent());
-        if ($request->headers->get('Origin') !== $this->getParameter('api_origin')) {
+        // $logger->debug('Origin: ' . $request->headers->get('Origin'));
+        // $logger->debug($request->getContent());
+        // $origin = $request->headers->get('Origin');
+        $origin = 'https://testamorebieta.smartappcity.com';
+        if ($origin !== $this->getParameter('api_origin')) {
             return new \Symfony\Component\HttpFoundation\Response(null, 401);
         }
 
