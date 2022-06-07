@@ -85,7 +85,9 @@ class RestController extends AbstractController
     {
         $logger->debug('Origin: ' . $request->headers->get('Origin'));
         $logger->debug($request->getContent());
-        dd($request->headers, $request->getContent());
+        $body = $request->getContent();
+        $decoded = json_decode($body, true);
+        dd($decoded);
     }
 
     /**
