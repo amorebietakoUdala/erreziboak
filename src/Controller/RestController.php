@@ -96,10 +96,10 @@ class RestController extends AbstractController
      */
     public function receiptsConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer)
     {
-        // $logger->debug('Origin: ' . $request->headers->get('Origin'));
-        // $logger->debug($request->getContent());
-        // $origin = $request->headers->get('Origin');
-        $origin = 'https://testamorebieta.smartappcity.com';
+        $logger->debug('Origin: ' . $request->headers->get('Origin'));
+        $logger->debug($request->getContent());
+        $origin = $request->headers->get('Origin');
+        // $origin = 'https://testamorebieta.smartappcity.com';
         if ($origin !== $this->getParameter('api_origin')) {
             return new \Symfony\Component\HttpFoundation\Response(null, 401);
         }
@@ -112,7 +112,9 @@ class RestController extends AbstractController
                 )
             );
         }
+        $logger->debug('Before create payment');
         $payment = Payment::createPaymentFromJson($request->getContent());
+        $logger->debug('After create payment');
         $em = $this->getDoctrine()->getManager();
 
         $existingPayment = $em->getRepository(Payment::class)->findOneBy([
@@ -120,6 +122,7 @@ class RestController extends AbstractController
             'status' => Payment::PAYMENT_STATUS_OK,
         ]);
         if ($existingPayment) {
+            $logger->debug('Receipt already payd');
             return new JsonResponse(
                 $serializer->serialize(
                     new ApiResponse('OK', 'Receipt already payd', null),
@@ -127,11 +130,13 @@ class RestController extends AbstractController
                 )
             );
         }
-
+        $logger->debug('Before finding recibo: '. $payment->getReferenceNumber());
         $recibo = $gts->findByNumReciboDni($payment->getReferenceNumber(), $payment->getNif());
         if (null !== $recibo) {
             try {
+                $logger->debug('Before paidWithCreditCard');
                 $gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $payment->getQuantity(), $payment->getTimeStamp(), '', 1);
+                $logger->debug('After paidWithCreditCard');
                 $em->persist($payment);
                 $em->flush();
                 $logger->debug('Receipt number ' . $payment->getReferenceNumber() . ' successfully paid');
