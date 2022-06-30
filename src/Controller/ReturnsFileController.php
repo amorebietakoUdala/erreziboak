@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use App\Entity\ReturnsFile;
 use App\Form\ReturnsFileType;
+use App\Repository\ReturnsFileRepository;
+use App\Service\C34XmlGenerator;
 use App\Service\CsvFormatValidator;
 use App\Service\FileUploader;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Swift_Mailer;
 use Swift_Message;
@@ -20,12 +23,20 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ReturnsFileController extends AbstractController
 {
+
+    private ReturnsFileRepository $returnsFileRepo;
+
+    public function __construct(ReturnsFileRepository $returnsFileRepo)
+    {
+        $this->returnsFileRepo = $returnsFileRepo;
+    }
+
     /**
      * @Route("/", name="returns_file_list")
      */
     public function list()
     {
-        $returnsFiles = $this->getDoctrine()->getRepository(ReturnsFile::class)->findBy([], [
+        $returnsFiles = $this->returnsFileRepo->findBy([], [
             'receptionDate' => 'DESC',
         ]);
 
@@ -37,7 +48,7 @@ class ReturnsFileController extends AbstractController
     /**
      * @Route("/upload", name="returns_file_upload")
      */
-    public function upload(Request $request, CsvFormatValidator $validator, Swift_Mailer $mailer, \App\Service\C34XmlGenerator $generator)
+    public function upload(Request $request, CsvFormatValidator $validator, Swift_Mailer $mailer, C34XmlGenerator $generator, EntityManagerInterface $em)
     {
         $form = $this->createForm(ReturnsFileType::class);
 
@@ -73,7 +84,6 @@ class ReturnsFileController extends AbstractController
                 $returnsFileObject->setStatus(ReturnsFile::STATUS_PROCESSED);
                 $returnsFileObject->setTotalAmount($totalAmount);
 
-                $em = $this->getDoctrine()->getManager();
                 $em->persist($returnsFileObject);
                 $em->flush();
                 $this->addFlash('success', 'messages.successfullySended');
@@ -110,7 +120,7 @@ class ReturnsFileController extends AbstractController
         return $response;
     }
 
-    private function processReturnsFile(string $path, ReturnsFile $returnsFile, \App\Service\C34XmlGenerator $generator)
+    private function processReturnsFile(string $path, ReturnsFile $returnsFile, C34XmlGenerator $generator)
     {
         $totalAmount = $generator->createFileFrom($path, $returnsFile);
 

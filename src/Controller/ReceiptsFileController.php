@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\ReceiptsFile;
 use App\Form\ReceiptsFileType;
+use App\Repository\ReceiptsFileRepository;
 use App\Service\CsvFormatValidator;
 use App\Service\FileUploader;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Swift_Mailer;
@@ -27,10 +29,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ReceiptsFileController extends AbstractController
 {
+
+    private ReceiptsFileRepository $receiptFileRepo;
+
+    public function __construct(ReceiptsFileRepository $receiptFileRepo)
+    {
+        $this->receiptFileRepo = $receiptFileRepo;
+    }
+
     /**
      * @Route("/upload", name="receipts_file_upload")
      */
-    public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, Swift_Mailer $mailer)
+    public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, Swift_Mailer $mailer, EntityManagerInterface $em)
     {
         $form = $this->createForm(ReceiptsFileType::class);
 
@@ -58,8 +68,6 @@ class ReceiptsFileController extends AbstractController
                 $receiptsFileName = $fileUploader->upload($file);
                 $data['receiptsFileName'] = $receiptsFileName;
                 $receiptsFileObject = ReceiptsFile::createReceiptsFile($data);
-
-                $em = $this->getDoctrine()->getManager();
                 $em->persist($receiptsFileObject);
                 $em->flush();
                 $this->addFlash('success', 'messages.successfullySended');
@@ -101,8 +109,7 @@ class ReceiptsFileController extends AbstractController
      */
     public function list()
     {
-        $em = $this->getDoctrine()->getManager();
-        $receiptsFiles = $em->getRepository(ReceiptsFile::class)->findBy([], [
+        $receiptsFiles = $this->receiptFileRepo->findBy([], [
             'receptionDate' => 'DESC',
         ]);
 

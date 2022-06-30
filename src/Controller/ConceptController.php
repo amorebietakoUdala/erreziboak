@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Concept;
 use App\Form\ConceptTypeForm;
 use App\Service\GTWINIntegrationService;
+use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -24,10 +25,9 @@ class ConceptController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @Route("/concept/new", name="admin_concept_new", methods={"GET","POST"})
      */
-    public function newAction(Request $request, LoggerInterface $logger, \App\Service\GTWINIntegrationService $gts)
+    public function newAction(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, EntityManagerInterface $em)
     {
         $logger->debug('-->newAction: Start');
-        $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(ConceptTypeForm::class, new Concept(), [
             'readonly' => false,
         ]);
@@ -53,10 +53,9 @@ class ConceptController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @Route("/concept", name="admin_concept_list", methods={"GET"})
      */
-    public function listAction(Request $request, LoggerInterface $logger)
+    public function listAction(Request $request, LoggerInterface $logger, EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
-        $em = $this->getDoctrine()->getManager();
         $concepts = $em->getRepository(Concept::class)->findAll();
 
         return $this->render('concept/list.html.twig', [
@@ -68,7 +67,7 @@ class ConceptController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @Route("/concept/{id}", name="admin_concept_show", methods={"GET"})
      */
-    public function showAction(Concept $id, LoggerInterface $logger)
+    public function showAction(Concept $id, LoggerInterface $logger, EntityManagerInterface $em)
     {
         $logger->debug('-->showAction: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
@@ -87,7 +86,7 @@ class ConceptController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @Route("/concept/{id}/edit", name="admin_concept_edit", methods={"GET","POST"})
      */
-    public function editAction(Request $request, Concept $id, LoggerInterface $logger)
+    public function editAction(Request $request, Concept $id, LoggerInterface $logger, EntityManagerInterface $em)
     {
         $logger->debug('-->ConceptEditAction: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
@@ -97,7 +96,6 @@ class ConceptController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $concept = $form->getData();
-            $em = $this->getDoctrine()->getManager();
             $em->persist($concept);
             $em->flush();
             $this->addFlash('success', 'message.concept_saved');
@@ -115,11 +113,10 @@ class ConceptController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @Route("/concept/{id}/delete", name="admin_concept_delete", methods={"GET"})
      */
-    public function deleteAction(Concept $id, LoggerInterface $logger)
+    public function deleteAction(Concept $id, LoggerInterface $logger, EntityManagerInterface $em)
     {
         $logger->debug('-->deleteAction: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
-        $em = $this->getDoctrine()->getManager();
         $em->remove($id);
         $em->flush();
         $this->addFlash('success', 'El concepto se ha eliminado correctamente.');

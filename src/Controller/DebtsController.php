@@ -7,6 +7,7 @@ use App\Entity\DebtsFile;
 use App\Entity\ReturnsFile;
 use App\Form\DebtsFileType;
 use App\Form\DebtsSearchFormType;
+use App\Repository\DebtsFileRepository;
 use App\Service\CsvFormatValidator;
 use App\Service\FileUploader;
 use App\Service\GTWINIntegrationService;
@@ -29,13 +30,20 @@ use Symfony\Component\Translation\TranslatableMessage;
  */
 class DebtsController extends AbstractController
 {
+
+    private DebtsFileRepository $debtsFileRepo;
+
+    public function __construct(DebtsFileRepository $debtsFileRepo)
+    {
+        $this->debtsFileRepo = $debtsFileRepo;    
+    }
+    
     /**
      * @Route("/{_locale}/debts_file/", name="debts_file_list")
      */
-    public function list()
+    public function list(EntityManagerInterface $em)
     {
-        $em = $this->getDoctrine()->getManager();
-        $debtsFiles = $em->getRepository(DebtsFile::class)->findBy([], [
+        $debtsFiles = $this->debtsFileRepo->findBy([], [
             'receptionDate' => 'DESC',
         ]);
 
@@ -91,7 +99,7 @@ class DebtsController extends AbstractController
     /**
      * @Route("/{_locale}/debts_file/upload", name="debts_file_upload")
      */
-    public function upload(Request $request, CsvFormatValidator $validator, GTWINIntegrationService $gts)
+    public function upload(Request $request, CsvFormatValidator $validator, GTWINIntegrationService $gts, EntityManagerInterface $em)
     {
         $form = $this->createForm(DebtsFileType::class);
 
@@ -125,7 +133,6 @@ class DebtsController extends AbstractController
                 $debtsFileObject->setProcessedDate(new DateTime());
                 $debtsFileObject->setStatus(ReturnsFile::STATUS_PROCESSED);
                 $debtsFileObject->setTotalAmount($debts['totalDebt']);
-                $em = $this->getDoctrine()->getManager();
                 $em->persist($debtsFileObject);
                 $em->flush();
                 $this->addFlash('success', 'messages.successfullySended');

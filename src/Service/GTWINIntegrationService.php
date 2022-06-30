@@ -8,6 +8,10 @@
 
 namespace App\Service;
 
+use App\Entity\ConceptInscription;
+use App\Entity\ExamInscription;
+use App\Entity\GTWIN\ConceptoContable;
+use App\Entity\GTWIN\Institucion;
 use App\Entity\GTWIN\Recibo;
 use App\Entity\GTWIN\TipoIngreso;
 use App\Entity\GTWIN\OperacionesExternas;
@@ -17,6 +21,7 @@ use Psr\Log\LoggerInterface;
 use App\Utils\Validaciones;
 use App\Entity\GTWIN\Person;
 use App\Entity\GTWIN\ReferenciaC60;
+use App\Entity\GTWIN\Tarifa;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -243,17 +248,85 @@ class GTWINIntegrationService
     }
 
     /**
-     * Crear Recibo en GTWIN con los datos de ordaindu.
+     * Crear Recibo en GTWIN con los datos de la inscripción a exam
      *
      * @abstract
      *
-     * @param Receipt $receipt Recibo de ordaindu
+     * @param ConceptInscription $inscription Recibo de ordaindu
      *
      * @return Recibo|null
      *
      * @throws Exception Si la operaciónExterna devuelve un error
      */
-    public function createReciboOpt(\App\Entity\ExamInscription $exam): ?Recibo
+    public function createReciboForInscription(ConceptInscription $inscription, bool $wait = true): ?Recibo
+    {
+        $concept = $inscription->getConcept();
+        /* If Concept has a service URL to retrive the price we must get it */
+        if (null === $inscription->getPrice()) {
+            if (null !== $concept->getServiceURL()) {
+                try {
+                    $response = $this->client->request('GET', $concept->getServiceURL());
+                    $actualPrice = json_decode($response->getContent(), true);
+                } catch (\Exception $e) {
+                    throw new \Exception($e->getMessage());
+                }
+            } else {
+                $actualPrice = $concept->getUnitaryPrice();
+            }
+        } else {
+            $actualPrice = $inscription->getPrice();
+        }
+
+        $tipoIngreso = $this->em->getRepository(TipoIngreso::class)->findOneBy([
+            'conceptoC60' => $inscription->getConcept()->getSuffix(),
+        ]);
+        $now = new DateTime();
+        $reference = $inscription->getExternalReference() ?? $now->format('YmdHis');
+        
+        $inputparams = $this->createReciboParams(
+            null,
+            $reference,
+            $tipoIngreso->getCodigo(),
+            $concept->getEntity(),
+            mb_convert_encoding($inscription->getApellido1() . '*' . $inscription->getApellido2() . ',' . $inscription->getNombre(), 'ISO-8859-1'),
+            substr($inscription->getDni(), 0, -1),
+            substr($inscription->getDni(), -1),
+            (Validaciones::validar_dni($inscription->getDni()) ? 'ES' : 'EX'),
+            str_pad($actualPrice, '15', ' ', STR_PAD_RIGHT) . str_pad(mb_convert_encoding($concept->getName(), 'ISO-8859-1'), '80', ' ', STR_PAD_RIGHT),
+            $tipoIngreso->getTipoDefecto(),
+            'P',
+            'V',
+            'F',
+            $concept->getAccountingConcept(),
+            $actualPrice
+        );
+        $dboid = $this->__insertExternalOperation('CREA_RECIBO', $inputparams);
+        $result = null;
+        if ($wait) {
+            $operacionExterna = $this->__waitUntilProcessed($dboid);
+            if ($operacionExterna->procesadaOk()) {
+                $em = $this->em;
+                $result = $em->getRepository(Recibo::class)->findOneBy(['numeroReferenciaExterna' => $reference]);
+            } else {
+                throw new \Exception($operacionExterna->getMensajeError()->getDescripcion());
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Crear Recibo en GTWIN con los datos de la inscripción a exam
+     *
+     * @abstract
+     *
+     * @param ExamInscription $receipt Recibo de ordaindu
+     *
+     * @return Recibo|null
+     *
+     * @throws Exception Si la operaciónExterna devuelve un error
+     */
+    public function createReciboOpt(ExamInscription $exam, bool $wait = true): ?Recibo
     {
         $concept = $exam->getCategory()->getConcept();
         /* If Concept has a service URL to retrive the price we must get it */
@@ -291,13 +364,15 @@ class GTWINIntegrationService
             $actualPrice
         );
         $dboid = $this->__insertExternalOperation('CREA_RECIBO', $inputparams);
-        $operacionExterna = $this->__waitUntilProcessed($dboid);
         $result = null;
-        if ($operacionExterna->procesadaOk()) {
-            $em = $this->em;
-            $result = $em->getRepository(Recibo::class)->findOneBy(['numeroReferenciaExterna' => $reference]);
-        } else {
-            throw new \Exception($operacionExterna->getMensajeError()->getDescripcion());
+        if ($wait) {
+            $operacionExterna = $this->__waitUntilProcessed($dboid);
+            if ($operacionExterna->procesadaOk()) {
+                $em = $this->em;
+                $result = $em->getRepository(Recibo::class)->findOneBy(['numeroReferenciaExterna' => $reference]);
+            } else {
+                throw new \Exception($operacionExterna->getMensajeError()->getDescripcion());
+            }
         }
 
         return $result;
@@ -410,6 +485,21 @@ class GTWINIntegrationService
         return $conceptosContables;
     }
 
+    public function findInstitucionByCodigo($codigo)
+    {
+        $result = $this->em->getRepository(Institucion::class)->findBy([
+            'codigo' => $codigo,
+        ]);
+
+        return $result;
+    }
+
+    public function findInstituciones() {
+        $result = $this->em->getRepository(Institucion::class)->findAll();
+
+        return $result;
+    }
+
     public function findTipoIngresoInstitucion($institucion)
     {
         $result = $this->em->getRepository(TipoIngreso::class)->findByInstitucion($institucion);
@@ -417,16 +507,17 @@ class GTWINIntegrationService
         return $result;
     }
 
-    public function findConceptosContablesTipoIngreso($tipoIngreso)
+    public function findTipoIngresoByCodigo($codigo)
     {
-        $result = $this->em->getRepository(\App\Entity\GTWIN\ConceptoContable::class)->findByTipoIngreso($tipoIngreso);
-
+        $result = $this->em->getRepository(TipoIngreso::class)->findBy([
+            'codigo' => $codigo,
+        ]);
         return $result;
     }
 
     public function findTarifasTipoIngreso($tipoIngreso)
-    {
-        $result = $this->em->getRepository(\App\Entity\GTWIN\Tarifa::class)->findByTipoIngreso($tipoIngreso);
+    {   
+        $result = $this->em->getRepository(Tarifa::class)->findByTipoIngreso($tipoIngreso);
 
         return $result;
     }

@@ -8,7 +8,6 @@ import getAppBase from '../common/app_base';
 
 
 $(document).ready(function(){
-    console.log('Exam new');
     Routing.setRoutingData(routes);
     $('.js-back').on('click', function(e) {
         e.preventDefault();
@@ -20,14 +19,12 @@ $(document).ready(function(){
         var price = null;
         $.ajax({
             url: url,
-            success: function (json) {
-                var category = JSON.parse(json);
+            success: function (category) {
                 var serviceURL = category.data.concept.service_url;
                 if (serviceURL !== undefined) {
                     $.ajax({
                         url: serviceURL,
                         success: function (price) {
-                            console.log(price);
                             $('.js-quantity').text(price);
                         }
                     });

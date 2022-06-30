@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\PaymentTypeForm;
+use App\Repository\PaymentRepository;
 
 /**
  * @Route("/{_locale}", requirements={
@@ -17,6 +18,14 @@ use App\Form\PaymentTypeForm;
  */
 class PaymentController extends AbstractController
 {
+
+    private PaymentRepository $paymentRepo;
+
+    public function __construct(PaymentRepository $paymentRepo)
+    {
+        $this->paymentRepo = $paymentRepo;    
+    }
+
     /**
      * @Route("/admin/payments", name="admin_list_payments", methods={"GET","POST"})
      * @IsGranted("ROLE_ADMIN")
@@ -24,7 +33,6 @@ class PaymentController extends AbstractController
     public function listPaymentsAction(Request $request, LoggerInterface $logger)
     {
         $logger->debug('-->listPaymentsAction: Start');
-        $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(PaymentTypeForm::class, null, [
             'search' => true,
             'readonly' => false,
@@ -33,7 +41,7 @@ class PaymentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $results = $em->getRepository(Payment::class)->findPaymentsBy($data);
+            $results = $this->paymentRepo->findPaymentsBy($data);
 
             return $this->render('payment/list.html.twig', [
                 'form' => $form->createView(),

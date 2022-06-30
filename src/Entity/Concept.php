@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -64,6 +66,16 @@ class Concept
      * @ORM\Column(type="string", length=1024, nullable=true)
      */
     private $serviceURL;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ConceptInscription::class, mappedBy="concept")
+     */
+    private $conceptInscriptions;
+
+    public function __construct()
+    {
+        $this->conceptInscriptions = new ArrayCollection();
+    }
 
     /**
      * Get id.
@@ -191,5 +203,35 @@ class Concept
     public function getHasServiceURL(): bool
     {
         return null !== $this->serviceURL;
+    }
+
+    /**
+     * @return Collection<int, ConceptInscription>
+     */
+    public function getConceptInscriptions(): Collection
+    {
+        return $this->conceptInscriptions;
+    }
+
+    public function addConceptInscription(ConceptInscription $conceptInscription): self
+    {
+        if (!$this->conceptInscriptions->contains($conceptInscription)) {
+            $this->conceptInscriptions[] = $conceptInscription;
+            $conceptInscription->setConcept($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConceptInscription(ConceptInscription $conceptInscription): self
+    {
+        if ($this->conceptInscriptions->removeElement($conceptInscription)) {
+            // set the owning side to null (unless already changed)
+            if ($conceptInscription->getConcept() === $this) {
+                $conceptInscription->setConcept(null);
+            }
+        }
+
+        return $this;
     }
 }

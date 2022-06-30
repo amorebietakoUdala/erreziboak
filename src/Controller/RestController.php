@@ -11,16 +11,23 @@ namespace App\Controller;
 use App\Service\GTWINIntegrationService;
 use App\Utils\ApiResponse;
 use App\Entity\Category;
+use App\Entity\ConceptInscription;
+use App\Entity\GTWIN\Recibo;
 use Exception;
 use JMS\Serializer\SerializerInterface;
 use App\Entity\Payment;
+use App\Form\ConceptInscriptionTypeForm;
 use App\Repository\CategoryRepository;
+use App\Repository\ConceptRepository;
+use App\Repository\PaymentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Description of RestController.
@@ -33,6 +40,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class RestController extends AbstractController
 {
+
+    private PaymentRepository $paymentRepo;
+    private ConceptRepository $conceptRepo;
+
+    public function __construct(PaymentRepository $paymentRepo, ConceptRepository $conceptRepo)
+    {
+       $this->paymentRepo = $paymentRepo;
+       $this->conceptRepo = $conceptRepo;
+    }
+
     /**
      * Check the existance of the person by DNI.
      *
@@ -51,6 +68,36 @@ class RestController extends AbstractController
             'Content-Type' => 'application/json;charset=utf-8'
         ], true);
 
+        return $response;
+    }
+
+    /**
+     * Check the existance of the person by DNI.
+     *
+     * @Route("/receipts/new", name="api_receipt_new",  methods={"POST"})
+     */
+    public function receiptNew (Request $request, GTWINIntegrationService $gts, SerializerInterface $serializer, RouterInterface $router) {
+        $inscription = new ConceptInscription();
+        $form = $this->createForm(ConceptInscriptionTypeForm::class, $inscription, [
+            'locale' => $request->getLocale(),
+            'csrf_protection' => false,
+        ]);
+        $json = json_decode($request->getContent(), true);
+        $form->submit($json);
+        /** @var ConceptInscription $data */ 
+        $data = $form->getData();
+        $recibo = $gts->createReciboForInscription($data, true);
+        $paymentURL = $router->generate('receipt_pay',[
+            'numeroRecibo' => $recibo->getNumeroRecibo(),
+            'dni' => $data->getDni(), 
+        ], RouterInterface::ABSOLUTE_URL);
+
+        $response = new JsonResponse($serializer->serialize(new ApiResponse('OK', 'Received', [
+            'recibo' => $recibo,
+            'paymentURL' => $paymentURL,
+        ]), 'json'), 200, [
+            'Content-Type' => 'application/json;charset=utf-8'
+        ], true);
         return $response;
     }
 
@@ -79,22 +126,9 @@ class RestController extends AbstractController
     }
 
     /**
-     * @Route("/receipts/confirmation2", methods={"POST"})
-     */
-    public function receiptsConfirmation2(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer)
-    {
-        $logger->debug('Origin: ' . $request->headers->get('Origin'));
-        $logger->debug($request->getContent());
-        $body = $request->getContent();
-        $decoded = json_decode($body, true);
-        $logger->debug($body);
-        dd($decoded);
-    }
-
-    /**
      * @Route("/receipts/confirmation", methods={"POST"})
      */
-    public function receiptsConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer)
+    public function receiptsConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer, EntityManagerInterface $em)
     {
         $logger->debug('Origin: ' . $request->headers->get('Origin'));
         $logger->debug($request->getContent());
@@ -115,9 +149,8 @@ class RestController extends AbstractController
         $logger->debug('Before create payment');
         $payment = Payment::createPaymentFromJson($request->getContent());
         $logger->debug('After create payment');
-        $em = $this->getDoctrine()->getManager();
 
-        $existingPayment = $em->getRepository(Payment::class)->findOneBy([
+        $existingPayment = $this->paymentRepo->findOneBy([
             'referenceNumber' => $payment->getReferenceNumber(),
             'status' => Payment::PAYMENT_STATUS_OK,
         ]);
@@ -169,10 +202,9 @@ class RestController extends AbstractController
 
     public function removeAlreadyPaid($recibos)
     {
-        $em = $this->getDoctrine()->getManager();
         $recibosNoPagados = [];
         foreach ($recibos as $recibo) {
-            $payment = $em->getRepository(Payment::class)->findOneBy([
+            $payment = $this->paymentRepo->findOneBy([
                 'referenceNumber' => str_pad($recibo->getNumeroRecibo(), 10, '0', STR_PAD_LEFT),
                 'status' => Payment::PAYMENT_STATUS_OK,
             ]);
@@ -200,4 +232,97 @@ class RestController extends AbstractController
             ], true
         );
     }
+
+    /**
+     * @Route("/instituciones", name="api_get_instituciones", methods={"GET"}, options = { "expose" = true })
+     */
+     public function getInstituciones(GTWINIntegrationService $gts, SerializerInterface $serializer) 
+     {
+        $instituciones = $gts->findInstituciones();
+
+        return new JsonResponse(
+            $serializer->serialize(new ApiResponse('OK', 'Instituciones found', $instituciones),'json'), 
+            200, [
+                'Content-Type' => 'application/json;charset=utf-8'
+            ], true
+        );
+    }
+
+    /**
+     * @Route("/institucion/{codigo}/tiposIngreso", name="api_get_tipos_ingreso_institucion", methods={"GET"}, options = { "expose" = true })
+     */
+    public function getTiposIngresoPorInstitucion($codigo, GTWINIntegrationService $gts, SerializerInterface $serializer) 
+    {
+       $tiposIngreso = $gts->findTipoIngresoInstitucion($codigo);
+
+       return new JsonResponse(
+           $serializer->serialize(new ApiResponse('OK', 'Tipos de ingreso found', $tiposIngreso),'json'), 
+           200, [
+               'Content-Type' => 'application/json;charset=utf-8'
+           ], true
+       );
+   }
+
+
+
+    /**
+     * @Route("/institucion/{codigo}", name="api_get_institucion", methods={"GET"}, options = { "expose" = true })
+     */
+    public function getInstitucion($codigo, GTWINIntegrationService $gts, SerializerInterface $serializer) 
+    {
+       $institucion = $gts->findInstitucionByCodigo($codigo);
+
+       return new JsonResponse(
+           $serializer->serialize(new ApiResponse('OK', 'Institucion found', $institucion),'json'), 
+           200, [
+               'Content-Type' => 'application/json;charset=utf-8'
+           ], true
+       );
+   }
+
+    /**
+     * @Route("/tarifas/{sufijo}", name="api_get_tarifas", methods={"GET"}, options = { "expose" = true })
+     */
+    public function getTarifasTipoIngreso($sufijo, GTWINIntegrationService $gts, SerializerInterface $serializer)
+    {
+        $tarifas = $gts->findTarifasTipoIngreso($sufijo);
+
+        return new JsonResponse(
+            $serializer->serialize(new ApiResponse('OK', 'Tarifas found', $tarifas),'json'), 
+            200, [
+                'Content-Type' => 'application/json;charset=utf-8'
+            ], true
+        );
+    }
+
+    /**
+     * @Route("/tipo-ingreso/{codigo}", name="api_get_tipo_ingreso", methods={"GET"}, options = { "expose" = true })
+     */
+    public function getTiposIngreso($codigo, GTWINIntegrationService $gts, SerializerInterface $serializer) 
+    {
+       $tiposIngreso = $gts->findTipoIngresoByCodigo($codigo);
+
+       return new JsonResponse(
+           $serializer->serialize(new ApiResponse('OK', 'Tipos de ingreso found', $tiposIngreso),'json'), 
+           200, [
+               'Content-Type' => 'application/json;charset=utf-8'
+           ], true
+       );
+   }
+
+    /**
+     * @Route("/concepts", name="api_get_concepts", methods={"GET"}, options = { "expose" = true })
+     */
+    public function getConcepts(SerializerInterface $serializer) 
+    {
+       $concepts = $this->conceptRepo->findAll();
+
+       return new JsonResponse(
+           $serializer->serialize(new ApiResponse('OK', 'Concepts found', $concepts),'json'), 
+           200, [
+               'Content-Type' => 'application/json;charset=utf-8'
+           ], true
+       );
+   }
+
 }
