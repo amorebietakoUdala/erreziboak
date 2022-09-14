@@ -226,4 +226,6 @@ table.options: "Opciones"
 "Payment was successfull": "El pago se ha realizado correctamente."
 "Payment was NOT successfull": "Ha ocurrido un error al realizar el pago. NO se ha realizado correctamente."
 
+"YYYY/MM/DD HH:MM": "AAAA/MM/DD HH:MM"
+
 mail.totalAmount: "Montante total"
