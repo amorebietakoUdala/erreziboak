@@ -13,7 +13,7 @@
 		    </div>
             <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                {{ form_widget(form.date_from, { 'attr': { 'class' : 'form-control form-control-sm' } }) }}
+                {{ form_widget(form.date_from, { 'attr': { 'class' : 'form-control form-control-sm js-datetime' } }) }}
                 {{ form_errors(form.date_from) }}
             </div>
 		</div>
@@ -23,7 +23,7 @@
 		    </div>
             <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                {{ form_widget(form.date_to, { 'attr': { 'class' : 'form-control form-control-sm' } }) }}
+                {{ form_widget(form.date_to, { 'attr': { 'class' : 'form-control form-control-sm js-datetime' } }) }}
                 {{ form_errors(form.date_to) }}
             </div>
 		</div>

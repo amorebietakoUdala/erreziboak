@@ -515,6 +515,15 @@ class GTWINIntegrationService
         return $result;
     }
 
+    public function findTipoIngresoByConceptoC60($suffix)
+    {
+        $tipoIngreso = $this->em->getRepository(TipoIngreso::class)->findOneBy([
+            'conceptoC60' => $suffix,
+        ]);
+        return $tipoIngreso;
+    }
+
+
     public function findTarifasTipoIngreso($tipoIngreso)
     {   
         $result = $this->em->getRepository(Tarifa::class)->findByTipoIngreso($tipoIngreso);

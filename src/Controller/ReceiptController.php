@@ -57,24 +57,26 @@ class ReceiptController extends AbstractController
             if (null === $data['referenciaC60']) {
                 $this->addFlash('error', 'Debe especificar una referencia');
 
-                return $this->render('receipt/list.html.twig', [
+                return $this->render('receipt/search.html.twig', [
                     'form' => $form->createView(),
-                    'receipts' => $results,
+                    'references' => $results,
                 ]);
             }
             if (null !== $data['referenciaC60'] && !is_numeric($data['referenciaC60'])) {
                 $this->addFlash('error', 'La refrencia no es correcta debe ser un número.');
 
-                return $this->render('receipt/list.html.twig', [
+                return $this->render('receipt/search.html.twig', [
                     'form' => $form->createView(),
-                    'receipts' => $results,
+                    'references' => $results,
                 ]);
             }
             $references = $gts->findReferenciaC60($data['referenciaC60']);
+            $fechaLimitePagoBanco = null;
+            $importeTotal = 0;
+            $concepto = null;
             if (null === $references || 0 === count($references)) {
                 $this->addFlash('error', 'messages.referenceNotFound');
             } else {
-                $importeTotal = 0;
                 $fechaLimitePagoBanco = $references[0]->getFechaLimitePagoBanco();
                 $concepto = 'many';
                 if (count($references) === 1) {
@@ -83,17 +85,17 @@ class ReceiptController extends AbstractController
                 foreach ($references as $reference) {
                     $importeTotal += ($reference->getCostas() + $reference->getRecargo()  + $reference->getIntereses() + $reference->getPrincipal());
                 }
-            }
-            if ($fechaLimitePagoBanco < new \DateTime()) {
-                $this->addFlash('error', 'messages.fechaLimitePagoBancoVencida');
-                return $this->render('receipt/search.html.twig', [
-                    'form' => $form->createView(),
-                    'references' => [],
-                ]);
+                if ($fechaLimitePagoBanco < new \DateTime()) {
+                    $this->addFlash('error', 'messages.fechaLimitePagoBancoVencida');
+                    return $this->render('receipt/search.html.twig', [
+                        'form' => $form->createView(),
+                        'references' => [],
+                    ]);
+                }
             }
             return $this->render('receipt/search.html.twig', [
                 'form' => $form->createView(),
-                'fechaLimitePagoBanco' => $fechaLimitePagoBanco->format('Y/m/d'),
+                'fechaLimitePagoBanco' => $fechaLimitePagoBanco !== null ? $fechaLimitePagoBanco->format('Y/m/d') : null,
                 'importeTotal' => $importeTotal,
                 'referenciaC60' => $data['referenciaC60'],
                 'references' => $references,
@@ -165,24 +167,25 @@ class ReceiptController extends AbstractController
     /**
      * @Route("/pay/{receipt}", name="receipt_forwarded_pay", methods={"POST"})
      */
-    public function payForwardedReceiptAction(Request $request, Recibo $receipt, LoggerInterface $logger)
-    {
-        $logger->debug('-->payForwardedReceiptAction: Start');
-        if (null != $receipt) {
-            $logger->debug('<--payForwardedReceiptAction: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequestAction');
+    // public function payForwardedReceiptAction(Request $request, Recibo $receipt, LoggerInterface $logger)
+    // {
+    //     $logger->debug('-->payForwardedReceiptAction: Start');
+    //     if (null != $receipt) {
+    //         $logger->debug('<--payForwardedReceiptAction: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequestAction');
 
-            return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequestAction', $this->__createMiPagoParametersArray($receipt));
-        } else {
-            $this->addFlash('error', 'Recibo no encontrado');
-            $logger->debug('<--payForwardedReceiptAction: End Recibo no encontrado');
+    //         return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequestAction', $this->__createMiPagoParametersArray($receipt));
+    //     } else {
+    //         $this->addFlash('error', 'Recibo no encontrado');
+    //         $logger->debug('<--payForwardedReceiptAction: End Recibo no encontrado');
+    //         $form = $this->createForm(ReceiptSearchForm::class);
 
-            return $this->render('receipt/list.html.twig', [
-                'form' => $form->createView(),
-                'receipts' => [],
-            ]);
-        }
-        $logger->debug('-->payForwardedReceiptAction: End OK');
-    }
+    //         return $this->render('receipt/search.html.twig', [
+    //             'form' => $form->createView(),
+    //             'references' => [],
+    //         ]);
+    //     }
+    //     $logger->debug('-->payForwardedReceiptAction: End OK');
+    // }
 
     /**
      * @Route("/pay/reference/{referencia}", name="referenciac60_pay", methods={"GET", "POST"}, options={"expose"=true})
@@ -230,9 +233,9 @@ class ReceiptController extends AbstractController
             $this->addFlash('error', 'El dni y el número de recibo son obligatorios');
             $logger->debug('<--payReceiptAction: End El dni y el número de recibo son obligatorios');
 
-            return $this->render('receipt/list.html.twig', [
+            return $this->render('receipt/search.html.twig', [
                 'form' => $form->createView(),
-                'receipts' => [],
+                'references' => [],
                 'email' => $email,
             ]);
         }
@@ -241,9 +244,9 @@ class ReceiptController extends AbstractController
             $this->addFlash('error', 'Recibo no encontrado');
             $logger->debug('<--payReceiptAction: End Recibo no encontrado');
 
-            return $this->render('receipt/list.html.twig', [
+            return $this->render('receipt/search.html.twig', [
                 'form' => $form->createView(),
-                'receipts' => [],
+                'references' => [],
                 'email' => $email,
             ]);
         }
