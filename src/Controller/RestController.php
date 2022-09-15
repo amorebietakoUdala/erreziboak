@@ -11,14 +11,17 @@ namespace App\Controller;
 use App\Service\GTWINIntegrationService;
 use App\Utils\ApiResponse;
 use App\Entity\Category;
+use App\Entity\Concept;
 use App\Entity\ConceptInscription;
 use App\Entity\GTWIN\Recibo;
+use App\Entity\GTWIN\TipoIngreso;
 use Exception;
 use JMS\Serializer\SerializerInterface;
 use App\Entity\Payment;
 use App\Form\ConceptInscriptionTypeForm;
 use App\Repository\CategoryRepository;
 use App\Repository\ConceptRepository;
+use App\Repository\GTWIN\TipoIngresoRepository;
 use App\Repository\PaymentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -43,11 +46,13 @@ class RestController extends AbstractController
 
     private PaymentRepository $paymentRepo;
     private ConceptRepository $conceptRepo;
+    private GTWINIntegrationService $gts;
 
-    public function __construct(PaymentRepository $paymentRepo, ConceptRepository $conceptRepo)
+    public function __construct(PaymentRepository $paymentRepo, ConceptRepository $conceptRepo, GTWINIntegrationService $gts)
     {
        $this->paymentRepo = $paymentRepo;
        $this->conceptRepo = $conceptRepo;
+       $this->gts = $gts;
     }
 
     /**
@@ -316,9 +321,29 @@ class RestController extends AbstractController
     public function getConcepts(SerializerInterface $serializer) 
     {
        $concepts = $this->conceptRepo->findAll();
-
+       $conceptsArray = [];
+       foreach ($concepts as $key => $value) {
+            $tipoIngreso = $this->gts->findTipoIngresoByConceptoC60($value->getSuffix());
+            $conceptsArray[] = [
+                'concept' => $value,
+                'tipoIngreso' => $tipoIngreso
+            ];
+       }
        return new JsonResponse(
-           $serializer->serialize(new ApiResponse('OK', 'Concepts found', $concepts),'json'), 
+           $serializer->serialize(new ApiResponse('OK', 'Concepts found', $conceptsArray),'json'), 
+           200, [
+               'Content-Type' => 'application/json;charset=utf-8'
+           ], true
+       );
+   }
+
+    /**
+     * @Route("/concept/{id}", name="api_get_concept", methods={"GET"}, options = { "expose" = true })
+     */
+    public function getConcept(SerializerInterface $serializer, Concept $concept) 
+    {
+       return new JsonResponse(
+           $serializer->serialize(new ApiResponse('OK', 'Concept found', $concept),'json'), 
            200, [
                'Content-Type' => 'application/json;charset=utf-8'
            ], true

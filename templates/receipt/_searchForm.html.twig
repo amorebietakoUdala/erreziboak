@@ -18,7 +18,9 @@
 			</div>
 			<div class="col-lg-2 col-md-2 col-sm-6">
 				{{ form_widget(form.search, { 'attr': { 'class' : 'btn btn-primary' } }) }}&nbsp;
-				<i id="info-btn" class="fa fa-info btn btn-primary btn-rounded" title="{{ "messages.numbersWhere" | trans }}" data-toggle="modal" data-target="#myModal"></i>
+				<span class="btn btn-primary rounded-circle" data-toggle="modal" data-target="#myModal">
+					&nbsp;<i id="info-btn" class="fa fa-info" title="{{ "messages.numbersWhere" | trans }}"></i>&nbsp;
+				</span>
 			</div>
 		</div>
 		{{ form_end(form) }}

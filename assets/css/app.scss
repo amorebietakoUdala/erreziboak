@@ -1,5 +1,5 @@
-@import '~bootstrap/scss/bootstrap'; 
-@import '~font-awesome';
+@import "~bootstrap";
+@import "~@fortawesome/fontawesome-free/css/all.css";
 
 header {
     display: grid;
@@ -33,10 +33,6 @@ main {
 
 body {
     background-color: white;
-}
-
-.btn-rounded {
-    border-radius: 1.1rem 1.1rem 1.1rem 1.1rem;
 }
 
 .fixed-bottom-right {

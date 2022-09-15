@@ -4,6 +4,8 @@ import 'popper.js';
 
 import '../css/app.scss';
 
+//import '@fortawesome/fontawesome-free';
+
 $(document).ready(function(){
     $('#js-locale-es').on('click',function (e) {
 		e.preventDefault();

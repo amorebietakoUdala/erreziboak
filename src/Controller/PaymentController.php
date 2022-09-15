@@ -40,7 +40,6 @@ class PaymentController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-
             $results = $this->paymentRepo->findPaymentsBy($data);
 
             return $this->render('payment/list.html.twig', [

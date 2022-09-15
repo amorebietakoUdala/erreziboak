@@ -32,16 +32,16 @@ class PaymentTypeForm extends AbstractType
             $builder->add('date_from', DateTimeType::class, [
         'widget' => 'single_text',
         'html5' => false,
-        'format' => 'yyyy-MM-dd HH:mm',
-        'attr' => ['class' => 'js-datepicker'],
+        'help' => 'YYYY/MM/DD HH:MM',
+        'format' => 'yyyy/MM/dd HH:mm',
         'label' => 'payment.from',
             'disabled' => $readonly,
         ])
         ->add('date_to', DateTimeType::class, [
         'widget' => 'single_text',
         'html5' => false,
-        'format' => 'yyyy-MM-dd HH:mm',
-        'attr' => ['class' => 'js-datepicker'],
+        'help' => 'YYYY/MM/DD HH:MM',
+        'format' => 'yyyy/MM/dd HH:mm',
         'label' => 'payment.to',
             'disabled' => $readonly,
         ]);
@@ -49,7 +49,7 @@ class PaymentTypeForm extends AbstractType
             $builder->add('timestamp', DateTimeType::class, [
         'widget' => 'single_text',
         'html5' => false,
-        'format' => 'yyyy-MM-dd HH:mm:ss',
+        'format' => 'yyyy/MM/dd HH:mm',
         'attr' => ['class' => 'js-datepicker'],
         'label' => 'payment.timestamp',
             'disabled' => $readonly,
