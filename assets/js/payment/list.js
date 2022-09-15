@@ -6,9 +6,7 @@ import 'bootstrap-table/dist/extensions/export/bootstrap-table-export'
 import 'tableexport.jquery.plugin/tableExport.min';
 import 'bootstrap-table/dist/locale/bootstrap-table-es-ES';
 import 'bootstrap-table/dist/locale/bootstrap-table-eu-EU';
-import { TempusDominus } from '@eonasdan/tempus-dominus';
-import moment from 'moment';
-import {createAlert} from '../common/alert';
+import tempusDominus from '@eonasdan/tempus-dominus';
 const routes = require('../../../public/js/fos_js_routes.json');
 import Routing from '../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
 
@@ -45,7 +43,7 @@ $(document).ready(function(){
         });
     });
     $('.js-datetime').each((i,v) => {
-        new TempusDominus(v,{
+        new tempusDominus.TempusDominus(v,{
             display: {
                 buttons: {
                     close: true,
