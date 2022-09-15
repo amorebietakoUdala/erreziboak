@@ -226,6 +226,6 @@ table.options: "Aukerak"
 "Payment was successfull": "Ordainketa behar den moduan gauzatu da."
 "Payment was NOT successfull": "Arazoa bat egon da ordainketa egiterakoan. Ez da ordainketarik egin."
 
-"YYYY/MM/DD HH:MM": "UUUU/HH/EE HH:MM"
+"YYYY-MM-DD HH:MM": "UUUU-HH-EE HH:MM"
 
 mail.totalAmount: "Zenbateko osoa"
