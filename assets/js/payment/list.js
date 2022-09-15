@@ -7,6 +7,7 @@ import 'tableexport.jquery.plugin/tableExport.min';
 import 'bootstrap-table/dist/locale/bootstrap-table-es-ES';
 import 'bootstrap-table/dist/locale/bootstrap-table-eu-EU';
 import tempusDominus from '@eonasdan/tempus-dominus';
+import customDateFormat from '@eonasdan/tempus-dominus/dist/plugins/customDateFormat';
 const routes = require('../../../public/js/fos_js_routes.json');
 import Routing from '../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
 
@@ -42,26 +43,30 @@ $(document).ready(function(){
             });
         });
     });
+    
     $('.js-datetime').each((i,v) => {
+        tempusDominus.extend(customDateFormat);
         new tempusDominus.TempusDominus(v,{
             display: {
-                buttons: {
-                    close: true,
-                },
-                components: {
-                    useTwentyfourHour: true,
-                    decades: false,
-                    year: true,
-                    month: true,
-                    date: true,
-                    hours: true,
-                    minutes: true,
-                    seconds: false
-                },                       
+              buttons: {
+                close: true,
+              },
+              components: {
+                useTwentyfourHour: true,
+                decades: false,
+                year: true,
+                month: true,
+                date: true,
+                hours: true,
+                minutes: true,
+                seconds: false,
+              },
             },
-            localization: { 
-                locale: 'eu', // We leave it in basque to allways format date as YYYY/MM/DD HH:mm in both languages. Otherways symfony gives format error.
-            }
+            localization: {
+              locale: current_locale,
+              dayViewHeaderFormat: { month: 'long', year: 'numeric' },
+              format: 'yyyy-MM-dd hh:mm',
+            },
         });
     });
 });
