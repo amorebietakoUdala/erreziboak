@@ -195,6 +195,9 @@ class GTWINIntegrationService
         }
         $em = $this->em;
         $importe = $em->getRepository(Recibo::class)->findDeudaByDni($fixedDocument);
+        if ($importe === null) {
+            return "No";
+        }
         return $importe;
     }
 

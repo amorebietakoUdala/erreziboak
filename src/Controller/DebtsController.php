@@ -177,8 +177,12 @@ class DebtsController extends AbstractController
         foreach ($records as $offset => $record) {
             $dni = $record['Dni'];
             $deuda = $gts->findDeudaTotal($dni);
-            $record['Deuda'] = number_format($deuda, 2, ',', '.');
-            $totalDebt += floatval($deuda);
+            if (is_numeric($deuda)) {
+                $totalDebt += floatval($deuda);
+                $record['Deuda'] = number_format($deuda, 2, ',', '.');                
+            }
+//            $record['Deuda'] = number_format($deuda, 2, ',', '.');
+//            $totalDebt += floatval($deuda);
             $debts[] = [$record];
         }
         $this->writeDebtsCsvFile($path, $debtsFile, $debts);
@@ -193,7 +197,7 @@ class DebtsController extends AbstractController
     private function writeDebtsCsvFile(string $path, DebtsFile $debtsFile, array $deudas)
     {
         $file = $path . '/' . $debtsFile->getFileName() . '-processed.csv';
-        $csv = \League\Csv\Writer::createFromFileObject(new \SplFileObject($file, 'w'));
+        $csv = \League\Csv\Writer::createFromFileObject(new \SplFileObject($file, 'w+'));
         $csv->setDelimiter(';');
         $csv->setNewline("\r\n");
         $headers = array_keys((array_values($deudas)[0])[0]);
