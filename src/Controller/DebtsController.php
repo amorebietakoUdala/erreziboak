@@ -180,9 +180,9 @@ class DebtsController extends AbstractController
             if (is_numeric($deuda)) {
                 $totalDebt += floatval($deuda);
                 $record['Deuda'] = number_format($deuda, 2, ',', '.');                
+            } else {
+                $record['Deuda'] = $deuda;
             }
-//            $record['Deuda'] = number_format($deuda, 2, ',', '.');
-//            $totalDebt += floatval($deuda);
             $debts[] = [$record];
         }
         $this->writeDebtsCsvFile($path, $debtsFile, $debts);
