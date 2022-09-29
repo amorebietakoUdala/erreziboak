@@ -74,7 +74,7 @@ class DebtsController extends AbstractController
             $em->flush();
             
             
-            if (null !== $principalAmount) {
+            if (null !== $principalAmount && $principalAmount !== "No") {
                 $debt = [
                     'idNumber' => $data['idNumber'],
                     'principalAmount' => $principalAmount,
