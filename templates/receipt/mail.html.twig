@@ -1,33 +1,41 @@
-{% block body_html %}
-<p><b>AMOREBIETA-ETXANOKO UDALA</b></p>
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+   </head>
+   <body>
+        {% block body_html %}
+        <p><b>AMOREBIETA-ETXANOKO UDALA</b></p>
 
-<img class="logo" alt="Logo del Ayuntamiento / Udaletxearen logoa" src="{{ absolute_url(asset('build/images/logo.jpg')) }}">
+        <img class="logo" alt="Logo del Ayuntamiento / Udaletxearen logoa" src="{{ absolute_url(asset('build/images/logo.jpg')) }}">
 
-<p>
-    {% if receipt.payment.isPaymentSuccessfull %}
-	<b style="color: green">{{ 'Payment was successfull' | trans | capitalize }}</b><br/>
-    {% else %}
-	<b style="color: red">{{ 'Payment was NOT successfull' | trans }}</b><br/>
-	<b style="color: red">Detalles / Zehaztasunak: {{ receipt.payment.statusMessage }}</b><br/>
-    {% endif %}
-</p>
+        <p>
+            {% if receipt.payment.isPaymentSuccessfull %}
+            <b style="color: green">{{ 'Payment was successfull' | trans | capitalize }}</b><br/>
+            {% else %}
+            <b style="color: red">{{ 'Payment was NOT successfull' | trans }}</b><br/>
+            <b style="color: red">Detalles / Zehaztasunak: {{ receipt.payment.statusMessage }}</b><br/>
+            {% endif %}
+        </p>
 
-<p>
-    <br/>
-    <br/>
-    <b>Nº de recibo / Errezibo zenbakia:</b> {{ receipt.id }} <br/> 
-    <b>Nº de referencia GTWIN/ GTWIN Erreferentzi zenbakia:</b> {{ receipt.numeroReferenciaGTWIN }} <br/> 
-    <b>Referencia C60 / C60 Erreferentzia:</b> {{ receipt.payment.registered_payment_id }} <br/> 
-    <b>Fecha/Data:</b> {{ receipt.payment.timestamp | date('Y-m-d') }}<br/>
-    <b>Concepto / Kontzeptua:</b> {{ receipt.concepto }} <br/> 
-    <b>Nombre / Izena:</b> {{ receipt.nombre }} <br/> 
-    <b>Primer apellido/ Lehen abizena:</b> {{ receipt.apellido1 }} <br/> 
-    <b>Segundo apellido/ Bigarren abizena:</b> {{ receipt.apellido2 }} <br/> 
-    <b>DNI/ NAN-a:</b> {{ receipt.dni }} <br/> 
-    <b>Teléfono/ Telefonoa:</b> {{ receipt.telefono }} <br/> 
-    <b>Importe/ Zenbatekoa:</b> {{ receipt.importe }} <br/> 
-    {% if receipt.tickets != null %}
-	<b>Nº Tickets / Zenbat Txartel:</b> {{ receipt.tickets.quantity }}
-    {% endif %}
-</p>
-{% endblock %}
+        <p>
+            <br/>
+            <br/>
+            <b>Nº de recibo / Errezibo zenbakia:</b> {{ receipt.id }} <br/> 
+            <b>Nº de referencia GTWIN/ GTWIN Erreferentzi zenbakia:</b> {{ receipt.numeroReferenciaGTWIN }} <br/> 
+            <b>Referencia C60 / C60 Erreferentzia:</b> {{ receipt.payment.registered_payment_id }} <br/> 
+            <b>Fecha/Data:</b> {{ receipt.payment.timestamp | date('Y-m-d') }}<br/>
+            <b>Concepto / Kontzeptua:</b> {{ receipt.concepto }} <br/> 
+            <b>Nombre / Izena:</b> {{ receipt.nombre }} <br/> 
+            <b>Primer apellido/ Lehen abizena:</b> {{ receipt.apellido1 }} <br/> 
+            <b>Segundo apellido/ Bigarren abizena:</b> {{ receipt.apellido2 }} <br/> 
+            <b>DNI/ NAN-a:</b> {{ receipt.dni }} <br/> 
+            <b>Teléfono/ Telefonoa:</b> {{ receipt.telefono }} <br/> 
+            <b>Importe/ Zenbatekoa:</b> {{ receipt.importe }} <br/> 
+            {% if receipt.tickets != null %}
+            <b>Nº Tickets / Zenbat Txartel:</b> {{ receipt.tickets.quantity }}
+            {% endif %}
+        </p>
+        {% endblock %}
+   </body>
+</html>

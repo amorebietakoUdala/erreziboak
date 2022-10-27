@@ -10,30 +10,20 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use \Doctrine\ORM\EntityManagerInterface;
+use \Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ConvertDaemonCommand extends Command
 {
     protected static $defaultName = 'app:convert-daemon';
     private $em;
     private $container;
-    private $mailer;
-    private $twig;
-    private $transport;
     private $sleep;
 
-    public function __construct(
-          \Doctrine\ORM\EntityManagerInterface $em,
-          \Symfony\Component\DependencyInjection\ContainerInterface $container,
-          \Swift_Mailer $mailer,
-          \Twig\Environment $twig,
-          \Swift_Transport $transport
-      ) {
+    public function __construct(EntityManagerInterface $em,ContainerInterface $container) {
         parent::__construct();
         $this->em = $em;
-        $this->mailer = $mailer;
         $this->container = $container;
-        $this->twig = $twig;
-        $this->transport = $transport;
         $this->sleep = 1 * 60; // One minute
     }
 
@@ -76,7 +66,6 @@ class ConvertDaemonCommand extends Command
                     $receiptFile->setProcessedDate(new DateTime());
                     $this->em->persist($receiptFile);
                     $this->em->flush();
-//                    $this->__sendMessage($receiptFile);
                 } catch (Exception $e) {
                     $io->error($e->getMessage());
                     $returnCode = 1;
@@ -94,23 +83,4 @@ class ConvertDaemonCommand extends Command
 
         return 0;
     }
-
-//    private function __sendMessage(ReceiptsFile $receiptFile)
-//    {
-//        $sent_from = $this->container->getParameter('mailer_user');
-//        $sent_to = $this->container->getParameter('delivery_addresses');
-//        $message = (new \Swift_Message('Conversión de ficheros'))
-//        ->setFrom($sent_from)
-//        ->setTo($sent_to)
-//        ->setBody(
-//            $this->twig->render(
-//                'emails/mail.html.twig',
-//                ['receiptFile' => $receiptFile]
-//            ),
-//            'text/html'
-//        );
-//        $this->mailer->send($message);
-//        $spool = $this->mailer->getTransport()->getSpool();
-//        $spool->flushQueue($this->mailer->getTransport());
-//    }
 }

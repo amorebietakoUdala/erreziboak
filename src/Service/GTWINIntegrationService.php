@@ -412,7 +412,7 @@ class GTWINIntegrationService
             '{REFERE}' => $reference,
             '{FECCRE}' => $now->format('d/m/Y H:i:s'),
             '{FECINI}' => $now->format('d/m/Y H:i:s'),
-            '{FECFIN}' => $now->format('d/m/Y H:i:s'),
+            '{FECFIN}' => $now->format('d/m/Y H:i:s'), // TODO +30 days para la fecha de vencimiento
             '{NOMCOM}' => $nomcom,
             '{DNINIF}' => $dninif,
             '{CARCON}' => $carcon,

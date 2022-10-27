@@ -12,8 +12,8 @@ use App\Service\GTWINIntegrationService;
 use App\Validator\IsValidIBANValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Swift_Mailer;
-use Swift_Message;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +26,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ReceiptController extends AbstractController
 {
+
+    private MailerInterface $mailer;
+
+    public function __construct(MailerInterface $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
+
     /**
      * @Route("/receipts/findReferenciaC60/{referenciac60}", name="receipt_find_referencia_c60", methods={"GET"})
      */
@@ -259,7 +268,7 @@ class ReceiptController extends AbstractController
     /**
      * @Route("/receiptConfirmation", name="receipt_confirmation", methods={"GET","POST"})
      */
-    public function receiptConfirmationAction(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, Swift_Mailer $mailer)
+    public function receiptConfirmationAction(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts)
     {
         $logger->debug('-->ReceiptConfirmationAction: Start');
         $payment = $request->get('payment');
@@ -267,43 +276,59 @@ class ReceiptController extends AbstractController
         $logger->info('ReferenceNumberDC: ' . $reference_number . ', Status: ' . $payment->getStatus() . ', PaymentId: ' . $payment->getId());
         /* A reference number can be specify one or more receipts */
         $recibos = $gts->findRecibosByNumeroReferenciaC60($payment->getReferenceNumberDC());
-        $this->__sendConfirmationEmails($recibos, $payment, $mailer);
+        $this->sendConfirmationEmails($recibos, $payment);
         $message = $this->__updatePayment($recibos, $payment, $logger, $gts);
         $logger->debug('<--ReceiptConfirmationAction: End OK');
 
         return new JsonResponse($message);
     }
 
-    private function __sendConfirmationEmails(array $recibos, Payment $payment, $mailer)
+    private function sendConfirmationEmails(array $recibos, Payment $payment)
     {
         foreach ($recibos as $recibo) {
             if (true === $this->getParameter('mailer_sendConfirmation') && !empty($payment->getEmail())) {
                 $emails = [$payment->getEmail()];
-                $this->__sendMessage('Confirmación del Pago / Ordainketaren konfirmazioa', $recibo, $payment, $emails, $mailer);
+                $this->sendMessage('Confirmación del Pago / Ordainketaren konfirmazioa', $recibo, $payment, $emails);
             }
             if (true === $this->getParameter('mailer_sendBCC')) {
                 $bccs = $this->getParameter('mailer_BCC_email');
-                $this->__sendMessage('Confirmación del Pago / Ordainketaren konfirmazioa', $recibo, $payment, $bccs, $mailer);
+                $this->sendMessage('Confirmación del Pago / Ordainketaren konfirmazioa', $recibo, $payment, $bccs);
             }
         }
     }
 
-    private function __sendMessage($subject, Recibo $receipt, Payment $payment, $emails, $mailer)
+    private function sendMessage($subject, Recibo $receipt, Payment $payment, $emails)
     {
-        $from = $this->getParameter('mailer_from');
-        $message = new Swift_Message($subject);
-
-        $message->setFrom($from);
-        $message->setTo($emails);
-        $message->setBody(
-            $this->renderView('receipt/PaymentConfirmationMail.html.twig', [
+        $email = (new Email())
+            ->from($this->getParameter('mailer_from'))
+            ->to($emails)
+            ->subject($subject)
+            ->html($this->renderView('receipt/PaymentConfirmationMail.html.twig', [
                 'receipt' => $receipt,
                 'payment' => $payment,
-            ])
+            ]),
+            'text/html'
         );
-        $message->setContentType('text/html');
-        $mailer->send($message);
+        $this->mailer->send($email);
+        return;
     }
+
+    // private function __sendMessage($subject, Recibo $receipt, Payment $payment, $emails)
+    // {
+    //     $from = $this->getParameter('mailer_from');
+    //     $message = new Swift_Message($subject);
+
+    //     $message->setFrom($from);
+    //     $message->setTo($emails);
+    //     $message->setBody(
+    //         $this->renderView('receipt/PaymentConfirmationMail.html.twig', [
+    //             'receipt' => $receipt,
+    //             'payment' => $payment,
+    //         ])
+    //     );
+    //     $message->setContentType('text/html');
+    //     $this->mailer->send($message);
+    // }
 
     private function __updatePayment($recibos, Payment $payment, LoggerInterface $logger, GTWINIntegrationService $gts)
     {

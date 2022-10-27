@@ -1,6 +1,14 @@
-{{ 'messages.wait' | trans }}<br/>
+<!DOCTYPE html>
+<html lang="{{app.request.locale}}">
+   <head>
+      <meta charset="utf-8">
+   </head>
+   <body>
+      {{ 'messages.wait' | trans }}<br/>
 
-{{ 'messages.download' | trans }}<br/>
-<a href="{{ absolute_url(path('returns_file_download', {'returnsFile': returnsFile.id})) }}">{{ absolute_url(path('returns_file_download', {'returnsFile': returnsFile.id})) }}</a><br/>
+      {{ 'messages.download' | trans }}<br/>
+      <a href="{{ absolute_url(path('returns_file_download', {'returnsFile': returnsFile.id})) }}">{{ absolute_url(path('returns_file_download', {'returnsFile': returnsFile.id})) }}</a><br/>
 
-{{ 'mail.totalAmount' | trans }}: {{ returnsFile.totalAmount|number_format(2, ',', '.') }}<br/>
+      {{ 'mail.totalAmount' | trans }}: {{ returnsFile.totalAmount|number_format(2, ',', '.') }}<br/>
+   </body>
+</html>

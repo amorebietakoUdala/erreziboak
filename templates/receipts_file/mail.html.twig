@@ -1,4 +1,12 @@
-{{ 'messages.wait' | trans }}<br/>
+<!DOCTYPE html>
+<html lang="{{app.request.locale}}">
+   <head>
+      <meta charset="utf-8">
+   </head>
+   <body>
+      {{ 'messages.wait' | trans }}<br/>
 
-{{ 'messages.download' | trans }}<br/>
-<a href="{{ absolute_url(path('receipts_file_download', {'receiptFile': receiptFile.id})) }}">{{ path('receipts_file_download', {'receiptFile': receiptFile.id}) }}</a>
+      {{ 'messages.download' | trans }}<br/>
+      <a href="{{ absolute_url(path('receipts_file_download', {'receiptFile': receiptFile.id})) }}">{{ path('receipts_file_download', {'receiptFile': receiptFile.id}) }}</a>
+   </body>
+</html>

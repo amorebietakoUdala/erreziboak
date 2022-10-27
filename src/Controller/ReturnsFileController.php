@@ -10,8 +10,8 @@ use App\Service\CsvFormatValidator;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Swift_Mailer;
-use Swift_Message;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,10 +25,12 @@ class ReturnsFileController extends AbstractController
 {
 
     private ReturnsFileRepository $returnsFileRepo;
+    private MailerInterface $mailer;
 
-    public function __construct(ReturnsFileRepository $returnsFileRepo)
+    public function __construct(ReturnsFileRepository $returnsFileRepo, MailerInterface $mailer)
     {
         $this->returnsFileRepo = $returnsFileRepo;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -48,7 +50,7 @@ class ReturnsFileController extends AbstractController
     /**
      * @Route("/upload", name="returns_file_upload")
      */
-    public function upload(Request $request, CsvFormatValidator $validator, Swift_Mailer $mailer, C34XmlGenerator $generator, EntityManagerInterface $em)
+    public function upload(Request $request, CsvFormatValidator $validator, C34XmlGenerator $generator, EntityManagerInterface $em)
     {
         $form = $this->createForm(ReturnsFileType::class);
 
@@ -89,7 +91,7 @@ class ReturnsFileController extends AbstractController
                 $this->addFlash('success', 'messages.successfullySended');
 
                 if (true === $this->getParameter('send_returns_file_messages')) {
-                    $this->__sendMail($returnsFileObject, $mailer);
+                    $this->sendMail($returnsFileObject);
                 }
 
                 return $this->redirectToRoute('returns_file_list');
@@ -127,23 +129,19 @@ class ReturnsFileController extends AbstractController
         return $totalAmount;
     }
 
-    public function __sendMail(ReturnsFile $returnsFile, \Swift_Mailer $mailer)
+    private function sendMail(ReturnsFile $returnsFile)
     {
-        $sent_from = $this->getParameter('mailer_user');
-        $sent_to = $this->getParameter('returns_files_notification_email');
-        $message = (new Swift_Message('Conversión de fichero de devoluciones'))
-        ->setFrom($sent_from)
-        ->setTo($sent_to)
-        ->setBody(
-            $this->renderView(
+        $email = (new Email())
+            ->from($this->getParameter('mailer_from'))
+            ->to($this->getParameter('returns_files_notification_email'))
+            ->subject('Conversión de fichero de devoluciones')
+            ->html($this->renderView(
                 'returns_files/mail.html.twig',
                 ['returnsFile' => $returnsFile]
             ),
             'text/html'
-        );
-
-        $mailer->send($message);
-
+            );
+        $this->mailer->send($email);
         return $this->render(
             'returns_files/mail.html.twig',
             ['returnsFile' => $returnsFile])

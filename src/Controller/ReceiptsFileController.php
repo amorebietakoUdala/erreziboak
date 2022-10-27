@@ -10,8 +10,8 @@ use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Swift_Mailer;
-use Swift_Message;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -31,16 +31,18 @@ class ReceiptsFileController extends AbstractController
 {
 
     private ReceiptsFileRepository $receiptFileRepo;
+    private MailerInterface $mailer;
 
-    public function __construct(ReceiptsFileRepository $receiptFileRepo)
+    public function __construct(ReceiptsFileRepository $receiptFileRepo, MailerInterface $mailer)
     {
         $this->receiptFileRepo = $receiptFileRepo;
+        $this->mailer = $mailer;
     }
 
     /**
      * @Route("/upload", name="receipts_file_upload")
      */
-    public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, Swift_Mailer $mailer, EntityManagerInterface $em)
+    public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, EntityManagerInterface $em)
     {
         $form = $this->createForm(ReceiptsFileType::class);
 
@@ -73,7 +75,7 @@ class ReceiptsFileController extends AbstractController
                 $this->addFlash('success', 'messages.successfullySended');
 
                 if (true === $this->getParameter('send_receiptfile_messages')) {
-                    $this->sendMail($receiptsFileObject, $mailer);
+                    $this->sendMail($receiptsFileObject);
                 }
 
                 return $this->redirectToRoute('receipts_file_list');
@@ -176,23 +178,19 @@ class ReceiptsFileController extends AbstractController
         }
     }
 
-    public function sendMail(ReceiptsFile $receiptsFile, Swift_Mailer $mailer)
+    private function sendMail(ReceiptsFile $receiptsFile)
     {
-        $sent_from = $this->getParameter('mailer_user');
-        $sent_to = $this->getParameter('delivery_addresses');
-        $message = (new Swift_Message('Conversión de ficheros'))
-        ->setFrom($sent_from)
-        ->setTo($sent_to)
-        ->setBody(
-            $this->renderView(
+        $email = (new Email())
+            ->from($this->getParameter('mailer_from'))
+            ->to($this->getParameter('delivery_addresses'))
+            ->subject('Conversión de ficheros')
+            ->html($this->renderView(
                 'receipts_file/mail.html.twig',
                 ['receiptFile' => $receiptsFile]
             ),
             'text/html'
         );
-
-        $mailer->send($message);
-
+        $this->mailer->send($email);
         return;
     }
 }

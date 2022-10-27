@@ -62,6 +62,7 @@ $(document).ready(function(){
                 seconds: false,
               },
             },
+            defaultDate: new tempusDominus.DateTime(),
             localization: {
               locale: current_locale,
               dayViewHeaderFormat: { month: 'long', year: 'numeric' },
