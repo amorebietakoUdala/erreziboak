@@ -20,6 +20,12 @@ security:
             entity:
                 class: App\Entity\User
                 property: username
+    role_hierarchy:
+        # ROLE_RECEIPTS:    ROLE_USER
+        # ROLE_RETURNS:     ROLE_USER
+        # ROLE_DEBTS:       ROLE_USER
+        # ROLE_TITULARITY:  ROLE_USER
+        ROLE_ADMIN:       [ROLE_RECEIPTS, ROLE_RETURNS, ROLE_DEBTS, ROLE_TITULARITY]
         
     firewalls:
         dev:

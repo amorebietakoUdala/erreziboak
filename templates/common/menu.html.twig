@@ -20,46 +20,51 @@
             </div>
         </li>
         {% if app.user %}
-        {% if is_granted('ROLE_USER') %}
-		<li class="nav-item dropdown">
-		  <a class="nav-link dropdown-toggle" href="#" id="navbarRecibos" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			{{ 'navitem.receipts' | trans | capitalize }}
-		  </a>
-		  <div class="dropdown-menu" aria-labelledby="navbarRecibos">
-			  <a class="dropdown-item" href="{{ path('receipts_file_upload') }}">{{ 'navitem.sendFile' | trans |capitalize }}</a>
-			  <a class="dropdown-item" href="{{ path('receipts_file_list') }}">{{ 'navitem.list' | trans |capitalize }}</a>
-		  </div>
-		</li>
-		<li class="nav-item dropdown">
-		  <a class="nav-link dropdown-toggle" href="#" id="navbarReturns" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			{{ 'navitem.returns' | trans | capitalize }}
-		  </a>
-		  <div class="dropdown-menu" aria-labelledby="navbarReturns">
-			  <a class="dropdown-item" href="{{ path('returns_file_upload') }}">{{ 'navitem.convertReturnsFile' | trans |capitalize }}</a>
-			  <a class="dropdown-item" href="{{ path('returns_file_list') }}">{{ 'navitem.list' | trans |capitalize }}</a>
-		  </div>
-		</li>
-		<li class="nav-item dropdown">
-		  <a class="nav-link dropdown-toggle" href="#" id="navbarDebts" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			{{ 'navitem.debts' | trans | capitalize }}
-		  </a>
-		  <div class="dropdown-menu" aria-labelledby="navbarCheckDebts">
-			  <a class="dropdown-item" href="{{ path('debts_search') }}">{{ 'navitem.debts.single_search' | trans |capitalize }}</a>
-			  <a class="dropdown-item" href="{{ path('debts_file_upload') }}">{{ 'navitem.debts.upload' | trans |capitalize }}</a>
-			  <a class="dropdown-item" href="{{ path('debts_file_list') }}">{{ 'navitem.debts.search' | trans |capitalize }}</a>
-		  </div>
-		</li>
-		<li class="nav-item dropdown">
-		  <a class="nav-link dropdown-toggle" href="#" id="navbarTitularity" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			{{ 'navitem.titularity' | trans | capitalize }}
-		  </a>
-		  <div class="dropdown-menu" aria-labelledby="navbarTitularity">
-			  <a class="dropdown-item" href="{{ path('app_account_titularity_check') }}">{{ 'navitem.titularity.check' | trans |capitalize }}</a>
-			  <a class="dropdown-item" href="{{ path('app_account_titularity_index') }}">{{ 'navitem.titularity.list' | trans |capitalize }}</a>
-		  </div>
-		</li>
-        {% endif %}
-
+        {% if is_granted('ROLE_RECEIPTS') %}
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarRecibos" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{{ 'navitem.receipts' | trans | capitalize }}
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarRecibos">
+					<a class="dropdown-item" href="{{ path('receipts_file_upload') }}">{{ 'navitem.sendFile' | trans |capitalize }}</a>
+					<a class="dropdown-item" href="{{ path('receipts_file_list') }}">{{ 'navitem.list' | trans |capitalize }}</a>
+				</div>
+			</li>
+		{% endif %}
+		{% if is_granted('ROLE_RETURNS') %}
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarReturns" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{{ 'navitem.returns' | trans | capitalize }}
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarReturns">
+					<a class="dropdown-item" href="{{ path('returns_file_upload') }}">{{ 'navitem.convertReturnsFile' | trans |capitalize }}</a>
+					<a class="dropdown-item" href="{{ path('returns_file_list') }}">{{ 'navitem.list' | trans |capitalize }}</a>
+				</div>
+			</li>
+		{% endif %}
+		{% if is_granted('ROLE_DEBTS') %}
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDebts" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{{ 'navitem.debts' | trans | capitalize }}
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarCheckDebts">
+					<a class="dropdown-item" href="{{ path('debts_search') }}">{{ 'navitem.debts.single_search' | trans |capitalize }}</a>
+					<a class="dropdown-item" href="{{ path('debts_file_upload') }}">{{ 'navitem.debts.upload' | trans |capitalize }}</a>
+					<a class="dropdown-item" href="{{ path('debts_file_list') }}">{{ 'navitem.debts.search' | trans |capitalize }}</a>
+				</div>
+			</li>
+		{% endif %}
+		{% if is_granted('ROLE_TITULARITY') %}
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarTitularity" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{{ 'navitem.titularity' | trans | capitalize }}
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarTitularity">
+					<a class="dropdown-item" href="{{ path('app_account_titularity_check') }}">{{ 'navitem.titularity.check' | trans |capitalize }}</a>
+					<a class="dropdown-item" href="{{ path('app_account_titularity_index') }}">{{ 'navitem.titularity.list' | trans |capitalize }}</a>
+				</div>
+			</li>
+      {% endif %}
 
 		{% if is_granted('ROLE_ADMIN') %}
 		<li class="nav-item dropdown">

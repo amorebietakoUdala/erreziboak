@@ -15,6 +15,10 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/**
+ * @IsGranted("ROLE_TITULARITY")
+ * })
+ */
 class AccountTitularityCheckController extends AbstractController
 {
     private $client;
