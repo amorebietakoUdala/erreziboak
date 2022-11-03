@@ -215,6 +215,10 @@ confirmation.cancel: "Cancelar"
 ROLE_USER: "Usuario"
 ROLE_API: "API"
 ROLE_ADMIN: "Administrador"
+ROLE_RECEIPTS: "Conversión de recibos"
+ROLE_RETURNS: "Conversión de devoluciones"
+ROLE_DEBTS: "Consulta de deudas"
+ROLE_TITULARITY: "Consulta titularidad"
 
 table.options: "Opciones"
 
