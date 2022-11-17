@@ -24,8 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * @Route("/{_locale}/receipts_file", requirements={
  *	    "_locale": "es|eu|en"
  * })
- * @IsGranted("ROLE_USER")
- * })
+ * @IsGranted("ROLE_RECEIPTS")
  */
 class ReceiptsFileController extends AbstractController
 {

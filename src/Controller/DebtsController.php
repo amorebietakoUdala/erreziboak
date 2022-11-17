@@ -25,8 +25,7 @@ use Qipsius\TCPDFBundle\Controller\TCPDFController;
 use Symfony\Component\Translation\TranslatableMessage;
 
 /**
- * @IsGranted("ROLE_USER")
- * })
+ * @IsGranted("ROLE_DEBTS")
  */
 class DebtsController extends AbstractController
 {

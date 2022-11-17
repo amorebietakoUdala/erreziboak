@@ -21,9 +21,9 @@
 					{{ form_widget(form.email, {'attr': {'class': 'form-control form-control-sm'}}) }}
 				</div>
                 <div class="col-1 form-group form-check form-check-inline align-items-end">
+                  {{ form_widget(form.activated, {'attr': {'class': 'form-check-input form-control-sm'}}) }}
                   {{ form_label(form.activated) }}
                   <span class="text-danger">{{ form_errors(form.activated) }}</span>
-                  {{ form_widget(form.activated, {'attr': {'class': 'form-check-input form-control form-control-sm'}}) }}
                 </div>                
 			</div>
 			<div class="form-row">
@@ -31,12 +31,12 @@
 					<div class="col-2 form-group">
 					{{ form_label(form.password.first) }}
 					<span class="text-danger">{{ form_errors(form.password.first) }}</span>
-					{{ form_widget(form.password.first, {'attr': {'class': 'form-control form-control-sm'}}) }}
+					{{ form_widget(form.password.first, {'attr': {'class': 'form-control form-control-sm', 'autocomplete': 'off', 'readonly': 'on'}}) }}
 					{{ form_label(form.password.second) }}
-					{{ form_widget(form.password.second, {'attr': {'class': 'form-control form-control-sm mt-1'}}) }}
+					{{ form_widget(form.password.second, {'attr': {'class': 'form-control form-control-sm mt-1', 'autocomplete': 'off', 'readonly': 'on'}}) }}
 					</div>
 				{% endif %}
-				<div class="col-2 form-group">
+				<div class="col-lg-3 form-group">
 					{{ form_label(form.roles) }}
 					{{ form_widget(form.roles, {'attr': {'class': 'ml-1 form-control form-control-sm'}}) }}
 				</div>
