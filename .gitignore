@@ -19,5 +19,4 @@ yarn-error.log
 /R/.gitignore
 /composer.json.dev
 /composer.json.prod
-/.yarn/cache
 
