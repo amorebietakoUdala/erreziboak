@@ -15,10 +15,6 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-/**
- * @IsGranted("ROLE_TITULARITY")
- * })
- */
 class AccountTitularityCheckController extends AbstractController
 {
     private $client;
@@ -92,7 +88,7 @@ class AccountTitularityCheckController extends AbstractController
      * @Route("/{_locale}/account/titularity/check", name="app_account_titularity_check", requirements={
      *	    "_locale": "es|eu|en"
      * })
-     * @IsGranted("ROLE_USER")
+     * @IsGranted("ROLE_TITULARITY")
      */
     public function check(Request $request, EntityManagerInterface $em, LoggerInterface $logger): Response
     {
@@ -118,7 +114,7 @@ class AccountTitularityCheckController extends AbstractController
      * @Route("/{_locale}/account/titularity", name="app_account_titularity_index", requirements={
      *	    "_locale": "es|eu|en"
      * })
-     * @IsGranted("ROLE_USER")
+     * @IsGranted("ROLE_TITULARITY")
      */
     public function index(AccountTitularityCheckRepository $repo): Response
     {
