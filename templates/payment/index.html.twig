@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{'messages.appTitle' | trans }}
+{% endblock %}
+
+{% block error %}
+	{{ exception.message | trans({'%suffixes%' : suffixes},"mipago", app.request.locale) }}
+{% endblock %}
+
+{% block body %}
+	<main class="container-fluid">
+		<div class="mt-2">
+			{{ include('payment/_form.html.twig',{
+			    }) }}
+		</div>
+		<div class="container-fluid">
+			{{ include('payment/_list.html.twig', {
+				'payments': payments,
+				'filters': filters,
+				'pageSize' : pageSize,
+				'page': page,
+				'sortName': sortName,
+				'sortOrder': sortOrder,
+			}) }}
+		</div>
+	</main>
+{% endblock body %}

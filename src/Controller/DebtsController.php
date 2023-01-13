@@ -11,10 +11,10 @@ use App\Repository\DebtsFileRepository;
 use App\Service\CsvFormatValidator;
 use App\Service\FileUploader;
 use App\Service\GTWINIntegrationService;
+use App\Controller\BaseController;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +27,7 @@ use Symfony\Component\Translation\TranslatableMessage;
 /**
  * @IsGranted("ROLE_DEBTS")
  */
-class DebtsController extends AbstractController
+class DebtsController extends BaseController
 {
 
     private DebtsFileRepository $debtsFileRepo;
@@ -40,13 +40,14 @@ class DebtsController extends AbstractController
     /**
      * @Route("/{_locale}/debts_file/", name="debts_file_list")
      */
-    public function list(EntityManagerInterface $em)
+    public function list(Request $request)
     {
+        $this->loadQueryParameters($request);
         $debtsFiles = $this->debtsFileRepo->findBy([], [
             'receptionDate' => 'DESC',
         ]);
 
-        return $this->render('debts_files/list.html.twig', [
+        return $this->render('debts_files/index.html.twig', [
             'debtsFiles' => $debtsFiles,
         ]);
     }
@@ -56,6 +57,7 @@ class DebtsController extends AbstractController
      */
     public function search(Request $request, EntityManagerInterface $em, GTWINIntegrationService $gts)
     {
+        $this->loadQueryParameters($request);
         $form = $this->createForm(DebtsSearchFormType::class);
 
         $form->handleRequest($request);
@@ -100,6 +102,7 @@ class DebtsController extends AbstractController
      */
     public function upload(Request $request, CsvFormatValidator $validator, GTWINIntegrationService $gts, EntityManagerInterface $em)
     {
+        $this->loadQueryParameters($request);
         $form = $this->createForm(DebtsFileType::class);
 
         $form->handleRequest($request);

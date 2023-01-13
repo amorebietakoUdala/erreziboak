@@ -1,19 +1,10 @@
-import '../../css/exam/new.scss';
-
 import $ from 'jquery';
 const routes = require('../../../public/js/fos_js_routes.json');
 import Routing from '../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
 import getAppBase from '../common/app_base';
 
-
-
 $(document).ready(function(){
     Routing.setRoutingData(routes);
-    $('.js-back').on('click', function(e) {
-        e.preventDefault();
-        var url = e.currentTarget.dataset.url;
-        document.location.href = url;
-    });
     $('.js-category').on('change',function(e) {
         var url = getAppBase() + Routing.generate('api_category', { id: $(e.currentTarget).val()});
         var price = null;

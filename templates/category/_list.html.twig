@@ -1,0 +1,44 @@
+<table id="taula" class="table bootstrap-table mt-3" {{ stimulus_controller('table', { 
+         'exportName': 'categorys',
+      }) }}
+      data-page-number="{{ page }}" 
+      data-page-size="{{ pageSize }}"
+      data-page-sortName="{{ sortName }}"
+      data-page-sortOrder="{{ sortOrder }}">
+   <thead>
+      <tr>
+         <th data-sortable="true">{{"category.id" | trans | capitalize}}</th>
+         <th data-sortable="true">{{"category.name" | trans | capitalize}}</th>
+         <th data-sortable="true">{{"category.concept" | trans | capitalize}}</th>
+         <th data-sortable="true" data-field="options">{{"options" | trans | capitalize}}</th>
+      </tr>
+   </thead>
+   <tbody>
+      {% if categorys is defined and categorys|length > 0 %}
+         {% for category in categorys %}
+         <tr>
+               <td>{{category.id}}</td>
+               {% if app.request.locale ==  'es' %}
+                  <td>{{category.name}}</td>
+                  <td>{{category.concept.name}}</td>
+               {% else %}
+                  <td>{{category.nameEu}}</td>
+                  <td>{{category.concept.nameEu}}</td>
+               {% endif %}
+               <td>
+                  <a href="{{ path ("admin_category_show",{'id': category.id })}}" data-action="click->table#onClick" data-pagination="false"><i class="fa fa-eye"></i></a>&nbsp;
+                  <a href="{{ path ("admin_category_edit",{'id': category.id })}}" data-action="click->table#onClick" data-pagination="false"><i class="fa fa-edit"></i></a>&nbsp;
+                  <a href="{{ path ("admin_category_delete",{'id': category.id })}}" title="{{ 'btn.delete' | trans | capitalize }}"
+                     data-action="click->table#onClick" 
+                     data-confirm="true" 
+                     data-return="false">
+                     <i class="fa fa-trash"></i>
+                  </a>
+               </td>
+         </tr>
+         {% endfor %}
+      {% else %}
+         <tr><td colspan="4">{{"messages.results0" | trans }}</td></tr>
+      {% endif %}
+   </tbody>
+</table>

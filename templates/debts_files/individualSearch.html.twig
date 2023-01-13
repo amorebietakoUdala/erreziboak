@@ -11,35 +11,32 @@
 
 		<div class="container-fluid">
 			{% if debt is defined and debt|length > 0 %}
-			<table id="taula" class="table bootstrap-table mt-3">
-			<thead>
-				<tr>
-               <th data-sortable="true">{{"debts.idNumber" | trans }}</th>
-               <th data-sortable="true">{{"messages.hasDebt" | trans }}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>{{debt.idNumber}}</td>
-               {% if null != debt.principalAmount %}
-						<td class="bg-danger text-white">{{ 'messages.si' | trans }}{#&nbsp;{{debt.principalAmount }}&nbsp;€&nbsp;{{"messages.plusInterestAndSurcharge" | trans}}#}</td>
-               {% else %}
-                  <td>{{ 'messages.no' | trans }}</td>
-               {% endif %}
-				</tr>
-			</tbody>
+			<table id="taula" class="table bootstrap-table mt-3"
+				{{ stimulus_controller('table', { 
+					'exportName': 'payments',
+				}) }}
+				data-page-number="{{ page }}" 
+				data-page-size="{{ pageSize }}"
+				data-page-sortName="{{ sortName }}"
+				data-page-sortOrder="{{ sortOrder }}">
+				<thead>
+					<tr>
+						<th data-sortable="true">{{"debts.idNumber" | trans }}</th>
+						<th data-sortable="true">{{"messages.hasDebt" | trans }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{debt.idNumber}}</td>
+						{% if null != debt.principalAmount %}
+							<td class="bg-danger text-white">{{ 'messages.si' | trans }}{#&nbsp;{{debt.principalAmount }}&nbsp;€&nbsp;{{"messages.plusInterestAndSurcharge" | trans}}#}</td>
+						{% else %}
+							<td>{{ 'messages.no' | trans }}</td>
+						{% endif %}
+					</tr>
+				</tbody>
 			</table>
 			{% endif %}
 		</div>
     </main>
-{% endblock %}
-
-{% block stylesheets %}
-	{{ parent() }}
-	{{ encore_entry_link_tags('debtsFiles_list') }}
-{% endblock %}
-
-{% block javascripts %}
-	{{ parent() }}
-	{{ encore_entry_script_tags('debtsFiles_list') }}
 {% endblock %}

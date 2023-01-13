@@ -1,0 +1,47 @@
+{% if payments is defined and payments|length > 0 %}
+   {% if filters is not defined or filters | length == 0 %}
+      {% set filters = null %}
+   {% endif %}
+   <table id="taula" class="table bootstrap-table mt-3"
+      {{ stimulus_controller('table', { 
+         'exportName': 'payments',
+         'filters': filters,
+      }) }}
+      data-page-number="{{ page }}" 
+      data-page-size="{{ pageSize }}"
+      data-page-sortName="{{ sortName }}"
+      data-page-sortOrder="{{ sortOrder }}">
+      <thead>
+         <tr>
+            <th data-sortable="true">{{"payment.timestamp" | trans | capitalize}}</th>
+            <th data-sortable="true" data-width="15%">{{"payment.referenceNumber" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"payment.suffix" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"payment.status" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"payment.quantity" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"payment.nif" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"payment.email" | trans | capitalize}}</th>
+            <th data-sortable="true" data-field="options">{{"table.options" | trans | capitalize}}</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for payment in payments %}
+            <tr>
+               <td>{{payment.timestamp | date('Y-m-d H:i:s') }}</td>
+               <td>{{payment.referenceNumber }}</td>
+               <td data-width="15%">{{payment.suffix }}</td>
+               <td>{{ constant('App\\Entity\\Payment::PAYMENT_STATUS_DESCRIPTION')[payment.status] | trans | capitalize }}</td>
+               <td>{{payment.quantity}}</td>
+               <td>{{payment.nif}}</td>
+               <td>{{payment.email}}</td>
+               <td>
+                  <a href="{{path("admin_show_payment", { 'id': payment.id, })}}" data-action="click->table#onClick" data-pagination="false">
+                     <i class="fa fa-eye"></i>
+                  </a>
+               </td>
+            </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+{% else %}
+   <div class="mt-2 p-2 border border-black text-center bg-light">{{"messages.results0" | trans }}</div>
+{% endif %}

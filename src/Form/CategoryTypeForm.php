@@ -28,26 +28,23 @@ class CategoryTypeForm extends AbstractType
     {
         $readonly = $options['readonly'];
         $builder->add('name', null, [
-        'label' => 'category.name',
-        'disabled' => $readonly,
-    ])
-    ->add('nameEu', null, [
-        'label' => 'category.name_eu',
-        'disabled' => $readonly,
-    ])
-    ->add('concept', EntityType::class, [
-        'class' => Concept::class,
-        'label' => 'category.concept',
-        'disabled' => $readonly,
-    ]);
+            'label' => 'category.name',
+            'disabled' => $readonly,
+        ])
+        ->add('nameEu', null, [
+            'label' => 'category.name_eu',
+            'disabled' => $readonly,
+        ])
+        ->add('concept', EntityType::class, [
+            'class' => Concept::class,
+            'label' => 'category.concept',
+            'disabled' => $readonly,
+        ]);
         if (!$readonly) {
             $builder->add('save', SubmitType::class, [
-            'label' => 'btn.save',
-        ]);
+                'label' => 'btn.save',
+            ]);
         }
-        $builder->add('back', ButtonType::class, [
-        'label' => 'btn.cancel',
-    ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

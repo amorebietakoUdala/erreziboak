@@ -32,24 +32,21 @@ class ExamInscriptionTypeForm extends AbstractType
             'data_class' => ExamInscription::class,
         ])
         ->add('category', EntityType::class, [
-        'class' => Category::class,
-        'label' => 'exam.category',
-        'choice_label' => function ($category) use ($locale) {
-            if ('es' === $locale) {
-                return $category->getName();
-            } else {
-                return $category->getNameEu();
-            }
-        },
-    ]);
+            'class' => Category::class,
+            'label' => 'exam.category',
+            'choice_label' => function ($category) use ($locale) {
+                if ('es' === $locale) {
+                    return $category->getName();
+                } else {
+                    return $category->getNameEu();
+                }
+            },
+        ]);
         if (!$readonly) {
             $builder->add('pay', SubmitType::class, [
-        'label' => 'btn.pay',
-        ]);
+                'label' => 'btn.pay',
+            ]);
         }
-        $builder->add('back', ButtonType::class, [
-            'label' => 'btn.cancel',
-        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -30,61 +30,61 @@ class PaymentTypeForm extends AbstractType
         $readonly = $options['readonly'];
         if ($search) {
             $builder->add('date_from', DateTimeType::class, [
-        'widget' => 'single_text',
-        'html5' => false,
-        'help' => 'YYYY-MM-DD HH:MM',
-        'format' => 'yyyy-MM-dd HH:mm',
-        'label' => 'payment.from',
+            'widget' => 'single_text',
+            'html5' => false,
+            'help' => 'YYYY-MM-DD HH:MM',
+            'format' => 'yyyy-MM-dd HH:mm',
+            'label' => 'payment.from',
             'disabled' => $readonly,
         ])
         ->add('date_to', DateTimeType::class, [
-        'widget' => 'single_text',
-        'html5' => false,
-        'help' => 'YYYY-MM-DD HH:MM',
-        'format' => 'yyyy-MM-dd HH:mm',
-        'label' => 'payment.to',
+            'widget' => 'single_text',
+            'html5' => false,
+            'help' => 'YYYY-MM-DD HH:MM',
+            'format' => 'yyyy-MM-dd HH:mm',
+            'label' => 'payment.to',
             'disabled' => $readonly,
         ]);
         } else {
             $builder->add('timestamp', DateTimeType::class, [
-        'widget' => 'single_text',
-        'html5' => false,
-        'format' => 'yyyy-MM-dd HH:mm:ss',
-        'attr' => ['class' => 'js-datepicker'],
-        'label' => 'payment.timestamp',
-            'disabled' => $readonly,
+                'widget' => 'single_text',
+                'html5' => false,
+                'format' => 'yyyy-MM-dd HH:mm:ss',
+                'attr' => ['class' => 'js-datepicker'],
+                'label' => 'payment.timestamp',
+                'disabled' => $readonly,
         ]);
         }
         $builder->add('referenceNumber', null, [
-        'label' => 'payment.referenceNumber',
+            'label' => 'payment.referenceNumber',
             'disabled' => $readonly,
         ])
         ->add('suffix', null, [
-        'label' => 'payment.suffix',
+            'label' => 'payment.suffix',
             'disabled' => $readonly,
         ])
         ->add('status', ChoiceType::class, [
-        'choices' => [
-            'status.any' => null,
-            'status.initialized' => Payment::PAYMENT_STATUS_INITIALIZED,
-            'status.paid' => Payment::PAYMENT_STATUS_OK,
-            'status.unpaid' => Payment::PAYMENT_STATUS_NOK,
-        ],
-        'label' => 'payment.status',
+            'choices' => [
+                'status.any' => null,
+                'status.initialized' => Payment::PAYMENT_STATUS_INITIALIZED,
+                'status.paid' => Payment::PAYMENT_STATUS_OK,
+                'status.unpaid' => Payment::PAYMENT_STATUS_NOK,
+            ],
+            'label' => 'payment.status',
             'disabled' => $readonly,
         ])
         ->add('nif', null, [
-        'label' => 'payment.nif',
+            'label' => 'payment.nif',
             'disabled' => $readonly,
         ])
         ->add('email', null, [
-        'label' => 'payment.email',
+            'label' => 'payment.email',
             'disabled' => $readonly,
         ]);
         if (!$search) {
             $builder->add('statusMessage', null, [
-            'label' => 'payment.statusMessage',
-            'disabled' => $readonly,
+                'label' => 'payment.statusMessage',
+                'disabled' => $readonly,
         ])
         ->add('name', null, [
             'label' => 'payment.name',
@@ -119,10 +119,6 @@ class PaymentTypeForm extends AbstractType
             $builder->add('search', SubmitType::class, [
         'label' => 'btn.search',
             'disabled' => $readonly,
-        ]);
-        } else {
-            $builder->add('back', ButtonType::class, [
-        'label' => 'btn.cancel',
         ]);
         }
     }
