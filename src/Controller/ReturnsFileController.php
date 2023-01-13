@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\BaseController;
 use App\Entity\ReturnsFile;
 use App\Form\ReturnsFileType;
 use App\Repository\ReturnsFileRepository;
@@ -12,7 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -23,7 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  * @Route("/{_locale}/returns")
  * @IsGranted("ROLE_RETURNS")
  */
-class ReturnsFileController extends AbstractController
+class ReturnsFileController extends BaseController
 {
 
     private ReturnsFileRepository $returnsFileRepo;
@@ -38,13 +38,14 @@ class ReturnsFileController extends AbstractController
     /**
      * @Route("/", name="returns_file_list")
      */
-    public function list()
+    public function list(Request $request)
     {
+        $this->loadQueryParameters($request);
         $returnsFiles = $this->returnsFileRepo->findBy([], [
             'receptionDate' => 'DESC',
         ]);
 
-        return $this->render('returns_files/list.html.twig', [
+        return $this->render('returns_files/index.html.twig', [
             'returnsFiles' => $returnsFiles,
         ]);
     }
@@ -144,9 +145,8 @@ class ReturnsFileController extends AbstractController
             'text/html'
             );
         $this->mailer->send($email);
-        return $this->render(
-            'returns_files/mail.html.twig',
-            ['returnsFile' => $returnsFile])
-        ;
+        return $this->render('returns_files/mail.html.twig', [
+            'returnsFile' => $returnsFile
+        ]);
     }
 }

@@ -3,55 +3,56 @@
 						} 
 }) }}
 {{ form_errors(form) }}
-    <div class="form-row align-items-center mb-1"> 
-        <div class="form-group col-lg-2 col-md-2 col-sm-6">
+    <div class="row align-items-center mb-1"> 
+        <div class="col-lg-2 col-md-2 col-sm-6">
             {{ form_label(form.inscription.dni) }}
-            {{ form_widget(form.inscription.dni, { 'id': '', 'attr': { 'class' : 'form-control form-control-sm col' } }) }}
+            {{ form_widget(form.inscription.dni, { 'id': '', 'attr': { 'class' : 'form-control form-control-sm' } }) }}
             <span class='text text-danger'>{{ form_errors(form.inscription.dni) }}</span>
         </div>
-        <div class="form-group col-lg-2 col-md-2 col-sm-6">
+        <div class="col-lg-2 col-md-2 col-sm-6">
             {{ form_label(form.inscription.nombre) }}
-            {{ form_widget(form.inscription.nombre, { 'attr': { 'id': '', 'class' : 'form-control orm-control-sm col' } }) }}
+            {{ form_widget(form.inscription.nombre, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm' } }) }}
             <span class='text text-danger'>{{ form_errors(form.inscription.nombre) }}</span>
         </div>
-        <div class="form-group col-lg-2 col-md-2 col-sm-6">
+        <div class="col-lg-2 col-md-2 col-sm-6">
             {{ form_label(form.inscription.apellido1) }}
-            {{ form_widget(form.inscription.apellido1, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm col' } }) }}
+            {{ form_widget(form.inscription.apellido1, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm' } }) }}
             <span class='text text-danger'>{{ form_errors(form.inscription.apellido1) }}</span>
         </div>
-        <div class="form-group col-lg-2 col-md-2 col-sm-6">
+        <div class="col-lg-2 col-md-2 col-sm-6">
             {{ form_label(form.inscription.apellido2) }}
-            {{ form_widget(form.inscription.apellido2, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm col' } }) }}
+            {{ form_widget(form.inscription.apellido2, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm' } }) }}
             <span class='text text-danger'>{{ form_errors(form.inscription.apellido2) }}</span>
         </div>
-        <div class=" form-group col-lg-2 col-md-2 col-sm-6">
+        <div class=" col-lg-2 col-md-2 col-sm-6">
             {{ form_label(form.inscription.email) }}
-            {{ form_widget(form.inscription.email, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm col' } }) }}
+            {{ form_widget(form.inscription.email, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm' } }) }}
             <span class='text text-danger'>{{ form_errors(form.inscription.email) }}</span>
         </div>
-        <div class="form-group col-lg-2 col-md-2 col-sm-6">
+        <div class="col-lg-2 col-md-2 col-sm-6">
             {{ form_label(form.inscription.telefono) }}
-            {{ form_widget(form.inscription.telefono, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm col' } }) }}
+            {{ form_widget(form.inscription.telefono, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm' } }) }}
             <span class='text text-danger'>{{ form_errors(form.inscription.telefono) }}</span>
         </div>
-        <div class="form-group col-lg-2 col-md-2 col-sm-6">
+        <div class="col-lg-2 col-md-2 col-sm-6">
             {{ form_label(form.category) }}
-            {{ form_widget(form.category, { 'attr': { 'id': '', 'class' : 'form-control form-control-sm col js-category' } }) }}
+            {{ form_widget(form.category, { 'attr': { 'id': '', 'class' : 'form-select form-select-sm js-category' } }) }}
             <span class="text text-danger">{{ form_errors(form.category) }}</span>
         </div>
-        <div class="form-group col-lg-2 col-md-2 col-sm-6">
-            <label>{{ "label.quantity" | trans }}</label>
-            <span class="js-quantity form-control form-control-sm col"></span>
+        <div class="col-lg-2 col-md-2 col-sm-6">
+            <label class="form-label">{{ "label.quantity" | trans }}</label>
+            <span class="js-quantity form-control form-control-sm"></span>
         </div>
     </div>
-    <div class="form-row align-items-center mb-1">
-	{% if readonly == false %}
-	    {{ form_widget(form.pay, { 'attr': { 'class' : 'btn btn-primary ml-1' } }) }}
-	{% endif %}
-	{% set url = path('receipt_find') %}
-	{{ form_widget(form.back, { 'attr': { 'class' : 'js-back btn btn-primary ml-1' ,
-					     'data-url' : url },
-				  }) }}
+    <div class="row align-items-center mb-1">
+        {% if readonly == false %}
+            <div class="col-lg-auto">
+                {{ form_widget(form.pay, { 'attr': { 'class' : 'btn btn-primary ml-1' } }) }}
+            </div>
+        {% endif %}
+        <div class="col-lg-auto">
+            <a href="{{ path('receipt_find') }}" class="btn btn-secondary ml-2" type="button">{{ "btn.cancel" | trans }}</a>
+        </div>
     </div>
 {{ form_end(form, {'attr': {'class': '',
 			       } 

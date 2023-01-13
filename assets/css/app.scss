@@ -1,4 +1,4 @@
-@import "~bootstrap";
+@import '~bootstrap/scss/bootstrap';
 @import "~@fortawesome/fontawesome-free/css/all.css";
 
 header {
@@ -49,4 +49,35 @@ span.text-danger ul {
 
 span.text-danger ul li {
 	font-size: 0.8rem;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.row-unchecked {
+    background-color: #4dffa6;
+    color: #000;
+ }
+ 
+ .row-success {
+    background-color: #4dffa6;
+    color: #000;
+ }
+ 
+ .row-danger {
+    background-color: #cc0000;
+    color: #FFF;
+ }
+
+@media (max-width: 767px) {
+	.logo {
+		height: 50px;
+		width: auto;
+	}
+	
+	h1 {
+		font-size: 1.5rem;
+	}
+  
 }

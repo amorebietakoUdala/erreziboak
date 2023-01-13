@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "amorebietakoudala/mipago-bundle": "^1.0",
+        "amorebietakoudala/stimulus-controller-bundle": "^1.0",
         "amorebietakoudala/user-bundle": "^1.1.7",
         "composer/package-versions-deprecated": "1.11.99.4",
         "doctrine/common": "^2",
@@ -72,6 +73,7 @@
             "App\\Tests\\": "tests/"
         }
     },
+    "minimum-stability": "stable",
     "replace": {
         "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",

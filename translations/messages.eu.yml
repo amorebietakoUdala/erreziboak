@@ -1,6 +1,10 @@
 messages.appTitle: "Erreziboak"
 
 title.debts.search: "Zor indibidualen bilaketa"
+title.debts.fileUpload: "Zor bilaketa masiboa"
+title.debts.index: "Zor bilaketen zerrenda"
+title.returns.fileUpload: "Itzulketen fitxategien eraldaketa"
+title.returns.list: "Itzulketen fitxategien eraldaketaren zerrenda"
 
 navitem.administration: "Administrazioa"
 navitem.users: "Erabiltzaileak"
@@ -182,6 +186,7 @@ btn.send: "Bidali"
 btn.search: "Bilatu"
 btn.refresh: "Taula eguneratu"
 btn.pay: "Ordaindu"
+btn.delete: "Ezabatu"
 
 messages.confirmacion: "Konfirmazioa"
 messages.confirmationDetail: "¿Erregistroa ezabatuko da ziur al zaude?"

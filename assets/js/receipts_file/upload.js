@@ -1,10 +1,7 @@
-import '../../css/receipts_file/upload.scss';
-
 import $ from 'jquery';
 
 $(document).ready(function(){
     $('.js-receiptsType').on('change',function (e) {
-        console.log('ReceiptsType Changed!');
         if ($('.js-receiptsType').val() === 'AU') {
             $('.js-receiptsFinishStatus').val('V');
         }

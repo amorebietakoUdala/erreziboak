@@ -1,20 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Upload File
-{% endblock %}
+{% block title %}{{ 'title.debts.fileUpload' | trans }}{% endblock %}
 
 {% block body %}
 	<main class="container-fluid">
 		{{ include ('debts_files/_form.html.twig') }}
 	</main>
-{% endblock %}
-
-{% block stylesheets %}
-	{{ parent() }}
-	{{ encore_entry_link_tags('debtsFiles_upload') }}
-{% endblock %}
-
-{% block javascripts %}
-	{{ parent() }}
-	{{ encore_entry_script_tags('debtsFiles_upload') }}
 {% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'messages.appTitle' | trans }}{% endblock %}
+
+{% block body %}
+    <main class="container-fluid" >
+	<div class="container-fluid">
+		{{ include('concept/_list.html.twig') }}
+	   <span class="pull-right"><a href="{{ path ('admin_concept_new') }}" class="btn btn-primary rounded-circle fixed-bottom-right"><i class="fa fa-plus" title='{{ "btn.new" | trans | capitalize }}'></i></a></span>
+		{{ include('common/_alert.html.twig') }}
+	</div>
+    </main>
+{% endblock %}

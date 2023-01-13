@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'messages.appTitle' | trans }}{% endblock %}
+
+{% block body %}
+    <main class="container-fluid">
+	<div class="container-fluid">
+		{{ include('category/_list.html.twig')}}
+	   <span class="pull-right"><a href="{{ path ('admin_category_new') }}" class="btn btn-primary rounded-circle fixed-bottom-right"><i class="fa fa-plus" title='{{ "btn.new" | trans | capitalize }}'></i></a></span>
+		{{ include('common/_alert.html.twig') }}
+	</div>
+    </main>
+{% endblock %}
+
+{# {% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('category_list') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('category_list') }}
+{% endblock %} #}

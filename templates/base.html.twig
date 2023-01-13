@@ -11,31 +11,13 @@
     <body>
 		
 		{% block header %}
-			{{ include('common/header.html.twig') }}
+			{{ include('common/_header.html.twig') }}
 		{% endblock header %}
 		{% block menu %}
-			{{ include('common/menu.html.twig') }}
+			{{ include('common/_menu.html.twig') }}
 		{% endblock %}
 		{% block message %}
-			{% for msg in app.session.flashBag.get('success') %}
-			<div class="alert alert-success margin-top-13">
-				{{ msg | trans}}
-			</div>
-			{% endfor %}
-			{% for msg in app.session.flashBag.get('error') %}
-			<div class="alert alert-danger margin-top-13">
-				{% if message is defined %}
-					{{ msg | trans({'%message%' : message},"messages", app.request.locale) }}
-				{% else %}
-					{{ msg | trans }}
-				{% endif %}
-			</div>
-			{% endfor %}
-			{% for msg in app.session.flashBag.get('warning') %}
-			<div class="alert alert-warning margin-top-13">
-				{{ msg | trans | capitalize }}
-			</div>
-			{% endfor %}
+			{{ include('common/_messages.html.twig') }}
 		{% endblock message %}
         {% block body %}{% endblock %}
         {% block javascripts %}

@@ -21,24 +21,16 @@ export function showAlert(title, html, confirmationButtonText, cancelButtonText,
 }
 
 export function createAlert(e, confirmURL) {
-    console.log(confirmURL, $(e.currentTarget).data('numerorecibo'));
     Translator.fromJSON(translations);
     var numeroRecibo = typeof($(e.currentTarget).data('numerorecibo')) === 'undefined' ? $(e.currentTarget).data('referencia') : $(e.currentTarget).data('numerorecibo');
     var concepto = $(e.currentTarget).data('concepto');
-    // var dni = $(e.currentTarget).data('dni');
-    // var nombre = $(e.currentTarget).data('nombre');
-    // var apellido1 = $(e.currentTarget).data('apellido1');
-    // var apellido2 = $(e.currentTarget).data('apellido2');
     var importe = $(e.currentTarget).data('importe');
     var ultimodiapago = $(e.currentTarget).data('ultimodiapago');
     var email = $(e.currentTarget).data('email');
     var html = Translator.trans('receipt.numeroRecibo') + ": " + numeroRecibo + '<br/>' +
-        Translator.trans('receipt.concepto') + ": " + concepto + '<br/>' +
-        // Translator.trans('receipt.dni') + ": " + dni + '<br/>' +
-        // Translator.trans('receipt.nombre') + ": " + nombre + '<br/>' +
-        // Translator.trans('receipt.apellidos') + ": " + apellido1 + ' ' + apellido2 + '<br/>' +
-        Translator.trans('receipt.importe') + ": " + importe + '<br/>' +
-        Translator.trans('receipt.ultimoDiaPago') + ": " + ultimodiapago + '<br/>';
+    Translator.trans('receipt.concepto') + ": " + concepto + '<br/>' +
+    Translator.trans('receipt.importe') + ": " + importe + '<br/>' +
+    Translator.trans('receipt.ultimoDiaPago') + ": " + ultimodiapago + '<br/>';
     if (email !== '') {
         html = html + Translator.trans('receipt.email') + ": " + email + '<br/>';
     }

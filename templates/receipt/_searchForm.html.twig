@@ -5,7 +5,7 @@
 						} 
 				       }) }}
 		{{ form_errors(form) }}
-		<div class="form-row align-items-center mb-1">
+		<div class="row align-items-center mb-1">
 			<div class="col-lg-2 col-md-2 col-sm-6">
 				{{ form_label(form.referenciaC60) }}
 				{{ form_widget(form.referenciaC60, { 'id': 'input-numeroRecibo', 'attr': { 'class' : 'form-control form-control-sm' } }) }}
@@ -18,7 +18,7 @@
 			</div>
 			<div class="col-lg-2 col-md-2 col-sm-6">
 				{{ form_widget(form.search, { 'attr': { 'class' : 'btn btn-primary' } }) }}&nbsp;
-				<span class="btn btn-primary rounded-circle" data-toggle="modal" data-target="#myModal">
+				<span class="btn btn-primary rounded-circle" data-bs-toggle="modal" data-bs-target="#myModal">
 					&nbsp;<i id="info-btn" class="fa fa-info" title="{{ "messages.numbersWhere" | trans }}"></i>&nbsp;
 				</span>
 			</div>
@@ -30,15 +30,13 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">{{ "messages.numbersWhere" | trans }}</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
 						<img src="{{ asset('build/images/errezibo_goiburua.png') }}"/>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">{{'btn.close' | trans}}</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{'btn.close' | trans}}</button>
 					</div>
 				</div>
 			</div>

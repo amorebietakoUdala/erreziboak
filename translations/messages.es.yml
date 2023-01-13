@@ -1,6 +1,10 @@
 messages.appTitle: "Recibos"
 
 title.debts.search: "Consulta individual de deudas"
+title.debts.fileUpload: "Consulta masiva de deudas"
+title.debts.index: "Listado de consulta de deudas"
+title.returns.fileUpload: "Conversión de ficheros de devoluciones"
+title.returns.list: "Listado de conversiones de ficheros de devoluciones"
 
 navitem.administration: "Administración"
 navitem.users: "Usuarios"
@@ -182,6 +186,7 @@ btn.send: "Enviar"
 btn.search: "Buscar"
 btn.refresh: "Refrescar"
 btn.pay: "Pagar"
+btn.delete: "Borrar"
 
 messages.confirmacion: "Confirmación"
 messages.confirmationDetail: "¿Esta seguro de que desea eliminar el registro?"

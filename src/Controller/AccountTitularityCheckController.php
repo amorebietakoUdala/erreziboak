@@ -5,9 +5,9 @@ namespace App\Controller;
 use App\Entity\AccountTitularityCheck;
 use App\Form\AccountTitularityCheckType;
 use App\Repository\AccountTitularityCheckRepository;
+use App\Controller\BaseController;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -15,7 +15,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class AccountTitularityCheckController extends AbstractController
+class AccountTitularityCheckController extends BaseController
 {
     private $client;
 
@@ -105,7 +105,7 @@ class AccountTitularityCheckController extends AbstractController
             return $this->sendRequestToTitularityCheckEndpoint($data, $form, $logger);
         }
 
-        return $this->renderForm('account_titularity_check/new.html.twig', [
+        return $this->renderForm('account_titularity_check/check.html.twig', [
             'form' => $form,
         ]);
     }
@@ -116,8 +116,9 @@ class AccountTitularityCheckController extends AbstractController
      * })
      * @IsGranted("ROLE_TITULARITY")
      */
-    public function index(AccountTitularityCheckRepository $repo): Response
+    public function index(Request $request, AccountTitularityCheckRepository $repo): Response
     {
+        $this->loadQueryParameters($request);
         $user = $this->getUser();
         $checks = $repo->findBy([
             'user' => $user,
@@ -141,7 +142,7 @@ class AccountTitularityCheckController extends AbstractController
             ]);
             if ($response->getStatusCode() !== 200) {
                 $this->addFlash('error', 'Status code:'. $response->getStatusCode(). ' Content: ' .$response->getContent());
-                return $this->renderForm('account_titularity_check/new.html.twig', [
+                return $this->renderForm('account_titularity_check/check.html.twig', [
                     'form' => $form,
                 ]);
             }
@@ -149,7 +150,7 @@ class AccountTitularityCheckController extends AbstractController
             $logger->info('Response: '. $response->getContent());
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
-            return $this->renderForm('account_titularity_check/new.html.twig', [
+            return $this->renderForm('account_titularity_check/check.html.twig', [
                 'form' => $form,
             ]);
         }

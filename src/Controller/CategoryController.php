@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\BaseController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
  *	    "_locale": "es|eu"
  * })
  */
-class CategoryController extends AbstractController
+class CategoryController extends BaseController
 {
     /**
      * @Route("/category/new", name="admin_category_new", methods={"GET","POST"})
@@ -24,6 +24,7 @@ class CategoryController extends AbstractController
     {
         $logger->debug('-->newAction: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
+        $this->loadQueryParameters($request);
         $user = $this->getUser();
         $form = $this->createForm(CategoryTypeForm::class, new Category(), [
             'readonly' => false,
@@ -35,25 +36,27 @@ class CategoryController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'La nueva categoría se ha guardado correctamente.');
 
-            return $this->redirectToRoute('admin_category_list');
+            return $this->redirectToRoute('admin_category_index');
         }
         $logger->debug('<--newAction: End OK');
 
-        return $this->render('category/new.html.twig', [
+        return $this->render('category/edit.html.twig', [
             'form' => $form->createView(),
             'readonly' => false,
+            'new' => true,
         ]);
     }
 
     /**
-     * @Route("/category", name="admin_category_list", methods={"GET"})
+     * @Route("/category", name="admin_category_index", methods={"GET"})
      */
     public function listAction(Request $request, LoggerInterface $logger, EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
+        $this->loadQueryParameters($request);
         $categorys = $em->getRepository(Category::class)->findAll();
 
-        return $this->render('category/list.html.twig', [
+        return $this->render('category/index.html.twig', [
             'categorys' => $categorys,
         ]);
     }
@@ -65,14 +68,16 @@ class CategoryController extends AbstractController
     {
         $logger->debug('-->showAction: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
+        $this->loadQueryParameters($request);
         $form = $this->createForm(CategoryTypeForm::class, $id, [
             'readonly' => true,
         ]);
         $logger->debug('<--showAction: End OK');
 
-        return $this->render('category/show.html.twig', [
+        return $this->render('category/edit.html.twig', [
             'form' => $form->createView(),
             'readonly' => true,
+            'new' => false,
         ]);
     }
 
@@ -83,6 +88,7 @@ class CategoryController extends AbstractController
     {
         $logger->debug('-->CategoryEditAction: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
+        $this->loadQueryParameters($request);
         $form = $this->createForm(CategoryTypeForm::class, $id, [
             'readonly' => false,
         ]);
@@ -109,11 +115,12 @@ class CategoryController extends AbstractController
     {
         $logger->debug('-->deleteAction: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
+        $this->loadQueryParameters($request);        
         $em->remove($id);
         $em->flush();
         $this->addFlash('success', 'La categoría se ha eliminado correctamente.');
         $logger->debug('<--deleteAction: End OK');
 
-        return $this->redirectToRoute('admin_category_list');
+        return $this->redirectToRoute('admin_category_index');
     }
 }

@@ -8,18 +8,8 @@
     <main class="container-fluid">
 	<div class="mt-2">
 	{{ include('payment/_form.html.twig',{
-	    'readonly' : true
+	    'readonly' : readonly
 			    }) }}
 	</div>
     </main>
 {% endblock body %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('payment_show') }}
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('payment_show') }}
-{% endblock %}

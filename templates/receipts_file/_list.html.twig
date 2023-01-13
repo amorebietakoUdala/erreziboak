@@ -1,0 +1,43 @@
+   {% if receiptsFiles is defined and receiptsFiles|length > 0 %}
+      <table id="taula" class="table bootstrap-table mt-3" 
+         {{ stimulus_controller('table', { 
+         'exportName': 'receipts_files',
+         }) }}
+         data-page-number="{{ page }}" 
+         data-page-size="{{ pageSize }}"
+         data-page-sortName="{{ sortName }}"
+         data-page-sortOrder="{{ sortOrder }}">
+         <thead>
+            <tr>
+            <th data-sortable="true">{{"receiptsFile.id" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"receiptsFile.fileName" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"receiptsFile.receptionDate" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"receiptsFile.processedDate" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"receiptsFile.receiptsType" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"receiptsFile.receiptsFinishStatus" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"receiptsFile.status" | trans | capitalize}}</th>
+            <th data-sortable="true" data-field="options">{{"table.options" | trans | capitalize}}</th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for receiptsFile in receiptsFiles %}
+            <tr>
+               <td>{{receiptsFile.id}}</td>
+               <td>{{receiptsFile.fileName}}</td>
+               <td>{{receiptsFile.receptionDate ? receiptsFile.receptionDate | date('Y-m-d H:i:s') : null }}</td>
+               <td>{{receiptsFile.processedDate ? receiptsFile.processedDate | date('Y-m-d H:i:s') : null }}</td>
+               <td>{{receiptsFile.receiptsType }}</td>
+               <td>{{receiptsFile.receiptsFinishStatus }}</td>
+               <td>{{ ('receiptsFile.status.choices.' ~ receiptsFile.status) | trans }}</td>
+               <td>
+                  {% if receiptsFile.status == constant('App\\Entity\\ReceiptsFile::STATUS_PROCESSED') %}
+                     <a href="{{ path('receipts_file_download', { 'receiptFile': receiptsFile.id }) }}"><i class="fa fa-download"></i></a>
+                  {% endif %}
+               </td>
+            </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   {% else %}
+      <div class="mt-2 p-2 border border-black text-center bg-light">{{"messages.results0" | trans }}</div>
+   {% endif %}

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\BaseController;
 use App\Entity\ReceiptsFile;
 use App\Form\ReceiptsFileType;
 use App\Repository\ReceiptsFileRepository;
@@ -12,7 +13,6 @@ use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * })
  * @IsGranted("ROLE_RECEIPTS")
  */
-class ReceiptsFileController extends AbstractController
+class ReceiptsFileController extends BaseController
 {
 
     private ReceiptsFileRepository $receiptFileRepo;
@@ -43,6 +43,7 @@ class ReceiptsFileController extends AbstractController
      */
     public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, EntityManagerInterface $em)
     {
+        $this->loadQueryParameters($request);
         $form = $this->createForm(ReceiptsFileType::class);
 
         $form->handleRequest($request);
@@ -77,7 +78,7 @@ class ReceiptsFileController extends AbstractController
                     $this->sendMail($receiptsFileObject);
                 }
 
-                return $this->redirectToRoute('receipts_file_list');
+                return $this->redirectToRoute('receipts_file_index');
             } catch (Exception $e) {
                 $this->addFlash('error', $e->getMessage());
             }
@@ -106,15 +107,16 @@ class ReceiptsFileController extends AbstractController
     }
 
     /**
-     * @Route("/", name="receipts_file_list")
+     * @Route("/", name="receipts_file_index")
      */
-    public function list()
+    public function list(Request $request)
     {
+        $this->loadQueryParameters($request);
         $receiptsFiles = $this->receiptFileRepo->findBy([], [
             'receptionDate' => 'DESC',
         ]);
 
-        return $this->render('receipts_file/list.html.twig', [
+        return $this->render('receipts_file/index.html.twig', [
             'receiptsFiles' => $receiptsFiles,
         ]);
     }

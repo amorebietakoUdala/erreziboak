@@ -5,3 +5,4 @@ ROLE_RETURNS: "Conversión de devoluciones"
 ROLE_DEBTS: "Consulta de deudas"
 ROLE_TITULARITY: "Consulta titularidad"
 
+security.login.remember_me: "Recordarme"

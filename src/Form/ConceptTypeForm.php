@@ -71,38 +71,35 @@ class ConceptTypeForm extends AbstractType
             'data' => 'AMOREBIE',
         ]);
         $builder->add('accountingConcept', EntityType::class, [
-        'class' => \App\Entity\GTWIN\Tarifa::class,
-        'em' => 'oracle',
-        'query_builder' => function (EntityRepository $er) {
-            $qb = $er->createQueryBuilder('u')
-                ->distinct()
-                ->andWhere('u.anyo >= :anyo')
-                ->setParameter('anyo', date('Y') - 1)
-                ->orderBy('u.valorActual', 'ASC');
+            'class' => \App\Entity\GTWIN\Tarifa::class,
+            'em' => 'oracle',
+            'query_builder' => function (EntityRepository $er) {
+                $qb = $er->createQueryBuilder('u')
+                    ->distinct()
+                    ->andWhere('u.anyo >= :anyo')
+                    ->setParameter('anyo', date('Y') - 1)
+                    ->orderBy('u.valorActual', 'ASC');
 
-            return $qb;
-        },
-        'choice_label' => function ($tarifa) {
-            return $tarifa->getValorActual().'-'.$tarifa->getNombre();
-        },
-        'choice_value' => function ($tarifa) {
-            if (null === $tarifa) {
-                return null;
-            }
+                return $qb;
+            },
+            'choice_label' => function ($tarifa) {
+                return $tarifa->getValorActual().'-'.$tarifa->getNombre();
+            },
+            'choice_value' => function ($tarifa) {
+                if (null === $tarifa) {
+                    return null;
+                }
 
-            return $tarifa;
-        },
-        'label' => 'concept.accountingConcept',
-        'disabled' => $readonly,
-    ]);
+                return $tarifa;
+            },
+            'label' => 'concept.accountingConcept',
+            'disabled' => $readonly,
+        ]);
         if (!$readonly) {
             $builder->add('save', SubmitType::class, [
-            'label' => 'btn.save',
-        ]);
+                'label' => 'btn.save',
+            ]);
         }
-        $builder->add('back', ButtonType::class, [
-            'label' => 'btn.cancel',
-        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

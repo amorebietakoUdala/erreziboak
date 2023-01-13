@@ -4,7 +4,7 @@ import $ from 'jquery';
 import { createAlert } from '../common/alert';
 import getAppBase from '../common/app_base';
 const routes = require('../../../public/js/fos_js_routes.json');
-import Routing from '../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js'
+import Routing from '../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
 
 $(document).ready(function() {
     Routing.setRoutingData(routes);

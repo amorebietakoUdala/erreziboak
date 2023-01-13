@@ -7,19 +7,19 @@
 <div class="container-fluid m-0">
 	<div class="row m-1">
 		<div class="col">
-			<div class="form-row">
-				<div class="col-lg-3 form-group">
+			<div class="row">
+				<div class="col-lg-3 ">
 					<span class="text-danger">{{ form_errors(form.file) }}</span>
 					{{ form_label(form.file, null, {
 							'label_attr': {'class': 'form-label form-label-sm'}
 					}) }}
 					{{ form_widget(form.file, {'attr': {'class': 'col-sm-10 form-control-file form-control-sm'}}) }}
 				</div>
-{#				<div class="col-lg-2 form-group">
+{#				<div class="col-lg-2 ">
 					{{ form_label(form.receiptsType) }}
 					{{ form_widget(form.receiptsType, {'attr': {'class': 'js-receiptsType form-control form-control-sm'}}) }}
 				</div>
-				<div class="col-lg-2 form-group">
+				<div class="col-lg-2 ">
 					{{ form_label(form.receiptsFinishStatus) }}
 					{{ form_widget(form.receiptsFinishStatus, {'attr': {'class': 'js-receiptsFinishStatus form-control form-control-sm'}}) }}
 				</div>
@@ -29,8 +29,12 @@
 </div>
 			
 <div class="row justify-content-center mt-2">
-	<button class="btn btn-primary ml-2 js-save" type="submit">{{ "btn.send" | trans }}</button>
-	<button class="btn btn-primary ml-2 js-back" type="button" data-url="{{ path('debts_file_list') }}">{{ "btn.cancel" | trans }}</button>
+	<div class="col-lg-auto">
+		<button class="btn btn-primary ml-2 js-save" type="submit">{{ "btn.send" | trans }}</button>
+	</div>
+	<div class="col-lg-auto">
+		<a href="{{ path('debts_file_list') }}" class="btn btn-secondary ml-2" type="button">{{ "btn.cancel" | trans }}</a>
+	</div>
 </div>
 
 <!-- Token CSRF -->

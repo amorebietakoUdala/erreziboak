@@ -23,29 +23,14 @@ Encore
  * Each entry will result in one JavaScript file (e.g. app.js)
  * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
  */
-.addEntry('app', './assets/js/app.js')
-    .addEntry('login', './assets/js/security/login.js')
-    .addEntry('user_list', './assets/js/user/list.js')
+.addEntry('app', './assets/app.js')
     .addEntry('user_edit', './assets/js/user/edit.js')
-    .addEntry('user_new', './assets/js/user/new.js')
     .addEntry('receiptsFile_upload', './assets/js/receipts_file/upload.js')
-    .addEntry('receiptsFile_list', './assets/js/receipts_file/list.js')
-    .addEntry('returnsFiles_upload', './assets/js/returns_files/upload.js')
-    .addEntry('returnsFiles_list', './assets/js/returns_files/list.js')
     .addEntry('receipt_search', './assets/js/receipt/search.js')
-    .addEntry('payment_list', './assets/js/payment/list.js')
-    .addEntry('payment_show', './assets/js/payment/show.js')
     .addEntry('exam_new', './assets/js/exam/new.js')
-    .addEntry('concept_list', './assets/js/concept/list.js')
-    .addEntry('concept_new', './assets/js/concept/new.js')
     .addEntry('concept_edit', './assets/js/concept/edit.js')
-    .addEntry('category_list', './assets/js/category/list.js')
-    .addEntry('category_new', './assets/js/category/new.js')
-    .addEntry('category_edit', './assets/js/category/edit.js')
-    .addEntry('debtsFiles_list', './assets/js/debts/list.js')
-    .addEntry('debtsFiles_upload', './assets/js/debts/upload.js')
-    .addEntry('account_list', './assets/js/account/list.js')
 
+.enableStimulusBridge('./assets/controllers.json')
 //.addEntry('page2', './assets/js/page2.js')
 
 // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
