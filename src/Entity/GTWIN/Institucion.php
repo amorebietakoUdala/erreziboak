@@ -18,7 +18,7 @@ use JMS\Serializer\Annotation as Serializer;
 class Institucion
 {
     /**
-     * @ORM\Column(name="INSDBOIDE", type="bigint")
+     * @ORM\Column(name="INSDBOIDE", type="string")
      * @ORM\Id
      */
     private $id;
@@ -36,6 +36,12 @@ class Institucion
     private $nombre;
 
     /**
+     * @ORM\Column(name="INSENTORD", type="string")
+     * @Serializer\Expose
+     */
+    private $entidadOrdenante;
+
+    /**
      * @ORM\OneToMany(targetEntity="InstitucionTipoIngreso", mappedBy="institucion")
      * @ORM\JoinTable(name="SP_TRB_TININS")
      */
@@ -44,9 +50,10 @@ class Institucion
     public function __construct()
     {
         $this->tiposIngreso = new ArrayCollection();
+        $this->recibos = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
@@ -93,5 +100,17 @@ class Institucion
     public function __toString()
     {
         return $this->codigo;
+    }
+
+    public function getEntidadOrdenante()
+    {
+        return $this->entidadOrdenante;
+    }
+
+    public function setEntidadOrdenante($entidadOrdenante)
+    {
+        $this->entidadOrdenante = $entidadOrdenante;
+
+        return $this;
     }
 }

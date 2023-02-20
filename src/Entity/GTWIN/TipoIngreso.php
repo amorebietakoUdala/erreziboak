@@ -215,4 +215,16 @@ class TipoIngreso
 
         return $this;
     }
+
+    public function getInstituciones()
+    {
+        return $this->instituciones;
+    }
+
+    public function setInstituciones($instituciones)
+    {
+        $this->instituciones = $instituciones;
+
+        return $this;
+    }
 }

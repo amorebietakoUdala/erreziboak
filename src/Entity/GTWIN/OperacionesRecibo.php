@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class OperacionesRecibo
 {
     /**
-     * @ORM\Column(name="OPEDBOIDE", type="bigint")
+     * @ORM\Column(name="OPEDBOIDE", type="string")
      * @ORM\Id
      */
     private $id;

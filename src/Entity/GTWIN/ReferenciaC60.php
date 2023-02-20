@@ -16,9 +16,9 @@ class ReferenciaC60
     const ANULADA = "T";
     const NO_ANULADA = "F";
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="C60DBOIDE", type="bigint", nullable=false)
+     * @ORM\Column(name="C60DBOIDE", type="string", nullable=false)
      * @ORM\Id
      */
     private $id;
@@ -117,7 +117,7 @@ class ReferenciaC60
     /**
      * @var int
      *
-     * @ORM\Column(name="C60PEGEN", type="bigint", nullable=true)
+     * @ORM\Column(name="C60PEGEN", type="string", nullable=true)
      */
     private $operacion;
 
@@ -140,9 +140,9 @@ class ReferenciaC60
     /**
      * Get the value of id
      *
-     * @return  int
+     * @return string
      */
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
@@ -472,7 +472,7 @@ class ReferenciaC60
      *
      * @return  self
      */
-    public function setRecibo(array $recibo): self
+    public function setRecibo($recibo): self
     {
         $this->recibo = $recibo;
 
@@ -555,10 +555,46 @@ class ReferenciaC60
 
     public function esPagable()
     {
-        if ($this->indClaveCobroAnulada === $this->NO_ANULADA && !$this->fechaLimitePagoBancoVencida()) {
+        if ($this->indClaveCobroAnulada === ReferenciaC60::NO_ANULADA && !$this->fechaLimitePagoBancoVencida()) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public function getRafagaC60Completa() {
+        $referencia = $this->getReferenciaC60();
+        $remesa = $this->getRemesa();
+        $concepto = $this->getConcepto();
+        $presupuesto = substr($this->getPresupuesto(),-2);
+        $fechaLimitePagoBanco = $this->getFechaLimitePagoBanco();
+        $digitoFechaLimitePago = substr($fechaLimitePagoBanco->format('y'), -1);
+        $diaJuliano = str_pad($fechaLimitePagoBanco->format('z')+1, 3, '0', STR_PAD_LEFT);
+        $importeTotal = $this->getPrincipal()*100;
+        $importe = str_pad($importeTotal, 8, '0', STR_PAD_LEFT);
+        $institucion = $this->getRecibo()->getInstitucion();
+        $entidadOrdenante = $institucion->getEntidadOrdenante();
+        $rafaga = "90521$entidadOrdenante$referencia$remesa$concepto$presupuesto$digitoFechaLimitePago$diaJuliano$importe".'0';
+        $dc = $this->calculateModule103ControlDigit($rafaga);
+        return $rafaga.$dc;
+    }
+
+    private function calculateModule103ControlDigit(string $rafagaC60) {
+        /**
+         * Cálculo del dígito de control de code 128C 
+         * https://www.barcodefaq.com/1d/code-128/#Code-128CharacterSet  
+         * https://en.wikipedia.org/wiki/Code_128
+         * 
+         * */
+        $sum = 105;
+        $loop = 1;
+        for ($i = 0; $i < strlen($rafagaC60); $i = $i + 2) {
+            $substring = substr($rafagaC60,$i,2);
+            $value = intval($substring) * $loop;
+            $sum += $value; 
+            $loop++;
+        }
+        $dc = $sum % 103;
+        return $dc;
     }
 }

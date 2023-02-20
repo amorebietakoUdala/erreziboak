@@ -21,9 +21,9 @@ class Recibo
     public const ESTADO_PENDIENTE = 'P';
     public const ESTADO_COBRADO = 'C';
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="RECDBOIDE", type="bigint")
+     * @ORM\Column(name="RECDBOIDE", type="string")
      * @ORM\Id
      */
     private $id;
@@ -238,6 +238,14 @@ class Recibo
     private $tipoIngreso;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Institucion", fetch="EAGER")
+     * @ORM\JoinColumn(name="RECINSTIT", referencedColumnName="INSDBOIDE")
+     * @Serializer\Expose
+     * @Serializer\MaxDepth(1)
+     */
+    private $institucion;
+
+    /**
      * @ORM\OneToMany(targetEntity="OperacionesRecibo", mappedBy="recibo")
      */
     private $operaciones;
@@ -246,6 +254,8 @@ class Recibo
 
     /**
      * @ORM\OneToMany(targetEntity="ReferenciaC60", mappedBy="recibo")
+     * @Serializer\Expose
+     * @Serializer\MaxDepth(1)
      */
     private $referenciasC60;
 
@@ -804,6 +814,47 @@ class Recibo
     public function setReferenciasC60($referenciasC60)
     {
         $this->referenciasC60 = $referenciasC60;
+
+        return $this;
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     */
+    public function getReferenciaC60() {
+        return ($this->getLastReferenciaC60())->getRafagaC60Completa();
+    }
+
+    public function getLastReferenciaC60() {
+        $lastReference = null;
+        foreach ($this->getReferenciasC60() as $referenciaC60 ) {
+            if ( $lastReference === null ) {
+                $lastReference = $referenciaC60;
+            } else {
+                if ( $lastReference->getId() < $referenciaC60->getId()  ) {
+                    $lastReference = $referenciaC60;
+                }
+            }
+        }
+        return $lastReference;
+    }
+
+    /**
+     * Get the value of institucion
+     */ 
+    public function getInstitucion(): Institucion
+    {
+        return $this->institucion;
+    }
+
+    /**
+     * Set the value of institucion
+     *
+     * @return  self
+     */ 
+    public function setInstitucion(Institucion $institucion)
+    {
+        $this->institucion = $institucion;
 
         return $this;
     }
