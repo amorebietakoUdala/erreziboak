@@ -21,7 +21,7 @@
         "select2": "^4.0.13",
         "sweetalert2": "^11.6.16",
         "tableexport.jquery.plugin": "^1.25.0",
-        "webpack": "^5.75.0",
+        "webpack": "^5.76.0",
         "webpack-cli": "^4.9.2",
         "webpack-notifier": "^1.6.0"
     },
