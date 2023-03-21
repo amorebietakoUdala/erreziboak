@@ -1,4 +1,5 @@
 # Roles
+ROLE_ERREZIBOAK: "Usuario"
 ROLE_API: Api
 ROLE_RECEIPTS: "Conversión de recibos"
 ROLE_RETURNS: "Conversión de devoluciones"

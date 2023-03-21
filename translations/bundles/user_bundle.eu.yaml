@@ -1,5 +1,6 @@
 # Roles
 ROLE_API: Api
+ROLE_ERREZIBOAK: "Erabiltzailea"
 ROLE_RECEIPTS: "Erreziboen eraldaketa"
 ROLE_RETURNS: "Itzulpenen eraldaketa"
 ROLE_DEBTS: "Zorren kontsulta"

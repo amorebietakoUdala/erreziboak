@@ -217,7 +217,7 @@ confirmation.title: "Datos del pago"
 confirmation.pay: "Pagar"
 confirmation.cancel: "Cancelar"
 
-ROLE_USER: "Usuario"
+ROLE_ERREZIBOAK: "Usuario"
 ROLE_API: "API"
 ROLE_ADMIN: "Administrador"
 ROLE_RECEIPTS: "Conversión de recibos"

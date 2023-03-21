@@ -21,11 +21,11 @@ security:
                 class: App\Entity\User
                 property: username
     role_hierarchy:
-        # ROLE_RECEIPTS:    ROLE_USER
-        # ROLE_RETURNS:     ROLE_USER
-        # ROLE_DEBTS:       ROLE_USER
-        # ROLE_TITULARITY:  ROLE_USER
-        ROLE_ADMIN:       [ROLE_RECEIPTS, ROLE_RETURNS, ROLE_DEBTS, ROLE_TITULARITY]
+        ROLE_RECEIPTS:    ROLE_ERREZIBOAK
+        ROLE_RETURNS:     ROLE_ERREZIBOAK
+        ROLE_DEBTS:       ROLE_ERREZIBOAK
+        ROLE_TITULARITY:  ROLE_ERREZIBOAK
+        ROLE_ADMIN:       [ROLE_ERREZIBOAK, ROLE_RECEIPTS, ROLE_RETURNS, ROLE_DEBTS, ROLE_TITULARITY]
         
     firewalls:
         dev:
@@ -58,7 +58,7 @@ security:
         - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/receipts, roles: PUBLIC_ACCESS }
         - { path: ^/api/category/, role: PUBLIC_ACCESS }
-        - { path: ^/(es|eu)/returns, roles: ROLE_USER }
+        - { path: ^/(es|eu)/returns, roles: ROLE_ERREZIBOAK }
         - { path: ^/api/, role: ROLE_API }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # - { path: ^/profile, roles: ROLE_ERREZIBOAK }

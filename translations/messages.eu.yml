@@ -217,7 +217,7 @@ confirmation.title: "Erreziboaren datuak"
 confirmation.pay: "Ordaindu"
 confirmation.cancel: "Itzuli"
 
-ROLE_USER: "Erabiltzailea arrunta"
+ROLE_ERREZIBOAK: "Erabiltzailea arrunta"
 ROLE_API: "API"
 ROLE_ADMIN: "Aministraria"
 ROLE_RECEIPTS: "Erreziboen eraldaketa"
