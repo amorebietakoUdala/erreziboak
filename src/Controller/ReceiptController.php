@@ -176,25 +176,25 @@ class ReceiptController extends AbstractController
     /**
      * @Route("/pay/{receipt}", name="receipt_forwarded_pay", methods={"POST"})
      */
-    // public function payForwardedReceiptAction(Request $request, Recibo $receipt, LoggerInterface $logger)
-    // {
-    //     $logger->debug('-->payForwardedReceiptAction: Start');
-    //     if (null != $receipt) {
-    //         $logger->debug('<--payForwardedReceiptAction: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequestAction');
+    public function payForwardedReceiptAction(Request $request, Recibo $receipt, LoggerInterface $logger)
+    {
+        $logger->debug('-->payForwardedReceiptAction: Start');
+        if (null != $receipt) {
+            $logger->debug('<--payForwardedReceiptAction: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequestAction');
 
-    //         return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequestAction', $this->__createMiPagoParametersArray($receipt));
-    //     } else {
-    //         $this->addFlash('error', 'Recibo no encontrado');
-    //         $logger->debug('<--payForwardedReceiptAction: End Recibo no encontrado');
-    //         $form = $this->createForm(ReceiptSearchForm::class);
+            return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequestAction', $this->__createMiPagoParametersArray($receipt));
+        } else {
+            $this->addFlash('error', 'Recibo no encontrado');
+            $logger->debug('<--payForwardedReceiptAction: End Recibo no encontrado');
+            $form = $this->createForm(ReceiptSearchForm::class);
 
-    //         return $this->render('receipt/search.html.twig', [
-    //             'form' => $form->createView(),
-    //             'references' => [],
-    //         ]);
-    //     }
-    //     $logger->debug('-->payForwardedReceiptAction: End OK');
-    // }
+            return $this->render('receipt/search.html.twig', [
+                'form' => $form->createView(),
+                'references' => [],
+            ]);
+        }
+        $logger->debug('-->payForwardedReceiptAction: End OK');
+    }
 
     /**
      * @Route("/pay/reference/{referencia}", name="referenciac60_pay", methods={"GET", "POST"}, options={"expose"=true})
