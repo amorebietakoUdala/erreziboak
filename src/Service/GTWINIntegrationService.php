@@ -399,7 +399,9 @@ class GTWINIntegrationService
 			<ESTADO>{ESTADO}</ESTADO>
 			<SITUAC>{SITUAC}</SITUAC>
 			<INDPAR>{INDPAR}</INDPAR>
+            <ANYCON>{ANYCON}</ANYCON>
 			<linea>
+                <PRESUP>{PRESUP}</PRESUP>
 				<CODCON>{CODCON}</CODCON>
 				<IMPORT>{IMPORT}</IMPORT>
 			</linea>';
@@ -422,6 +424,8 @@ class GTWINIntegrationService
             '{ESTADO}' => $estado,
             '{SITUAC}' => $situacion,
             '{INDPAR}' => $indpar,
+            '{ANYCON}' => $now->format('Y'),
+            '{PRESUP}' => $now->format('Y'),
             '{CODCON}' => $codcon,
             '{IMPORT}' => $importe,
         ];
