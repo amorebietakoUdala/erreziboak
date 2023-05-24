@@ -43,6 +43,7 @@ class CsvFormatValidator
         'Apellido1',
         'Apellido2',
         'Dni',
+        'Fecha_Nacimiento',
         'Importe',
         'Cuenta_Corriente',
         'Nombre_Titular',
@@ -250,6 +251,10 @@ class CsvFormatValidator
         if (null !== $fechaLimitePagoValidation) {
             return $fechaLimitePagoValidation;
         }
+        $fechaNacimientoValidation = $this->validateFechaNacimiento($numFila, $record['Fecha_Nacimiento']);
+        if (null !== $fechaNacimientoValidation) {
+            return $fechaNacimientoValidation;
+        }
         if (in_array('Dni', $this->requiredFields) && self::RECEIPTS_TYPE === $this->type) {
             $dniValidation = $this->validateDni($numFila, in_array('Dni', $this->requiredFields) ? $record['Dni'] : null);
             if (null !== $dniValidation) {
@@ -315,6 +320,18 @@ class CsvFormatValidator
             return [
                 'status' => self::INVALID_DATE,
                 'message' => $this->getValidationMessage('invalid_date', $numFila, $fechaInicioPago),
+            ];
+        }
+
+        return null;
+    }
+
+    private function validateFechaNacimiento($numFila, $fechaNacimiento)
+    {
+        if (!empty($fechaNacimiento) && !Validaciones::validateDate($fechaNacimiento)) {
+            return [
+                'status' => self::INVALID_DATE,
+                'message' => $this->getValidationMessage('invalid_date', $numFila, $fechaNacimiento),
             ];
         }
 
