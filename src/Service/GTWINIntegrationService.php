@@ -366,8 +366,6 @@ class GTWINIntegrationService
             $concept->getAccountingConcept(),
             $actualPrice
         );
-
-        dd($inputparams);
         $dboid = $this->__insertExternalOperation('CREA_RECIBO', $inputparams);
         $result = null;
         if ($wait) {
