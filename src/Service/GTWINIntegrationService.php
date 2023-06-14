@@ -354,7 +354,7 @@ class GTWINIntegrationService
             $reference,
             $tipoIngreso->getCodigo(),
             $concept->getEntity(),
-            mb_convert_encoding($exam->getApellido1() . '*' . $exam->getApellido2() . ',' . $exam->getNombre(), 'ISO-8859-1'),
+            mb_convert_encoding(mb_strtoupper($this->removeAccents($exam->getApellido1())) . '*' . mb_strtoupper($this->removeAccents($exam->getApellido2())) . ',' . mb_strtoupper($this->removeAccents($exam->getNombre())), 'ISO-8859-1'),
             substr($exam->getDni(), 0, -1),
             substr($exam->getDni(), -1),
             (Validaciones::validar_dni($exam->getDni()) ? 'ES' : 'EX'),
@@ -366,6 +366,8 @@ class GTWINIntegrationService
             $concept->getAccountingConcept(),
             $actualPrice
         );
+
+        dd($inputparams);
         $dboid = $this->__insertExternalOperation('CREA_RECIBO', $inputparams);
         $result = null;
         if ($wait) {
@@ -535,6 +537,18 @@ class GTWINIntegrationService
     {   
         $result = $this->em->getRepository(Tarifa::class)->findByTipoIngreso($tipoIngreso);
 
+        return $result;
+    }
+
+    public function removeAccents($original) {
+        $result = $original;
+        $replacement = [
+            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+            'ä' => 'a', 'ë' => 'e', 'ï' => 'i', 'ö' => 'o', 'ü' => 'u',
+        ];
+        foreach($replacement as $i=>$u) { 
+            $result = mb_eregi_replace($i,$u,$result);
+        }        
         return $result;
     }
 }
