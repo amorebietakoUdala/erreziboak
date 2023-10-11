@@ -3,7 +3,7 @@ import $ from 'jquery';
 $(document).ready(function(){
     $('.js-receiptsType').on('change',function (e) {
         if ($('.js-receiptsType').val() === 'AU') {
-            $('.js-receiptsFinishStatus').val('V');
+            $('.js-receiptsFinishStatus').val('P');
         }
         if ($('.js-receiptsType').val() === 'ID') {
             $('.js-receiptsFinishStatus').val('P');
