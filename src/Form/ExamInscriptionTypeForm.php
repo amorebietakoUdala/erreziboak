@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Description of InscriptionTypeForm.
@@ -42,6 +43,9 @@ class ExamInscriptionTypeForm extends AbstractType
                     return $category->getNameEu();
                 }
             },
+            'constraints' => [
+                new NotBlank(),
+            ],
         ]);
         if (!$readonly) {
             $builder->add('pay', SubmitType::class, [
