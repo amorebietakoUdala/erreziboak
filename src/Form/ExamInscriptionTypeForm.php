@@ -34,6 +34,7 @@ class ExamInscriptionTypeForm extends AbstractType
         ->add('category', EntityType::class, [
             'class' => Category::class,
             'label' => 'exam.category',
+            'placeholder' => 'exam.category.placeholder',
             'choice_label' => function ($category) use ($locale) {
                 if ('es' === $locale) {
                     return $category->getName();

@@ -118,6 +118,7 @@ inscription.email: "Emaila"
 inscription.telefono: "Telefonoa"
 
 exam.category: "Kategoria"
+exam.category.placeholder: "Kategoria bat hautatu"
 
 concept.id: "Id"
 concept.name: "Izena"

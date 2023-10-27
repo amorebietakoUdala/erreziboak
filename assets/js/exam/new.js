@@ -6,25 +6,28 @@ import getAppBase from '../common/app_base';
 $(document).ready(function(){
     Routing.setRoutingData(routes);
     $('.js-category').on('change',function(e) {
-        var url = getAppBase() + Routing.generate('api_category', { id: $(e.currentTarget).val()});
-        var price = null;
-        $.ajax({
-            url: url,
-            success: function (category) {
-                var serviceURL = category.data.concept.service_url;
-                if (serviceURL !== undefined) {
-                    $.ajax({
-                        url: serviceURL,
-                        success: function (price) {
-                            $('.js-quantity').text(price);
-                        }
-                    });
-                } else {
-                    price = category.data.concept.unitary_price;
-                    $('.js-quantity').text(price);
+        const id = $(e.currentTarget).val();
+        if ( id != "" ) {
+            var url = getAppBase() + Routing.generate('api_category', { id: $(e.currentTarget).val()});
+            var price = null;
+            $.ajax({
+                url: url,
+                success: function (category) {
+                    var serviceURL = category.data.concept.service_url;
+                    if (serviceURL !== undefined) {
+                        $.ajax({
+                            url: serviceURL,
+                            success: function (price) {
+                                $('.js-quantity').text(price);
+                            }
+                        });
+                    } else {
+                        price = category.data.concept.unitary_price;
+                        $('.js-quantity').text(price);
+                    }
                 }
-            }
-        });
+            });
+        }
     })
 });
 $(function () {

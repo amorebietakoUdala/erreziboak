@@ -117,6 +117,7 @@ inscription.email: "Email"
 inscription.telefono: "Telefono"
 
 exam.category: "Categoría"
+exam.category.placeholder: "Seleccione una categoría"
 
 concept.id: "Id"
 concept.name: "Nombre"
