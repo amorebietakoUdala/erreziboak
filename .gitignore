@@ -20,3 +20,16 @@ yarn-error.log
 /composer.json.dev
 /composer.json.prod
 /.yarn/
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+/bin/phpunit
+###< symfony/phpunit-bridge ###
+
+*.log

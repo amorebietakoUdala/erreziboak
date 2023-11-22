@@ -4,7 +4,7 @@ namespace App\Repository\GTWIN;
 
 use App\Entity\GTWIN\TipoOperacion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method TipoOperacion|null find($id, $lockMode = null, $lockVersion = null)

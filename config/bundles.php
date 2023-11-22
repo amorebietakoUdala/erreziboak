@@ -19,4 +19,5 @@ return [
     Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true],
     AMREU\UserBundle\UserBundle::class => ['all' => true],
     Qipsius\TCPDFBundle\QipsiusTCPDFBundle::class => ['all' => true],
+    Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
 ];
