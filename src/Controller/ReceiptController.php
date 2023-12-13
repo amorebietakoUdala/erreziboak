@@ -19,38 +19,25 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/{_locale}", requirements={
- *	    "_locale": "es|eu|en"
- * })
- */
+#[Route(path: '/{_locale}', requirements: ['_locale' => 'es|eu|en'])]
 class ReceiptController extends AbstractController
 {
 
-    private MailerInterface $mailer;
-
-    public function __construct(MailerInterface $mailer)
+    public function __construct(private readonly MailerInterface $mailer)
     {
-        $this->mailer = $mailer;
     }
 
 
-    /**
-     * @Route("/receipts/findReferenciaC60/{referenciac60}", name="receipt_find_referencia_c60", methods={"GET"})
-     */
     // public function findReferenciaC60(Request $request, $referenciac60, EntityManagerInterface $oracleEntityManager)
     // {
     //     $repo = $oracleEntityManager->getRepository(ReferenciaC60::class);
     //     $result = $repo->findRecibosByNumeroReferenciaC60($referenciac60);
     //     dd($result->getRecibo()->getNumeroRecibo());
     // }
-
-    /**
-     * @Route("/receipts", name="receipt_find", methods={"GET","POST"})
-     */
-    public function findReceiptsAction(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts)
+    #[Route(path: '/receipts', name: 'receipt_find', methods: ['GET', 'POST'])]
+    public function findReceipts(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts)
     {
-        $logger->debug('-->findReceiptsAction: Start');
+        $logger->debug('-->findReceipts: Start');
         $referenciaC60 = $request->get('referenciaC60');
         $email = $request->get('email');
         $form = $this->createForm(ReceiptSearchForm::class, [
@@ -67,7 +54,7 @@ class ReceiptController extends AbstractController
                 $this->addFlash('error', 'Debe especificar una referencia');
 
                 return $this->render('receipt/search.html.twig', [
-                    'form' => $form->createView(),
+                    'form' => $form,
                     'references' => $results,
                 ]);
             }
@@ -75,7 +62,7 @@ class ReceiptController extends AbstractController
                 $this->addFlash('error', 'La refrencia no es correcta debe ser un número.');
 
                 return $this->render('receipt/search.html.twig', [
-                    'form' => $form->createView(),
+                    'form' => $form,
                     'references' => $results,
                 ]);
             }
@@ -97,13 +84,13 @@ class ReceiptController extends AbstractController
                 if ($fechaLimitePagoBanco < new \DateTime()) {
                     $this->addFlash('error', 'messages.fechaLimitePagoBancoVencida');
                     return $this->render('receipt/search.html.twig', [
-                        'form' => $form->createView(),
+                        'form' => $form,
                         'references' => [],
                     ]);
                 }
             }
             return $this->render('receipt/search.html.twig', [
-                'form' => $form->createView(),
+                'form' => $form,
                 'fechaLimitePagoBanco' => $fechaLimitePagoBanco !== null ? $fechaLimitePagoBanco->format('Y/m/d') : null,
                 'importeTotal' => $importeTotal,
                 'referenciaC60' => $data['referenciaC60'],
@@ -113,11 +100,11 @@ class ReceiptController extends AbstractController
             ]);
         }
 
-        $logger->debug('<--findReceiptsAction: Results: ' . count($results));
-        $logger->debug('<--findReceiptsAction: End OK');
+        $logger->debug('<--findReceipts: Results: ' . count($results));
+        $logger->debug('<--findReceipts: End OK');
 
         return $this->render('receipt/search.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
             'references' => $results,
             'search' => true,
             'readonly' => false,
@@ -155,7 +142,7 @@ class ReceiptController extends AbstractController
         $referencia = $referenciasC60[0];
 
         $params = [
-            'reference_number' => substr($referencia->getReferenciaC60(), 0, -2),
+            'reference_number' => substr((string) $referencia->getReferenciaC60(), 0, -2),
             'payment_limit_date' => $referencia->getFechaLimitePagoBanco()->format('Ymd'),
             'sender' => $this->getParameter('mipago.sender'),
             'suffix' => $referencia->getConcepto(),
@@ -173,35 +160,31 @@ class ReceiptController extends AbstractController
         return $params;
     }
 
-    /**
-     * @Route("/pay/{receipt}", name="receipt_forwarded_pay", methods={"POST"})
-     */
-    public function payForwardedReceiptAction(Request $request, Recibo $receipt, LoggerInterface $logger)
+    #[Route(path: '/pay/{receipt}', name: 'receipt_forwarded_pay', methods: ['POST'])]
+    public function payForwardedReceipt(Recibo $receipt, LoggerInterface $logger)
     {
-        $logger->debug('-->payForwardedReceiptAction: Start');
+        $logger->debug('-->payForwardedReceipt: Start');
         if (null != $receipt) {
-            $logger->debug('<--payForwardedReceiptAction: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequestAction');
+            $logger->debug('<--payForwardedReceipt: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequest');
 
-            return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequestAction', $this->__createMiPagoParametersArray($receipt));
+            return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequest', $this->__createMiPagoParametersArray($receipt));
         } else {
             $this->addFlash('error', 'Recibo no encontrado');
-            $logger->debug('<--payForwardedReceiptAction: End Recibo no encontrado');
+            $logger->debug('<--payForwardedReceipt: End Recibo no encontrado');
             $form = $this->createForm(ReceiptSearchForm::class);
 
             return $this->render('receipt/search.html.twig', [
-                'form' => $form->createView(),
+                'form' => $form,
                 'references' => [],
             ]);
         }
-        $logger->debug('-->payForwardedReceiptAction: End OK');
+        $logger->debug('-->payForwardedReceipt: End OK');
     }
 
-    /**
-     * @Route("/pay/reference/{referencia}", name="referenciac60_pay", methods={"GET", "POST"}, options={"expose"=true})
-     */
-    public function payForwardedC60ReferenceAction(Request $request, $referencia, LoggerInterface $logger, GTWINIntegrationService $gts)
+    #[Route(path: '/pay/reference/{referencia}', name: 'referenciac60_pay', methods: ['GET', 'POST'], options: ['expose' => true])]
+    public function payForwardedC60Reference(Request $request, $referencia, LoggerInterface $logger, GTWINIntegrationService $gts)
     {
-        $logger->debug('-->payForwardedC60ReferenceAction: Start');
+        $logger->debug('-->payForwardedC60Reference: Start');
         $email = $request->get('email');
         $references = $gts->findReferenciaC60($referencia);
         if (count($references) === 0) {
@@ -213,37 +196,35 @@ class ReceiptController extends AbstractController
         }
 
         if (null !== $references) {
-            $logger->debug('<--payForwardedC60ReferenceAction: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequestAction');
+            $logger->debug('<--payForwardedC60Reference: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequest');
 
-            return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequestAction', $this->__createMiPagoParametersArrayFromC60Reference($references, $email));
+            return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequest', $this->__createMiPagoParametersArrayFromC60Reference($references, $email));
         } else {
             $this->addFlash('error', 'Recibo no encontrado');
-            $logger->debug('<--payForwardedC60ReferenceAction: End Recibo no encontrado');
+            $logger->debug('<--payForwardedC60Reference: End Recibo no encontrado');
 
             return $this->redirectToRoute('receipt_find', [
                 'referenciaC60' => $referencia,
                 'email' => $email,
             ]);
         }
-        $logger->debug('-->payForwardedC60ReferenceAction: End OK');
+        $logger->debug('-->payForwardedC60Reference: End OK');
     }
 
-    /**
-     * @Route("/pay/{numeroRecibo}/{dni}", name="receipt_pay", methods={"GET","POST"}, options={"expose"=true})
-     */
-    public function payReceiptAction(Request $request, $numeroRecibo, $dni, GTWINIntegrationService $gts, LoggerInterface $logger)
+    #[Route(path: '/pay/{numeroRecibo}/{dni}', name: 'receipt_pay', methods: ['GET', 'POST'], options: ['expose' => true])]
+    public function payReceipt(Request $request, $numeroRecibo, $dni, GTWINIntegrationService $gts, LoggerInterface $logger)
     {
-        $logger->debug('-->payReceiptAction: Start');
+        $logger->debug('-->payReceipt: Start');
         $user = $this->getUser();
         $roles = (null === $user) ? ['IS_AUTHENTICATED_ANONYMOUSLY'] : $user->getRoles();
         $email = $request->get('email');
         $form = $this->createForm(ReceiptSearchForm::class, null);
         if (null === $user && (null === $dni || null === $numeroRecibo)) {
             $this->addFlash('error', 'El dni y el número de recibo son obligatorios');
-            $logger->debug('<--payReceiptAction: End El dni y el número de recibo son obligatorios');
+            $logger->debug('<--payReceipt: End El dni y el número de recibo son obligatorios');
 
             return $this->render('receipt/search.html.twig', [
-                'form' => $form->createView(),
+                'form' => $form,
                 'references' => [],
                 'email' => $email,
             ]);
@@ -251,26 +232,24 @@ class ReceiptController extends AbstractController
         $receipt = $gts->findByNumReciboDni($numeroRecibo, $dni);
         if (null === $receipt) {
             $this->addFlash('error', 'Recibo no encontrado');
-            $logger->debug('<--payReceiptAction: End Recibo no encontrado');
+            $logger->debug('<--payReceipt: End Recibo no encontrado');
 
             return $this->render('receipt/search.html.twig', [
-                'form' => $form->createView(),
+                'form' => $form,
                 'references' => [],
                 'email' => $email,
             ]);
         }
-        $logger->debug('<--payReceiptAction: End Forwarded to sendRequest');
+        $logger->debug('<--payReceipt: End Forwarded to sendRequest');
         $receipt->setEmail($email);
 
-        return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequestAction', $this->__createMiPagoParametersArray($receipt));
+        return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequest', $this->__createMiPagoParametersArray($receipt));
     }
 
-    /**
-     * @Route("/receiptConfirmation", name="receipt_confirmation", methods={"GET","POST"})
-     */
-    public function receiptConfirmationAction(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts)
+    #[Route(path: '/receiptConfirmation', name: 'receipt_confirmation', methods: ['GET', 'POST'])]
+    public function receiptConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts)
     {
-        $logger->debug('-->ReceiptConfirmationAction: Start');
+        $logger->debug('-->ReceiptConfirmation: Start');
         $payment = $request->get('payment');
         $reference_number = intval($payment->getReferenceNumberDC());
         $logger->info('ReferenceNumberDC: ' . $reference_number . ', Status: ' . $payment->getStatus() . ', PaymentId: ' . $payment->getId());
@@ -278,7 +257,7 @@ class ReceiptController extends AbstractController
         $recibos = $gts->findRecibosByNumeroReferenciaC60($payment->getReferenceNumberDC());
         $this->sendConfirmationEmails($recibos, $payment);
         $message = $this->__updatePayment($recibos, $payment, $logger, $gts);
-        $logger->debug('<--ReceiptConfirmationAction: End OK');
+        $logger->debug('<--ReceiptConfirmation: End OK');
 
         return new JsonResponse($message);
     }
@@ -371,10 +350,8 @@ class ReceiptController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/receipts/testIBAN", name="receipt_testIBAN", methods={"GET"})
-     */
-    public function testIBANAction(Request $request, IsValidIBANValidator $validator)
+    #[Route(path: '/receipts/testIBAN', name: 'receipt_testIBAN', methods: ['GET'])]
+    public function testIBAN(Request $request, IsValidIBANValidator $validator)
     {
         $iban = $request->get('iban');
         $valid = $validator->validateIBAN($iban);

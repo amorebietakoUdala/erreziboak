@@ -8,10 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends AbstractController
 {
-    /**
-     * @Route("/", name="app_homepage", methods={"GET"})
-     */
-    public function homeAction(Request $request)
+    #[Route(path: '/', name: 'app_homepage', methods: ['GET'])]
+    public function home(Request $request)
     {
         $locale = $request->attributes->get('_locale');
         if (null !== $locale) {

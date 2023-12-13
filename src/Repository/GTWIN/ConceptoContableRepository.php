@@ -3,6 +3,7 @@
 namespace App\Repository\GTWIN;
 
 use App\Entity\GTWIN\ConceptoContable;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * @method ConceptoContable|null find($id, $lockMode = null, $lockVersion = null)
@@ -10,7 +11,7 @@ use App\Entity\GTWIN\ConceptoContable;
  * @method ConceptoContable[]    findAll()
  * @method ConceptoContable[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ConceptoContableRepository extends \Doctrine\ORM\EntityRepository
+class ConceptoContableRepository extends EntityRepository
 {
     // /**
     //  * @return ConceptoContable[] Returns an array of ConceptoContable objects

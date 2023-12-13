@@ -2,65 +2,50 @@
 
 namespace App\Entity\GTWIN;
 
+use App\Repository\GTWIN\PersonRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Tipo Ingreso.
- *
- * @ORM\Table(name="PERSON")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\PersonRepository", readOnly=true)
  */
-class Person
+#[ORM\Table(name: 'PERSON')]
+#[ORM\Entity(repositoryClass: PersonRepository::class, readOnly: true)]
+class Person implements \Stringable
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="DBOID", type="bigint", nullable=false)
-     * @ORM\Id
      */
+    #[ORM\Column(name: 'DBOID', type: 'bigint', nullable: false)]
+    #[ORM\Id]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="IDNUMBER", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'IDNUMBER', type: 'string', nullable: false)]
     private $numDocumento;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="CTRLDIGIT", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'CTRLDIGIT', type: 'string', nullable: false)]
     private $digitoControl;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="NAME", type="string", nullable=false)
-     */
-    private $nombre;
+    
+    #[ORM\Column(name: 'NAME', type: 'string', nullable: false)]
+    private ?string $nombre = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="FAMILYNAME", type="string", nullable=false)
-     */
-    private $apellido1;
+    
+    #[ORM\Column(name: 'FAMILYNAME', type: 'string', nullable: false)]
+    private ?string $apellido1 = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="SECONDNAME", type="string", nullable=false)
-     */
-    private $apellido2;
+    
+    #[ORM\Column(name: 'SECONDNAME', type: 'string', nullable: false)]
+    private ?string $apellido2 = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="FULLNAME", type="string", nullable=false)
-     */
-    private $nombreCompleto;
+    
+    #[ORM\Column(name: 'FULLNAME', type: 'string', nullable: false)]
+    private ?string $nombreCompleto = null;
 
     public function __toString(): string
     {
@@ -103,26 +88,11 @@ class Person
         return $this;
     }
 
-
-
-
-    /**
-     * Get the value of nombre
-     *
-     * @return  string
-     */
     public function getNombre()
     {
         return $this->nombre;
     }
 
-    /**
-     * Set the value of nombre
-     *
-     * @param  string  $nombre
-     *
-     * @return  self
-     */
     public function setNombre(string $nombre)
     {
         $this->nombre = $nombre;
@@ -130,23 +100,11 @@ class Person
         return $this;
     }
 
-    /**
-     * Get the value of apellido1
-     *
-     * @return  string
-     */
     public function getApellido1()
     {
         return $this->apellido1;
     }
 
-    /**
-     * Set the value of apellido1
-     *
-     * @param  string  $apellido1
-     *
-     * @return  self
-     */
     public function setApellido1(string $apellido1)
     {
         $this->apellido1 = $apellido1;
@@ -154,23 +112,11 @@ class Person
         return $this;
     }
 
-    /**
-     * Get the value of apellido2
-     *
-     * @return  string
-     */
     public function getApellido2()
     {
         return $this->apellido2;
     }
 
-    /**
-     * Set the value of apellido2
-     *
-     * @param  string  $apellido2
-     *
-     * @return  self
-     */
     public function setApellido2(string $apellido2)
     {
         $this->apellido2 = $apellido2;
@@ -178,23 +124,11 @@ class Person
         return $this;
     }
 
-    /**
-     * Get the value of nombreCompleto
-     *
-     * @return  string
-     */
     public function getNombreCompleto()
     {
         return $this->nombreCompleto;
     }
 
-    /**
-     * Set the value of nombreCompleto
-     *
-     * @param  string  $nombreCompleto
-     *
-     * @return  self
-     */
     public function setNombreCompleto(string $nombreCompleto)
     {
         $this->nombreCompleto = $nombreCompleto;

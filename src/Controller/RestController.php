@@ -16,7 +16,6 @@ use App\Entity\ConceptInscription;
 use App\Entity\GTWIN\Recibo;
 use App\Entity\GTWIN\TipoIngreso;
 use Exception;
-use JMS\Serializer\SerializerInterface;
 use App\Entity\Payment;
 use App\Form\ConceptInscriptionTypeForm;
 use App\Repository\CategoryRepository;
@@ -31,76 +30,61 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
-/**
- * Description of RestController.
- *
- * @author ibilbao
- */
-
-/**
- * @Route("/api")
- */
+#[Route(path: '/api')]
 class RestController extends AbstractController
 {
 
-    private PaymentRepository $paymentRepo;
-    private ConceptRepository $conceptRepo;
-    private GTWINIntegrationService $gts;
+    private readonly GTWINIntegrationService $gts;
+    private readonly SerializerInterface $serializer;
 
-    public function __construct(PaymentRepository $paymentRepo, ConceptRepository $conceptRepo, GTWINIntegrationService $gts)
+    public function __construct(private readonly PaymentRepository $paymentRepo, private readonly ConceptRepository $conceptRepo, GTWINIntegrationService $gts, SerializerInterface $serializer)
     {
-       $this->paymentRepo = $paymentRepo;
-       $this->conceptRepo = $conceptRepo;
        $this->gts = $gts;
+       $this->serializer = $serializer;
     }
 
     /**
      * Check the existance of the person by DNI.
-     *
-     * @Route("/person/{dni}", name="api_person",  methods={"GET"})
      */
-    public function getCheckPersonAction(Request $request, GTWINIntegrationService $gts, SerializerInterface $serializer)
+    #[Route(path: '/person/{dni}', name: 'api_person', methods: ['GET'])]
+    public function getCheckPerson(string $dni)
     {
-        $dni = strtoupper($request->get('dni'));
-        $exists = $gts->personExists($dni);
+        $exists = $this->gts->personExists($dni);
         if ($exists) {
             $data = new ApiResponse('OK', 'Found', null);
         } else {
             $data = new ApiResponse('KO', 'Not Found', null);
         }
-        $response = new JsonResponse($serializer->serialize($data, 'json'), 200, [
-            'Content-Type' => 'application/json;charset=utf-8'
-        ], true);
-
+        $response = new JsonResponse($this->serializer->serialize($data, 'json', ['groups' => ['show']]), Response::HTTP_OK, [], true);
         return $response;
     }
 
     /**
      * Check the existance of the person by DNI.
-     *
-     * @Route("/receipts/new", name="api_receipt_new",  methods={"POST"})
      */
-    public function receiptNew (Request $request, GTWINIntegrationService $gts, SerializerInterface $serializer, RouterInterface $router) {
+    #[Route(path: '/receipts/new', name: 'api_receipt_new', methods: ['POST'])]
+    public function receiptNew (Request $request, RouterInterface $router) {
         $inscription = new ConceptInscription();
         $form = $this->createForm(ConceptInscriptionTypeForm::class, $inscription, [
             'locale' => $request->getLocale(),
             'csrf_protection' => false,
         ]);
-        $json = json_decode($request->getContent(), true);
+        $json = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $form->submit($json);
         /** @var ConceptInscription $data */ 
         $data = $form->getData();
-        $recibo = $gts->createReciboForInscription($data, true);
+        $recibo = $this->gts->createReciboForInscription($data, true);
         $paymentURL = $router->generate('receipt_pay',[
             'numeroRecibo' => $recibo->getNumeroRecibo(),
             'dni' => $data->getDni(), 
         ], RouterInterface::ABSOLUTE_URL);
 
-        $response = new JsonResponse($serializer->serialize(new ApiResponse('OK', 'Received', [
+        $response = new JsonResponse($this->serializer->serialize(new ApiResponse('OK', 'Received', [
             'recibo' => $recibo,
             'paymentURL' => $paymentURL,
-        ]), 'json'), 200, [
+        ]), 'json', ['groups' => ['show']]), Response::HTTP_OK, [
             'Content-Type' => 'application/json;charset=utf-8'
         ], true);
         return $response;
@@ -108,46 +92,42 @@ class RestController extends AbstractController
 
     /**
      * Returns a list of unpayd receipts for the DNI.
-     *
-     * @Route("/receipts/{dni}", name="api_receipts_dni",  methods={"GET"})
      */
-    public function getPersonReceiptsAction(Request $request, GTWINIntegrationService $gts, SerializerInterface $serializer)
+    #[Route(path: '/receipts/{dni}', name: 'api_receipts_dni', methods: ['GET'])]
+    public function getPersonReceipts($dni)
     {
-        $dni = strtoupper($request->get('dni'));
-        $exists = $gts->personExists($dni);
+        $dni = strtoupper($dni);
+        $exists = $this->gts->personExists($dni);
         if ($exists) {
-            $recibos = $gts->findByRecibosPendientesByDni($dni);
+            $recibos = $this->gts->findByRecibosPendientesByDni($dni);
             $recibosNoPagados = $this->removeAlreadyPaid($recibos);
             $data = new ApiResponse('OK', 'Found', $recibosNoPagados);
         } else {
             $data = new ApiResponse('KO', 'Not Found', null);
         }
-        $serialized = $serializer->serialize($data, 'json');
-        $response = new JsonResponse($serialized, 200, [
+        $serialized = $this->serializer->serialize($data, 'json', ['groups' => ['show']]);
+        $response = new JsonResponse($serialized, Response::HTTP_OK, [
             'Content-Type' => 'application/json;charset=utf-8'
         ], true);
-
         return $response;
     }
 
-    /**
-     * @Route("/receipts/confirmation", methods={"POST"})
-     */
-    public function receiptsConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts, SerializerInterface $serializer, EntityManagerInterface $em)
+    #[Route(path: '/receipts/confirmation', methods: ['POST'])]
+    public function receiptsConfirmation(Request $request, LoggerInterface $logger, EntityManagerInterface $em)
     {
         $logger->debug('Origin: ' . $request->headers->get('Origin'));
         $logger->debug($request->getContent());
         $origin = $request->headers->get('Origin');
         // $origin = 'https://testamorebieta.smartappcity.com';
         if ($origin !== $this->getParameter('api_origin')) {
-            return new \Symfony\Component\HttpFoundation\Response(null, 401);
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
         }
 
         if (null === $request->getContent() || empty($request->getContent())) {
             return new JsonResponse(
-                $serializer->serialize(
+                $this->serializer->serialize(
                     new ApiResponse('NOK', 'No response data found', null),
-                    'json'
+                    'json', ['groups' => ['show']]
                 )
             );
         }
@@ -162,34 +142,34 @@ class RestController extends AbstractController
         if ($existingPayment) {
             $logger->debug('Receipt already payd');
             return new JsonResponse(
-                $serializer->serialize(
+                $this->serializer->serialize(
                     new ApiResponse('OK', 'Receipt already payd', null),
-                    'json'
+                    'json', ['groups' => ['show']]
                 )
             );
         }
         $logger->debug('Before finding recibo: '. $payment->getReferenceNumber());
-        $recibo = $gts->findByNumReciboDni($payment->getReferenceNumber(), $payment->getNif());
+        $recibo = $this->gts->findByNumReciboDni($payment->getReferenceNumber(), $payment->getNif());
         if (null !== $recibo) {
             try {
                 $logger->debug('Before paidWithCreditCard');
-                $gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $payment->getQuantity(), $payment->getTimeStamp(), '', 1);
+                $this->gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $payment->getQuantity(), $payment->getTimeStamp(), '', 1);
                 $logger->debug('After paidWithCreditCard');
                 $em->persist($payment);
                 $em->flush();
                 $logger->debug('Receipt number ' . $payment->getReferenceNumber() . ' successfully paid');
 
                 return new JsonResponse(
-                    $serializer->serialize(
+                    $this->serializer->serialize(
                         new ApiResponse('OK', 'Receipt succesfully payd', null),
-                        'json'
+                        'json', ['groups' => ['show']]
                     )
                 );
             } catch (Exception $e) {
                 return new JsonResponse(
-                    $serializer->serialize(
+                    $this->serializer->serialize(
                         new ApiResponse('NOK', 'There was and error during the request: ' . $e->getMessage(), null),
-                        'json'
+                        'json', ['groups' => ['show']]
                     )
                 );
             }
@@ -198,9 +178,9 @@ class RestController extends AbstractController
         $logger->debug('Receipt number ' . $payment->getReferenceNumber() . ' not found.');
 
         return new JsonResponse(
-            $serializer->serialize(
+            $this->serializer->serialize(
                 new ApiResponse('NOK', 'Receipt not found', null),
-                'json'
+                'json', ['groups' => ['show']]
             )
         );
     }
@@ -210,7 +190,7 @@ class RestController extends AbstractController
         $recibosNoPagados = [];
         foreach ($recibos as $recibo) {
             $payment = $this->paymentRepo->findOneBy([
-                'referenceNumber' => str_pad($recibo->getNumeroRecibo(), 10, '0', STR_PAD_LEFT),
+                'referenceNumber' => str_pad((string) $recibo->getNumeroRecibo(), 10, '0', STR_PAD_LEFT),
                 'status' => Payment::PAYMENT_STATUS_OK,
             ]);
             if (null === $payment) {
@@ -221,104 +201,81 @@ class RestController extends AbstractController
         return $recibosNoPagados;
     }
 
-    /**
-     * @Route("/category/{id}", name="api_category", methods={"GET"}, options = { "expose" = true })
-     */
-    public function getCategory($id, LoggerInterface $logger, SerializerInterface $serializer, CategoryRepository $repo)
+    #[Route(path: '/category/{id}', name: 'api_category', methods: ['GET'], options: ['expose' => true])]
+    public function getCategory($id, LoggerInterface $logger, CategoryRepository $repo)
     {
         /** @var Category $category */
         $category = $repo->find($id);
         $logger->debug('Get category Id: ' . $id);
-
         return new JsonResponse(
-            $serializer->serialize(new ApiResponse('OK', 'Category found', $category),'json'), 
-            200, [
-                'Content-Type' => 'application/json;charset=utf-8'
-            ], true
+            $this->serializer->serialize(new ApiResponse('OK', 'Category found', $category),'json', ['groups' => ['show']]), 
+            Response::HTTP_OK, [], true
         );
     }
 
-    /**
-     * @Route("/instituciones", name="api_get_instituciones", methods={"GET"}, options = { "expose" = true })
-     */
-     public function getInstituciones(GTWINIntegrationService $gts, SerializerInterface $serializer) 
+    #[Route(path: '/instituciones', name: 'api_get_instituciones', methods: ['GET'], options: ['expose' => true])]
+     public function getInstituciones() 
      {
-        $instituciones = $gts->findInstituciones();
+        $instituciones = $this->gts->findInstituciones();
 
         return new JsonResponse(
-            $serializer->serialize(new ApiResponse('OK', 'Instituciones found', $instituciones),'json'), 
-            200, [
+            $this->serializer->serialize(new ApiResponse('OK', 'Instituciones found', $instituciones),'json', ['groups' => ['show']]), 
+            Response::HTTP_OK, [], true
+        );
+    }
+
+    #[Route(path: '/institucion/{codigo}/tiposIngreso', name: 'api_get_tipos_ingreso_institucion', methods: ['GET'], options: ['expose' => true])]
+    public function getTiposIngresoPorInstitucion($codigo) 
+    {
+       $tiposIngreso = $this->gts->findTipoIngresoInstitucion($codigo);
+
+       return new JsonResponse(
+           $this->serializer->serialize(new ApiResponse('OK', 'Tipos de ingreso found', $tiposIngreso),'json', ['groups' => ['show']]), 
+           Response::HTTP_OK, [], true
+       );
+   }
+
+
+
+    #[Route(path: '/institucion/{codigo}', name: 'api_get_institucion', methods: ['GET'], options: ['expose' => true])]
+    public function getInstitucion($codigo) 
+    {
+       $institucion = $this->gts->findInstitucionByCodigo($codigo);
+
+       return new JsonResponse(
+           $this->serializer->serialize(new ApiResponse('OK', 'Institucion found', $institucion),'json', ['groups' => ['show']]), 
+           Response::HTTP_OK, [], true
+       );
+   }
+
+    #[Route(path: '/tarifas/{sufijo}', name: 'api_get_tarifas', methods: ['GET'], options: ['expose' => true])]
+    public function getTarifasTipoIngreso($sufijo)
+    {
+        $tarifas = $this->gts->findTarifasTipoIngreso($sufijo);
+
+        return new JsonResponse(
+            $this->serializer->serialize(new ApiResponse('OK', 'Tarifas found', $tarifas),'json', ['groups' => ['show']]), 
+            Response::HTTP_OK, [
                 'Content-Type' => 'application/json;charset=utf-8'
             ], true
         );
     }
 
-    /**
-     * @Route("/institucion/{codigo}/tiposIngreso", name="api_get_tipos_ingreso_institucion", methods={"GET"}, options = { "expose" = true })
-     */
-    public function getTiposIngresoPorInstitucion($codigo, GTWINIntegrationService $gts, SerializerInterface $serializer) 
+    #[Route(path: '/tipo-ingreso/{codigo}', name: 'api_get_tipo_ingreso', methods: ['GET'], options: ['expose' => true])]
+    public function getTiposIngreso($codigo) 
     {
-       $tiposIngreso = $gts->findTipoIngresoInstitucion($codigo);
+       $tiposIngreso = $this->gts->findTipoIngresoByCodigo($codigo);
 
        return new JsonResponse(
-           $serializer->serialize(new ApiResponse('OK', 'Tipos de ingreso found', $tiposIngreso),'json'), 
-           200, [
+           $this->serializer->serialize(new ApiResponse('OK', 'Tipos de ingreso found', $tiposIngreso),'json', ['groups' => ['show']]), 
+           Response::HTTP_OK, [
                'Content-Type' => 'application/json;charset=utf-8'
            ], true
        );
    }
 
-
-
-    /**
-     * @Route("/institucion/{codigo}", name="api_get_institucion", methods={"GET"}, options = { "expose" = true })
-     */
-    public function getInstitucion($codigo, GTWINIntegrationService $gts, SerializerInterface $serializer) 
-    {
-       $institucion = $gts->findInstitucionByCodigo($codigo);
-
-       return new JsonResponse(
-           $serializer->serialize(new ApiResponse('OK', 'Institucion found', $institucion),'json'), 
-           200, [
-               'Content-Type' => 'application/json;charset=utf-8'
-           ], true
-       );
-   }
-
-    /**
-     * @Route("/tarifas/{sufijo}", name="api_get_tarifas", methods={"GET"}, options = { "expose" = true })
-     */
-    public function getTarifasTipoIngreso($sufijo, GTWINIntegrationService $gts, SerializerInterface $serializer)
-    {
-        $tarifas = $gts->findTarifasTipoIngreso($sufijo);
-
-        return new JsonResponse(
-            $serializer->serialize(new ApiResponse('OK', 'Tarifas found', $tarifas),'json'), 
-            200, [
-                'Content-Type' => 'application/json;charset=utf-8'
-            ], true
-        );
-    }
-
-    /**
-     * @Route("/tipo-ingreso/{codigo}", name="api_get_tipo_ingreso", methods={"GET"}, options = { "expose" = true })
-     */
-    public function getTiposIngreso($codigo, GTWINIntegrationService $gts, SerializerInterface $serializer) 
-    {
-       $tiposIngreso = $gts->findTipoIngresoByCodigo($codigo);
-
-       return new JsonResponse(
-           $serializer->serialize(new ApiResponse('OK', 'Tipos de ingreso found', $tiposIngreso),'json'), 
-           200, [
-               'Content-Type' => 'application/json;charset=utf-8'
-           ], true
-       );
-   }
-
-    /**
-     * @Route("/concepts", name="api_get_concepts", methods={"GET"}, options = { "expose" = true })
-     */
-    public function getConcepts(SerializerInterface $serializer) 
+    #[Route(path: '/concepts', name: 'api_get_concepts', methods: ['GET'], options: ['expose' => true])]
+    public function getConcepts() 
     {
        $concepts = $this->conceptRepo->findAll();
        $conceptsArray = [];
@@ -330,21 +287,19 @@ class RestController extends AbstractController
             ];
        }
        return new JsonResponse(
-           $serializer->serialize(new ApiResponse('OK', 'Concepts found', $conceptsArray),'json'), 
-           200, [
+           $this->serializer->serialize(new ApiResponse('OK', 'Concepts found', $conceptsArray),'json', ['groups' => ['show']]), 
+           Response::HTTP_OK, [
                'Content-Type' => 'application/json;charset=utf-8'
            ], true
        );
    }
 
-    /**
-     * @Route("/concept/{id}", name="api_get_concept", methods={"GET"}, options = { "expose" = true })
-     */
-    public function getConcept(SerializerInterface $serializer, Concept $concept) 
+    #[Route(path: '/concept/{id}', name: 'api_get_concept', methods: ['GET'], options: ['expose' => true])]
+    public function getConcept(Concept $concept) 
     {
        return new JsonResponse(
-           $serializer->serialize(new ApiResponse('OK', 'Concept found', $concept),'json'), 
-           200, [
+           $this->serializer->serialize(new ApiResponse('OK', 'Concept found', $concept),'json', ['groups' => ['show']]), 
+           Response::HTTP_OK, [
                'Content-Type' => 'application/json;charset=utf-8'
            ], true
        );

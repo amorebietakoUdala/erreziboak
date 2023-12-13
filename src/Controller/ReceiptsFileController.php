@@ -20,27 +20,16 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/{_locale}/receipts_file", requirements={
- *	    "_locale": "es|eu|en"
- * })
- * @IsGranted("ROLE_RECEIPTS")
- */
+#[Route(path: '/{_locale}/receipts_file', requirements: ['_locale' => 'es|eu|en'])]
+#[IsGranted('ROLE_RECEIPTS')]
 class ReceiptsFileController extends BaseController
 {
 
-    private ReceiptsFileRepository $receiptFileRepo;
-    private MailerInterface $mailer;
-
-    public function __construct(ReceiptsFileRepository $receiptFileRepo, MailerInterface $mailer)
+    public function __construct(private readonly ReceiptsFileRepository $receiptFileRepo, private readonly MailerInterface $mailer)
     {
-        $this->receiptFileRepo = $receiptFileRepo;
-        $this->mailer = $mailer;
     }
 
-    /**
-     * @Route("/upload", name="receipts_file_upload")
-     */
+    #[Route(path: '/upload', name: 'receipts_file_upload')]
     public function upload(Request $request, FileUploader $fileUploader, CsvFormatValidator $validator, EntityManagerInterface $em)
     {
         $this->loadQueryParameters($request);
@@ -55,7 +44,7 @@ class ReceiptsFileController extends BaseController
                 $this->addFlash('error', 'messages.fileNotSelected');
 
                 return $this->render('receipts_file/upload.html.twig', [
-                    'form' => $form->createView(),
+                    'form' => $form,
                 ]);
             }
             $validationResult = $validator->validate($file);
@@ -63,7 +52,7 @@ class ReceiptsFileController extends BaseController
                 $this->addFlash('error', $validationResult['message']);
 
                 return $this->render('receipts_file/upload.html.twig', [
-                    'form' => $form->createView(),
+                    'form' => $form,
                 ]);
             }
             try {
@@ -85,13 +74,11 @@ class ReceiptsFileController extends BaseController
         }
 
         return $this->render('receipts_file/upload.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 
-    /**
-     * @Route("/{receiptFile}/download", name="receipts_file_download")
-     */
+    #[Route(path: '/{receiptFile}/download', name: 'receipts_file_download')]
     public function download(ReceiptsFile $receiptFile)
     {
         $without_extension = pathinfo($receiptFile->getFileName(), PATHINFO_FILENAME);
@@ -106,9 +93,7 @@ class ReceiptsFileController extends BaseController
         return $response;
     }
 
-    /**
-     * @Route("/", name="receipts_file_index")
-     */
+    #[Route(path: '/', name: 'receipts_file_index')]
     public function list(Request $request)
     {
         $this->loadQueryParameters($request);

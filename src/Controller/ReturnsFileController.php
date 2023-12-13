@@ -19,25 +19,16 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @Route("/{_locale}/returns")
- * @IsGranted("ROLE_RETURNS")
- */
+#[Route(path: '/{_locale}/returns')]
+#[IsGranted('ROLE_RETURNS')]
 class ReturnsFileController extends BaseController
 {
 
-    private ReturnsFileRepository $returnsFileRepo;
-    private MailerInterface $mailer;
-
-    public function __construct(ReturnsFileRepository $returnsFileRepo, MailerInterface $mailer)
+    public function __construct(private readonly ReturnsFileRepository $returnsFileRepo, private readonly MailerInterface $mailer)
     {
-        $this->returnsFileRepo = $returnsFileRepo;
-        $this->mailer = $mailer;
     }
 
-    /**
-     * @Route("/", name="returns_file_list")
-     */
+    #[Route(path: '/', name: 'returns_file_list')]
     public function list(Request $request)
     {
         $this->loadQueryParameters($request);
@@ -50,9 +41,7 @@ class ReturnsFileController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/upload", name="returns_file_upload")
-     */
+    #[Route(path: '/upload', name: 'returns_file_upload')]
     public function upload(Request $request, CsvFormatValidator $validator, C34XmlGenerator $generator, EntityManagerInterface $em)
     {
         $form = $this->createForm(ReturnsFileType::class);
@@ -64,7 +53,7 @@ class ReturnsFileController extends BaseController
                 $this->addFlash('error', 'messages.fileNotSelected');
 
                 return $this->render('returns_files/upload.html.twig', [
-                    'form' => $form->createView(),
+                    'form' => $form,
                 ]);
             }
             $validator->setRequiredFields(['Importe', 'Nombre', 'Apellido1', 'Cuenta_Corriente', 'Cuerpo1']);
@@ -74,7 +63,7 @@ class ReturnsFileController extends BaseController
                 $this->addFlash('error', $validationResult['message']);
 
                 return $this->render('returns_files/upload.html.twig', [
-                      'form' => $form->createView(),
+                      'form' => $form,
                   ]);
             }
 
@@ -104,13 +93,11 @@ class ReturnsFileController extends BaseController
         }
 
         return $this->render('returns_files/upload.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 
-    /**
-     * @Route("/{returnsFile}/download", name="returns_file_download")
-     */
+    #[Route(path: '/{returnsFile}/download', name: 'returns_file_download')]
     public function download(ReturnsFile $returnsFile)
     {
         $without_extension = pathinfo($returnsFile->getFileName(), PATHINFO_FILENAME);

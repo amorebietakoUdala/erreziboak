@@ -2,91 +2,53 @@
 
 namespace App\Entity\GTWIN;
 
+use App\Repository\GTWIN\TipoIngresoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
-/**
- * Tipo Ingreso.
- *
- * @ORM\Table(name="SP_TRB_TIPING")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\TipoIngresoRepository",readOnly=true)
- * @Serializer\ExclusionPolicy("all")
- * @Serializer\AccessType("public_method")
- */
-class TipoIngreso
+#[ORM\Table(name: 'SP_TRB_TIPING')]
+#[ORM\Entity(repositoryClass: TipoIngresoRepository::class, readOnly: true)]
+class TipoIngreso implements \Stringable
 {
     private const PLANPAG = 'PLANPAG';
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TINDBOIDE", type="string", nullable=false)
-     * @ORM\Id
-     */
+    #[ORM\Column(name: 'TINDBOIDE', type: 'string', nullable: false)]
+    #[ORM\Id]
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TINCODTIN", type="string", nullable=false)
-     * @Serializer\Expose
-     */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'TINCODTIN', type: 'string', nullable: false)]
     private $codigo;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TINNOMTIN", type="string", nullable=false)
-     * @Serializer\Expose
-     */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'TINNOMTIN', type: 'string', nullable: false)]
     private $descripcion;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TINDEFECT", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'TINDEFECT', type: 'string', nullable: false)]
     private $tipoDefecto;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TINCC60ID", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'TINCC60ID', type: 'string', nullable: false)]
     private $conceptoC60ID;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TINCC60AU", type="string", nullable=false)
-     * @Serializer\Expose
-     */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'TINCC60AU', type: 'string', nullable: false)]
     private $conceptoC60AU;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TINCC60SC", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'TINCC60SC', type: 'string', nullable: false)]
     private $conceptoC60SC;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TINCODO60", type="string", nullable=false)
-     * @Serializer\Expose
-     */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'TINCODO60', type: 'string', nullable: false)]
     private $conceptoC60;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Tarifa", mappedBy="tipoIngreso")
-     */
+    #[ORM\OneToMany(targetEntity: 'Tarifa', mappedBy: 'tipoIngreso')]
     private $tarifas;
 
-    /**
-     * @ORM\OneToMany(targetEntity="InstitucionTipoIngreso", mappedBy="tipoIngreso")
-     * @ORM\JoinTable(name="SP_TRB_TININS")
-     */
+    #[ORM\JoinTable(name: 'SP_TRB_TININS')]
+    #[ORM\OneToMany(targetEntity: 'InstitucionTipoIngreso', mappedBy: 'tipoIngreso')]
+    #[Groups(['show'])]
+    #[MaxDepth(1)]
     private $instituciones;
 
     public function __construct()
@@ -95,7 +57,7 @@ class TipoIngreso
         $this->instituciones = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return ''.$this->getConceptoC60AU();
     }

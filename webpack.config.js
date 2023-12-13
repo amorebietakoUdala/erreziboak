@@ -7,81 +7,85 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 }
 
 Encore
-// directory where compiled assets will be stored
+    // directory where compiled assets will be stored
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
     .setPublicPath('/erreziboak/build/')
     // only needed for CDN's or sub-directory deploy
     .setManifestKeyPrefix('build/')
 
-/*
- * ENTRY CONFIG
- *
- * Add 1 entry for each "page" of your app
- * (including one that's included on every page - e.g. "app")
- *
- * Each entry will result in one JavaScript file (e.g. app.js)
- * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
- */
-.addEntry('app', './assets/app.js')
+    /*
+    * ENTRY CONFIG
+    *
+    * Add 1 entry for each "page" of your app
+    * (including one that's included on every page - e.g. "app")
+    *
+    * Each entry will result in one JavaScript file (e.g. app.js)
+    * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
+    */
+    .addEntry('app', './assets/app.js')
     .addEntry('user_edit', './assets/js/user/edit.js')
     .addEntry('receiptsFile_upload', './assets/js/receipts_file/upload.js')
     .addEntry('receipt_search', './assets/js/receipt/search.js')
     .addEntry('exam_new', './assets/js/exam/new.js')
     .addEntry('concept_edit', './assets/js/concept/edit.js')
 
-.enableStimulusBridge('./assets/controllers.json')
-//.addEntry('page2', './assets/js/page2.js')
+    // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
+    .enableStimulusBridge('./assets/controllers.json')
 
-// When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
-.splitEntryChunks()
+    // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
+    .splitEntryChunks()
 
-// will require an extra script tag for runtime.js
-// but, you probably want this, unless you're building a single-page app
-.enableSingleRuntimeChunk()
+    // will require an extra script tag for runtime.js
+    // but, you probably want this, unless you're building a single-page app
+    .enableSingleRuntimeChunk()
 
-/*
- * FEATURE CONFIG
- *
- * Enable & configure other features below. For a full
- * list of features, see:
- * https://symfony.com/doc/current/frontend.html#adding-more-features
- */
-.cleanupOutputBeforeBuild()
+    /*
+     * FEATURE CONFIG
+     *
+     * Enable & configure other features below. For a full
+     * list of features, see:
+     * https://symfony.com/doc/current/frontend.html#adding-more-features
+     */
+    .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
-.configureBabel((config) => {
-    config.plugins.push('@babel/plugin-proposal-class-properties');
-})
+    // configure Babel
+    // .configureBabel((config) => {
+    //     config.plugins.push('@babel/a-babel-plugin');
+    // })
 
-// enables @babel/preset-env polyfills
-.configureBabelPresetEnv((config) => {
-    config.useBuiltIns = 'usage';
-    config.corejs = 3;
-})
+    // enables and configure @babel/preset-env polyfills
+    .configureBabelPresetEnv((config) => {
+        config.useBuiltIns = 'usage';
+        config.corejs = '3.23';
+    })
 
-// enables Sass/SCSS support
-.enableSassLoader()
+    // enables Sass/SCSS support
+    //.enableSassLoader()
 
-// uncomment if you use TypeScript
-//.enableTypeScriptLoader()
+    // uncomment if you use TypeScript
+    //.enableTypeScriptLoader()
 
-// uncomment to get integrity="..." attributes on your script & link tags
-// requires WebpackEncoreBundle 1.4 or higher
-//.enableIntegrityHashes(Encore.isProduction())
+    // uncomment if you use React
+    //.enableReactPreset()
 
-// uncomment if you're having problems with a jQuery plugin
-.autoProvidejQuery()
+    // uncomment to get integrity="..." attributes on your script & link tags
+    // requires WebpackEncoreBundle 1.4 or higher
+    //.enableIntegrityHashes(Encore.isProduction())
+    // uncomment if you're having problems with a jQuery plugin
+    .autoProvidejQuery()
 
-// uncomment if you use API Platform Admin (composer req api-admin)
-//.enableReactPreset()
-//.addEntry('admin', './assets/js/admin.js')
-.copyFiles({
-    from: './assets/images',
-    to: 'images/[path][name].[hash:8].[ext]'
-});
+    // uncomment if you use API Platform Admin (composer req api-admin)
+    //.enableReactPreset()
+
+    .copyFiles({
+        from: './assets/images',
+        to: 'images/[path][name].[hash:8].[ext]'
+    });
+;
 
 module.exports = Encore.getWebpackConfig();

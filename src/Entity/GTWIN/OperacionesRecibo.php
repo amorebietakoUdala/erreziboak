@@ -2,32 +2,28 @@
 
 namespace App\Entity\GTWIN;
 
+use App\Repository\GTWIN\OperacionesExternasRepository;
+use App\Entity\GTWIN\Recibo;
+use App\Entity\GTWIN\TipoOperacion;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Tipo Ingreso.
- *
- * @ORM\Table(name="SP_TRB_OPEREC")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\OperacionesExternasRepository",readOnly=true)
  */
+#[ORM\Table(name: 'SP_TRB_OPEREC')]
+#[ORM\Entity(repositoryClass: OperacionesExternasRepository::class, readOnly: true)]
 class OperacionesRecibo
 {
-    /**
-     * @ORM\Column(name="OPEDBOIDE", type="string")
-     * @ORM\Id
-     */
+    #[ORM\Column(name: 'OPEDBOIDE', type: 'string')]
+    #[ORM\Id]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GTWIN\Recibo", inversedBy="operaciones")
-     * @ORM\JoinColumn(name="OPERECIBO", referencedColumnName="RECDBOIDE")
-     */
+    #[ORM\ManyToOne(targetEntity: Recibo::class, inversedBy: 'operaciones')]
+    #[ORM\JoinColumn(name: 'OPERECIBO', referencedColumnName: 'RECDBOIDE')]
     private $recibo;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GTWIN\TipoOperacion")
-     * @ORM\JoinColumn(name="OPETIPOPE", referencedColumnName="TOPDBOIDE")
-     */
+    #[ORM\ManyToOne(targetEntity: TipoOperacion::class)]
+    #[ORM\JoinColumn(name: 'OPETIPOPE', referencedColumnName: 'TOPDBOIDE')]
     private $tipoOperacion;
 
     public function getId()

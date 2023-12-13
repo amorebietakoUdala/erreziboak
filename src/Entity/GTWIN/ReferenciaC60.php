@@ -2,139 +2,91 @@
 
 namespace App\Entity\GTWIN;
 
+use App\Repository\GTWIN\ReferenciaC60Repository;
+use App\Entity\GTWIN\Recibo;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Tipo Ingreso.
- *
- * @ORM\Table(name="SP_TRB_REFC60")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\ReferenciaC60Repository", readOnly=true)
  */
+#[ORM\Table(name: 'SP_TRB_REFC60')]
+#[ORM\Entity(repositoryClass: ReferenciaC60Repository::class, readOnly: true)]
 class ReferenciaC60
 {
-    const ANULADA = "T";
-    const NO_ANULADA = "F";
+    final public const ANULADA = "T";
+    final public const NO_ANULADA = "F";
     /**
      * @var string
-     *
-     * @ORM\Column(name="C60DBOIDE", type="string", nullable=false)
-     * @ORM\Id
      */
+    #[ORM\Column(name: 'C60DBOIDE', type: 'string', nullable: false)]
+    #[ORM\Id]
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="C60ANULAD", type="string", length=1, nullable=true)
-     */
-    private $indClaveCobroAnulada;
+    
+    #[ORM\Column(name: 'C60ANULAD', type: 'string', length: 1, nullable: true)]
+    private ?string $indClaveCobroAnulada = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="C60ANUREF", type="string", nullable=true)
-     */
-    private $referenciaClaveCobroAnulada;
+    
+    #[ORM\Column(name: 'C60ANUREF', type: 'string', nullable: true)]
+    private ?string $referenciaClaveCobroAnulada = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="C60ANYC60", type="integer", nullable=false)
-     */
-    private $presupuesto;
+    
+    #[ORM\Column(name: 'C60ANYC60', type: 'integer', nullable: false)]
+    private ?int $presupuesto = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="C60CODC60", type="string", length=3, nullable=false)
-     */
-    private $concepto;
+    
+    #[ORM\Column(name: 'C60CODC60', type: 'string', length: 3, nullable: false)]
+    private ?string $concepto = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="C60EXPEDI", type="bigint", nullable=true)
-     */
-    private $expediente;
+    
+    #[ORM\Column(name: 'C60EXPEDI', type: 'bigint', nullable: true)]
+    private ?int $expediente = null;
 
-    /**
-     * @var datetime
-     *
-     * @ORM\Column(name="C60FECFIN", type="datetime", nullable=true)
-     */
-    private $fechaFinInteres;
+    
+    #[ORM\Column(name: 'C60FECFIN', type: 'datetime', nullable: true)]
+    private ?\Datetime $fechaFinInteres = null;
 
-    /**
-     * @var datetime
-     *
-     * @ORM\Column(name="C60FECLIM", type="datetime", nullable=false)
-     */
-    private $fechaLimitePagoBanco;
+    
+    #[ORM\Column(name: 'C60FECLIM', type: 'datetime', nullable: false)]
+    private ?\Datetime $fechaLimitePagoBanco = null;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="C60IMPCOS", type="decimal", scale=13, precision=2, nullable=false)
-     */
-    private $costas;
+    
+    #[ORM\Column(name: 'C60IMPCOS', type: 'decimal', scale: 13, precision: 2, nullable: false)]
+    private ?float $costas = null;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="C60IMPDES", type="decimal", scale=13, precision=2, nullable=true)
-     */
-    private $descuento;
+    
+    #[ORM\Column(name: 'C60IMPDES', type: 'decimal', scale: 13, precision: 2, nullable: true)]
+    private ?float $descuento = null;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="C60IMPINT", type="decimal", scale=13, precision=2, nullable=false)
-     */
-    private $intereses;
+    
+    #[ORM\Column(name: 'C60IMPINT', type: 'decimal', scale: 13, precision: 2, nullable: false)]
+    private ?float $intereses = null;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="C60IMPORT", type="decimal", scale=13, precision=2, nullable=false)
-     */
-    private $principal;
+    
+    #[ORM\Column(name: 'C60IMPORT', type: 'decimal', scale: 13, precision: 2, nullable: false)]
+    private ?float $principal = null;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="C60IMPREC", type="decimal", scale=13, precision=2, nullable=false)
-     */
-    private $recargo;
+    
+    #[ORM\Column(name: 'C60IMPREC', type: 'decimal', scale: 13, precision: 2, nullable: false)]
+    private ?float $recargo = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="C60MODALI", type="integer", nullable=true)
-     */
-    private $modalidadC60;
+    
+    #[ORM\Column(name: 'C60MODALI', type: 'integer', nullable: true)]
+    private ?int $modalidadC60 = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="C60PEGEN", type="string", nullable=true)
-     */
-    private $operacion;
+    
+    #[ORM\Column(name: 'C60PEGEN', type: 'string', nullable: true)]
+    private ?string $operacion = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GTWIN\Recibo", inversedBy="referenciasC60")
-     * @ORM\JoinColumn(name="C60RECIBO", referencedColumnName="RECDBOIDE")
-     */
+    #[ORM\ManyToOne(targetEntity: Recibo::class, inversedBy: 'referenciasC60')]
+    #[ORM\JoinColumn(name: 'C60RECIBO', referencedColumnName: 'RECDBOIDE')]
     private $recibo;
 
-    /**
-     * @ORM\Column(name="C60REFC60", type="string", length=12, nullable=false)
-     */
+    #[ORM\Column(name: 'C60REFC60', type: 'string', length: 12, nullable: false)]
     private $referenciaC60;
 
-    /**
-     * @ORM\Column(name="C60REMC60", type="string", length=12, nullable=false)
-     */
+    #[ORM\Column(name: 'C60REMC60', type: 'string', length: 12, nullable: false)]
     private $remesa;
 
     /**
@@ -160,7 +112,6 @@ class ReferenciaC60
     /**
      * Set the value of indClaveCobroAnulada
      *
-     * @param  string  $indClaveCobroAnulada
      *
      * @return  self
      */
@@ -184,7 +135,6 @@ class ReferenciaC60
     /**
      * Set the value of referenciaClaveCobroAnulada
      *
-     * @param  string  $referenciaClaveCobroAnulada
      *
      * @return  self
      */
@@ -208,7 +158,6 @@ class ReferenciaC60
     /**
      * Set the value of presupuesto
      *
-     * @param  int  $presupuesto
      *
      * @return  self
      */
@@ -232,7 +181,6 @@ class ReferenciaC60
     /**
      * Set the value of concepto
      *
-     * @param  string  $concepto
      *
      * @return  self
      */
@@ -256,7 +204,6 @@ class ReferenciaC60
     /**
      * Set the value of expediente
      *
-     * @param  int  $expediente
      *
      * @return  self
      */
@@ -328,7 +275,6 @@ class ReferenciaC60
     /**
      * Set the value of descuento
      *
-     * @param  float  $descuento
      *
      * @return  self
      */
@@ -352,7 +298,6 @@ class ReferenciaC60
     /**
      * Set the value of intereses
      *
-     * @param  float  $intereses
      *
      * @return  self
      */
@@ -376,7 +321,6 @@ class ReferenciaC60
     /**
      * Set the value of principal
      *
-     * @param  float  $principal
      *
      * @return  self
      */
@@ -400,7 +344,6 @@ class ReferenciaC60
     /**
      * Set the value of recargo
      *
-     * @param  float  $recargo
      *
      * @return  self
      */
@@ -424,7 +367,6 @@ class ReferenciaC60
     /**
      * Set the value of modalidadC60
      *
-     * @param  int  $modalidadC60
      *
      * @return  self
      */
@@ -448,7 +390,6 @@ class ReferenciaC60
     /**
      * Set the value of operacion
      *
-     * @param  int  $operacion
      *
      * @return  self
      */
@@ -532,7 +473,6 @@ class ReferenciaC60
     /**
      * Set the value of costas
      *
-     * @param  float  $costas
      *
      * @return  self
      */

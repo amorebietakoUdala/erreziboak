@@ -4,73 +4,72 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Repository\ConceptRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * Exam.
- *
- * @ORM\Table(name="concept")
- * @ORM\Entity(repositoryClass="App\Repository\ConceptRepository")
  */
-class Concept
+#[ORM\Table(name: 'concept')]
+#[ORM\Entity(repositoryClass: ConceptRepository::class)]
+class Concept implements \Stringable
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: true)]
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name_eu", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(name: 'name_eu', type: 'string', length: 255, nullable: true)]
     private $nameEu;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="unitaryPrice", type="decimal", precision=6, scale=2, nullable=true)
      */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'unitaryPrice', type: 'decimal', precision: 6, scale: 2, nullable: true)]
     private $unitaryPrice;
 
     /**
      * @var string
-     * @ORM\Column(name="entity", type="string", length=255, nullable=false)
      */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'entity', type: 'string', length: 255, nullable: false)]
     private $entity;
 
     /**
      * @var string
-     * @ORM\Column(name="suffix", type="string", length=3, nullable=false)
      */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'suffix', type: 'string', length: 3, nullable: false)]
     private $suffix;
 
     /**
      * @var string
-     * @ORM\Column(name="acc_concept", type="string", length=5, nullable=false)
      */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'acc_concept', type: 'string', length: 5, nullable: false)]
     private $accountingConcept;
 
-    /**
-     * @ORM\Column(type="string", length=1024, nullable=true)
-     */
-    private $serviceURL;
+    #[ORM\Column(type: 'string', length: 1024, nullable: true)]
+    #[Groups(['show'])]
+    private ?string $serviceURL = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity=ConceptInscription::class, mappedBy="concept")
-     */
-    private $conceptInscriptions;
+    #[ORM\OneToMany(targetEntity: ConceptInscription::class, mappedBy: 'concept')]
+    private Collection|array $conceptInscriptions;
 
     public function __construct()
     {
@@ -171,7 +170,7 @@ class Concept
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name;
     }

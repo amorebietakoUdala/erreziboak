@@ -7,18 +7,18 @@
         <div class="col-lg-3 col-md-2 col-sm-6">
             {{ form_label(form.entity) }}
             {% set url_select = path('admin_tipos_ingreso_select') %}
-            {{ form_widget(form.entity, { 'attr': { 'class' : 'form-control form-control-sm col js-entity-select', 'data-suffix-select-url': url_select } }) }}
+            {{ form_widget(form.entity, { 'attr': { 'class' : 'form-select form-select-sm js-entity-select', 'data-suffix-select-url': url_select } }) }}
         </div>
         <div class="col-lg-3 col-md-2 col-sm-6 js-suffix-select-div">
             {{ form_label(form.suffix) }}
             {% set url_select2 = path('admin_tarifas_select') %}
             {{ form_widget(form.suffix, { 'attr': 
-                  { 'class' : 'form-control form-control-sm col js-suffix-select' , 'data-accounting-concept-select-url': url_select2 }
+                  { 'class' : 'form-select form-select-sm js-suffix-select' , 'data-accounting-concept-select-url': url_select2 }
                }) }}
         </div>
         <div class="col-lg-3 col-md-2 col-sm-6 js-accountingConcept-select-div">
             {{ form_label(form.accountingConcept) }}
-            {{ form_widget(form.accountingConcept, { 'attr': { 'class' : 'form-control form-control-sm col js-accountingConcept-select' } }) }}
+            {{ form_widget(form.accountingConcept, { 'attr': { 'class' : 'form-select form-select-sm js-accountingConcept-select' } }) }}
         </div>
     </div>
     <div class="row align-items-center mb-1">

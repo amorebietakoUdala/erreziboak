@@ -6,48 +6,34 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ReturnsFileRepository")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: \App\Repository\ReturnsFileRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ReturnsFile
 {
-    public const STATUS_UNPROCESSED = 0;
-    public const STATUS_PROCESSING = 1;
-    public const STATUS_PROCESSED = 2;
-    public const STATUS_INVALID = 3;
-    public const STATUS_FAILED = 4;
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    final public const STATUS_UNPROCESSED = 0;
+    final public const STATUS_PROCESSING = 1;
+    final public const STATUS_PROCESSED = 2;
+    final public const STATUS_INVALID = 3;
+    final public const STATUS_FAILED = 4;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $fileName;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $fileName = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $receptionDate;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $receptionDate = null;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $processedDate;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $processedDate = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $status;
+    #[ORM\Column(type: 'integer')]
+    private ?int $status = null;
 
-    /**
-     * @ORM\Column(type="decimal", precision=15, scale=2)
-     */
-    private $totalAmount;
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2)]
+    private ?string $totalAmount = null;
 
     public function getId(): ?int
     {

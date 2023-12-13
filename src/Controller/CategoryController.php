@@ -10,19 +10,13 @@ use App\Entity\Category;
 use App\Form\CategoryTypeForm;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * @Route("/{_locale}/admin", requirements={
- *	    "_locale": "es|eu"
- * })
- */
+#[Route(path: '/{_locale}/admin', requirements: ['_locale' => 'es|eu'])]
 class CategoryController extends BaseController
 {
-    /**
-     * @Route("/category/new", name="admin_category_new", methods={"GET","POST"})
-     */
-    public function newAction(Request $request, LoggerInterface $logger, EntityManagerInterface $em)
+    #[Route(path: '/category/new', name: 'admin_category_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, LoggerInterface $logger, EntityManagerInterface $em)
     {
-        $logger->debug('-->newAction: Start');
+        $logger->debug('-->new: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
         $this->loadQueryParameters($request);
         $user = $this->getUser();
@@ -38,19 +32,17 @@ class CategoryController extends BaseController
 
             return $this->redirectToRoute('admin_category_index');
         }
-        $logger->debug('<--newAction: End OK');
+        $logger->debug('<--new: End OK');
 
         return $this->render('category/edit.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
             'readonly' => false,
             'new' => true,
         ]);
     }
 
-    /**
-     * @Route("/category", name="admin_category_index", methods={"GET"})
-     */
-    public function listAction(Request $request, LoggerInterface $logger, EntityManagerInterface $em)
+    #[Route(path: '/category', name: 'admin_category_index', methods: ['GET'])]
+    public function list(Request $request, LoggerInterface $logger, EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
         $this->loadQueryParameters($request);
@@ -61,32 +53,28 @@ class CategoryController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/category/{id}", name="admin_category_show", methods={"GET"})
-     */
-    public function showAction(Request $request, Category $id, LoggerInterface $logger)
+    #[Route(path: '/category/{id}', name: 'admin_category_show', methods: ['GET'])]
+    public function show(Request $request, Category $id, LoggerInterface $logger)
     {
-        $logger->debug('-->showAction: Start');
+        $logger->debug('-->show: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
         $this->loadQueryParameters($request);
         $form = $this->createForm(CategoryTypeForm::class, $id, [
             'readonly' => true,
         ]);
-        $logger->debug('<--showAction: End OK');
+        $logger->debug('<--show: End OK');
 
         return $this->render('category/edit.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
             'readonly' => true,
             'new' => false,
         ]);
     }
 
-    /**
-     * @Route("/category/{id}/edit", name="admin_category_edit", methods={"GET","POST"})
-     */
-    public function editAction(Request $request, Category $id, LoggerInterface $logger, EntityManagerInterface $em)
+    #[Route(path: '/category/{id}/edit', name: 'admin_category_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Category $id, LoggerInterface $logger, EntityManagerInterface $em)
     {
-        $logger->debug('-->CategoryEditAction: Start');
+        $logger->debug('-->CategoryEdit: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
         $this->loadQueryParameters($request);
         $form = $this->createForm(CategoryTypeForm::class, $id, [
@@ -99,27 +87,25 @@ class CategoryController extends BaseController
             $em->flush();
             $this->addFlash('success', 'message.category_saved');
         }
-        $logger->debug('<--CategoryEditAction: End OK');
+        $logger->debug('<--CategoryEdit: End OK');
 
         return $this->render('category/edit.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
             'readonly' => false,
             'new' => false,
         ]);
     }
 
-    /**
-     * @Route("/category/{id}/delete", name="admin_category_delete", methods={"GET"})
-     */
-    public function deleteAction(Request $request, Category $id, LoggerInterface $logger, EntityManagerInterface $em)
+    #[Route(path: '/category/{id}/delete', name: 'admin_category_delete', methods: ['GET'])]
+    public function delete(Request $request, Category $id, LoggerInterface $logger, EntityManagerInterface $em)
     {
-        $logger->debug('-->deleteAction: Start');
+        $logger->debug('-->delete: Start');
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
         $this->loadQueryParameters($request);        
         $em->remove($id);
         $em->flush();
         $this->addFlash('success', 'La categoría se ha eliminado correctamente.');
-        $logger->debug('<--deleteAction: End OK');
+        $logger->debug('<--delete: End OK');
 
         return $this->redirectToRoute('admin_category_index');
     }

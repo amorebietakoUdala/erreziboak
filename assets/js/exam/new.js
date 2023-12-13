@@ -13,7 +13,7 @@ $(document).ready(function(){
             $.ajax({
                 url: url,
                 success: function (category) {
-                    var serviceURL = category.data.concept.service_url;
+                    var serviceURL = category.data.concept.serviceURL;
                     if (serviceURL !== undefined) {
                         $.ajax({
                             url: serviceURL,
@@ -22,7 +22,7 @@ $(document).ready(function(){
                             }
                         });
                     } else {
-                        price = category.data.concept.unitary_price;
+                        price = category.data.concept.unitaryPrice;
                         $('.js-quantity').text(price);
                     }
                 }

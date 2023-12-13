@@ -2,57 +2,47 @@
 
 namespace App\Entity\GTWIN;
 
+use App\Repository\GTWIN\OperacionesExternasRepository;
+use App\Entity\GTWIN\MensajesError;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 
 /**
  * Tipo Ingreso.
- *
- * @ORM\Table(name="EXTCALL")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\OperacionesExternasRepository",readOnly=true)
  */
+#[ORM\Table(name: 'EXTCALL')]
+#[ORM\Entity(repositoryClass: OperacionesExternasRepository::class, readOnly: true)]
 class OperacionesExternas
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="DBOID", type="bigint")
-     * @ORM\Id
      */
+    #[ORM\Column(name: 'DBOID', type: 'bigint')]
+    #[ORM\Id]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ACTIONCODE", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'ACTIONCODE', type: 'integer', nullable: false)]
     private $operacion;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="CALLSTATUS", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'CALLSTATUS', type: 'integer', nullable: false)]
     private $estado;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="CALLTIME", type="datetime", nullable=false)
-     */
-    private $fecha;
+    
+    #[ORM\Column(name: 'CALLTIME', type: 'datetime', nullable: false)]
+    private ?\DateTime $fecha = null;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="PROCTIME", type="datetime", nullable=false)
-     */
-    private $fechaProcesamiento;
+    
+    #[ORM\Column(name: 'PROCTIME', type: 'datetime', nullable: false)]
+    private ?\DateTime $fechaProcesamiento = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GTWIN\MensajesError")
-     * @ORM\JoinColumn(name="MSGERROR", referencedColumnName="DBOID")
-     */
+    #[ORM\ManyToOne(targetEntity: MensajesError::class)]
+    #[ORM\JoinColumn(name: 'MSGERROR', referencedColumnName: 'DBOID')]
     private $mensajeError;
 
     public function getId()

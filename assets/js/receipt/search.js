@@ -1,4 +1,4 @@
-import '../../css/receipt/search.scss';
+import '../../css/receipt/search.css';
 
 import $ from 'jquery';
 import { createAlert } from '../common/alert';

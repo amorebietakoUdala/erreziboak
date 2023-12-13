@@ -4,7 +4,8 @@
 
 {% block body %}
     <main class="container-fluid">
-        <div class="mt-2">
+        <div class="mt-2" {{ stimulus_controller('concept-form', {
+		})}}>
             {{ include('concept/_form.html.twig',{
                 'readonly': readonly,
                 'new': new,
