@@ -18,6 +18,7 @@ security:
                 property: username
     role_hierarchy:
         ROLE_RECEIPTS:    ROLE_ERREZIBOAK
+        ROLE_API:         ROLE_ERREZIBOAK
         ROLE_RETURNS:     ROLE_ERREZIBOAK
         ROLE_DEBTS:       ROLE_ERREZIBOAK
         ROLE_TITULARITY:  ROLE_ERREZIBOAK
