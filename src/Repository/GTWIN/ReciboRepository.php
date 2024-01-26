@@ -6,7 +6,6 @@ use App\Entity\GTWIN\Recibo;
 use App\Entity\GTWIN\ReferenciaC60;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * ReciboRepository.
@@ -16,6 +15,7 @@ use Doctrine\ORM\Query\Expr\Join;
  */
 class ReciboRepository extends EntityRepository
 {
+
     //	public function findBy ($numRecibo, $dni) {
     //		$em = $this->em;
     //		$select_template = "SELECT * FROM SP_TRB_RECIBO R, SP_TRB_TIPING T WHERE R.RECCODTIN=T.TINCODTIN AND RECESTADO='P' AND RECSITUAC='V' AND RECNUMREC='{RECNUMREC}' AND RECDNINIF='{RECDNINIF}'";
@@ -48,8 +48,8 @@ class ReciboRepository extends EntityRepository
 
     public function findByReferenciaC60AndDni($referenciaC60, $dni, $letra): array
     {
-        if (null !== $referenciaC60 && strlen($referenciaC60) !== 12) {
-            $referenciaC60 = str_pad($referenciaC60, 12,  "0", STR_PAD_LEFT);
+        if (null !== $referenciaC60 && strlen((string) $referenciaC60) !== 12) {
+            $referenciaC60 = str_pad((string) $referenciaC60, 12,  "0", STR_PAD_LEFT);
         }
         $qb = $this->createQueryBuilder('r')
             ->innerjoin('r.referenciasC60', 'c60');
@@ -152,7 +152,7 @@ class ReciboRepository extends EntityRepository
                 ->getQuery();
 
             $importe = $query->getSingleScalarResult();
-        } catch (NoResultException $e) {
+        } catch (NoResultException) {
             return null;
         }
 

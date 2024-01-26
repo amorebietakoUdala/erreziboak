@@ -3,40 +3,29 @@
 namespace App\Entity;
 
 use App\Repository\AuditRepository;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=AuditRepository::class)
- */
+#[ORM\Entity(repositoryClass: AuditRepository::class)]
 class Audit
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $idNumber;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $idNumber = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $operation;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $operation = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $date;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $date = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="audits")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'audits')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {

@@ -2,56 +2,42 @@
 
 namespace App\Entity\GTWIN;
 
+use App\Repository\GTWIN\TarifaRepository;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
-/**
- * ConceptoContables.
- *
- * @ORM\Table(name="SP_TRB_TARIFA")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\TarifaRepository",readOnly=true)
- * @Serializer\ExclusionPolicy("all")
- * @Serializer\AccessType("public_method")
- */
-class Tarifa
+#[ORM\Table(name: 'SP_TRB_TARIFA')]
+#[ORM\Entity(repositoryClass: TarifaRepository::class, readOnly: true)]
+class Tarifa implements \Stringable
 {
-    /**
-     * @ORM\Column(name="TARDBOIDE", type="bigint")
-     * @ORM\Id
-     */
+    #[ORM\Column(name: 'TARDBOIDE', type: 'bigint')]
+    #[ORM\Id]
+    #[Groups(['show'])]
     private $id;
 
-    /**
-     * @ORM\Column(name="TARNOMTAR", type="string")
-     * @Serializer\Expose
-     */
+    #[ORM\Column(name: 'TARNOMTAR', type: 'string')]
+    #[Groups(['show'])]
     private $nombre;
 
-    /**
-     * @ORM\Column(name="TARDESCRI", type="string")
-     * @Serializer\Expose
-     */
+    #[ORM\Column(name: 'TARDESCRI', type: 'string')]
+    #[Groups(['show'])]
     private $descripcion;
 
-    /**
-     * @ORM\Column(name="TARANYPTO", type="integer")
-     * @Serializer\Expose
-     */
+    #[ORM\Column(name: 'TARANYPTO', type: 'integer')]
     private $anyo;
 
-    /**
-     * @ORM\Column(name="TARVALACT", type="integer")
-     * @Serializer\Expose
-     */
+    #[ORM\Column(name: 'TARVALACT', type: 'integer')]
+    #[Groups(['show'])]
     private $valorActual;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="TipoIngreso", inversedBy="tarifas")
-     * @ORM\JoinColumn(name="TARTIPING", referencedColumnName="TINDBOIDE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'TipoIngreso', inversedBy: 'tarifas')]
+    #[ORM\JoinColumn(name: 'TARTIPING', referencedColumnName: 'TINDBOIDE')]
+    #[Groups(['show'])]
+    #[MaxDepth(1)]
     private $tipoIngreso;
 
-    public function getId(): ?int
+    public function getId(): string
     {
         return $this->id;
     }
@@ -59,7 +45,7 @@ class Tarifa
     public function getDescripcion()
     {
         $check = mb_check_encoding($this->descripcion, 'ISO-8859-1');
-        $descripcion = $check ? mb_convert_encoding($this->descripcion, 'UTF-8', 'ISO-8859-1') : $this->descripcion;
+        $descripcion = $check ? mb_convert_encoding((string) $this->descripcion, 'UTF-8', 'ISO-8859-1') : $this->descripcion;
 
         return $descripcion;
     }
@@ -107,7 +93,7 @@ class Tarifa
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return ''.$this->valorActual;
     }

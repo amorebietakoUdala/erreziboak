@@ -1,5 +1,0 @@
-jms_serializer:
-    visitors:
-        json_serialization:
-            options: # json_encode options bitmask, suggested JSON_PRETTY_PRINT in development
-                - JSON_UNESCAPED_UNICODE

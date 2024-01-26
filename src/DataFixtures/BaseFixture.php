@@ -9,13 +9,12 @@ use Faker\Generator;
 
 abstract class BaseFixture extends Fixture
 {
-    /** @var ObjectManager */
-    private $manager;
+    private ?ObjectManager $manager = null;
 
     /** @var Generator */
     protected $faker;
 
-    private $referencesIndex = [];
+    private array $referencesIndex = [];
 
     abstract protected function loadData(ObjectManager $manager);
 
@@ -37,11 +36,9 @@ abstract class BaseFixture extends Fixture
      *           return $user;
      *      });
      *
-     * @param int      $count
      * @param string   $groupName Tag these created objects with this group name,
      *                            and use this later with getRandomReference(s)
      *                            to fetch only from this specific group.
-     * @param callable $factory
      */
     protected function createMany(int $count, string $groupName, callable $factory)
     {
@@ -64,7 +61,7 @@ abstract class BaseFixture extends Fixture
             $this->referencesIndex[$groupName] = [];
 
             foreach ($this->referenceRepository->getReferences() as $key => $ref) {
-                if (strpos($key, $groupName.'_') === 0) {
+                if (str_starts_with($key, $groupName.'_')) {
                     $this->referencesIndex[$groupName][] = $key;
                 }
             }

@@ -2,261 +2,142 @@
 
 namespace App\Entity\GTWIN;
 
+use App\Repository\GTWIN\ReciboRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+
 
 /**
  * Tipo Ingreso.
  *
- * @ORM\Table(name="SP_TRB_RECIBO")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\ReciboRepository",readOnly=true)
- * @Serializer\ExclusionPolicy("all")
  */
-class Recibo
+#[ORM\Table(name: 'SP_TRB_RECIBO')]
+#[ORM\Entity(repositoryClass: ReciboRepository::class, readOnly: true)]
+class Recibo implements \Stringable
 {
-    public const SITUACION_VOLUNTARIA = 'V';
-    public const SITUACION_EJECUTIVA = 'E';
-    public const ESTADO_PENDIENTE = 'P';
-    public const ESTADO_COBRADO = 'C';
+    final public const SITUACION_VOLUNTARIA = 'V';
+    final public const SITUACION_EJECUTIVA = 'E';
+    final public const ESTADO_PENDIENTE = 'P';
+    final public const ESTADO_COBRADO = 'C';
     /**
      * @var string
-     *
-     * @ORM\Column(name="RECDBOIDE", type="string")
-     * @ORM\Id
      */
+    #[ORM\Column(name: 'RECDBOIDE', type: 'string')]
+    #[ORM\Id]
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECNUMREC", type="integer", nullable=false)
-     * @Serializer\Expose
-     */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'RECNUMREC', type: 'integer', nullable: false)]
     private $numeroRecibo;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECCODINS", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'RECCODINS', type: 'string', nullable: false)]
     private $codInstitucion;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECREFERE", type="string", nullable=false)
-     * @Serializer\Expose
-     */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'RECREFERE', type: 'string', nullable: false)]
     private $numeroReferenciaExterna;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECCLACOB", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'RECCLACOB', type: 'string', nullable: false)]
     private $claveCobro;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="RECANYCON", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'RECANYCON', type: 'integer', nullable: false)]
     private $anyoContable;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="RECTIPEXA", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'RECTIPEXA', type: 'integer', nullable: false)]
     private $tipoExaccion;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECCODREM", type="string", length=10, nullable=false)
-     */
+    #[ORM\Column(name: 'RECCODREM', type: 'string', length: 10, nullable: false)]
     private $codigoRemesa;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECCUERPO", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'RECCUERPO', type: 'string', nullable: false)]
     private $cuerpo;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="RECIMPORT", type="decimal", precision=11, scale=2, nullable=false)
-     * @Serializer\Expose
-     */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'RECIMPORT', type: 'decimal', precision: 11, scale: 2, nullable: false)]
     private $importe;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="RECIMPTOT", type="decimal", precision=11, scale=2, nullable=false)
-     * @Serializer\Expose
-     */
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'RECIMPTOT', type: 'decimal', precision: 11, scale: 2, nullable: false)]
     private $importeTotal;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="RECNUMFRA", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'RECNUMFRA', type: 'integer', nullable: false)]
     private $fraccion;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECESTADO", type="string", length=1, nullable=false)
-     */
+    #[ORM\Column(name: 'RECESTADO', type: 'string', length: 1, nullable: false)]
     private $estado;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECSITUAC", type="string", length=1, nullable=false)
-     */
+    #[ORM\Column(name: 'RECSITUAC', type: 'string', length: 1, nullable: false)]
     private $situacion;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECINDPAR", type="string", length=1, nullable=false)
-     */
+    #[ORM\Column(name: 'RECINDPAR', type: 'string', length: 1, nullable: false)]
     private $paralizado;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="RECFECCRE", type="datetime", nullable=false)
-     */
-    private $fechaCreacion;
+    #[ORM\Column(name: 'RECFECCRE', type: 'datetime', nullable: false)]
+    private ?\DateTime $fechaCreacion = null;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="RECFECINI", type="datetime", nullable=false)
-     */
-    private $fechaInicioVoluntaria;
+    #[ORM\Column(name: 'RECFECINI', type: 'datetime', nullable: false)]
+    private ?\DateTime $fechaInicioVoluntaria = null;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="RECFECFIN", type="datetime", nullable=false)
-     */
-    private $fechaFinVoluntaria;
+    #[ORM\Column(name: 'RECFECFIN', type: 'datetime', nullable: false)]
+    private ?\DateTime $fechaFinVoluntaria = null;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="RECFECLNV", type="datetime")
-     * @Serializer\Expose
-     */
-    private $fechaLimitePagoBanco;
+    #[Groups(['show'])]
+    #[ORM\Column(name: 'RECFECLNV', type: 'datetime')]
+    private ?\DateTime $fechaLimitePagoBanco = null;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="RECFECCOB", type="datetime", nullable=false)
-     */
-    private $fechaCobro;
+    #[ORM\Column(name: 'RECFECCOB', type: 'datetime', nullable: false)]
+    private ?\DateTime $fechaCobro = null;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="RECCOSTAS", type="decimal", precision=11, scale=2, nullable=false)
-     */
-    private $costas;
+    #[ORM\Column(name: 'RECCOSTAS', type: 'decimal', precision: 11, scale: 2, nullable: false)]
+    private ?float $costas = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECDNINIF", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'RECDNINIF', type: 'string', nullable: false)]
     private $dni;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECCARCON", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'RECCARCON', type: 'string', nullable: false)]
     private $letra;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECNOMCOM", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'RECNOMCOM', type: 'string', nullable: false)]
     private $nombreCompleto;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECTRASPA", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'RECTRASPA', type: 'string', nullable: false)]
     private $traspasado;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECBAJPRO", type="string", nullable=false)
-     */
-    private $propuestoBaja;
+    #[ORM\Column(name: 'RECBAJPRO', type: 'string', nullable: false)]
+    private ?string $propuestoBaja = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECPLPAGO", type="string", nullable=false)
-     */
-    private $incluidoEnPlanDePagos;
+    #[ORM\Column(name: 'RECPLPAGO', type: 'string', nullable: false)]
+    private ?string $incluidoEnPlanDePagos = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="RECPADFRA", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'RECPADFRA', type: 'string', nullable: false)]
     private $esPadreFracciones;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="CUEIBANCO", type="string", length=30, nullable=false)
-     */
+    #[ORM\Column(name: 'CUEIBANCO', type: 'string', length: 30, nullable: false)]
     private $codigoIBAN;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="TipoIngreso")
-     * @ORM\JoinColumn(name="RECTIPING", referencedColumnName="TINDBOIDE")
-     * @Serializer\Expose
-     * @Serializer\MaxDepth(1)
-     */
-    private $tipoIngreso;
+    #[Groups(['show'])]
+    #[MaxDepth(1)]
+    #[ORM\ManyToOne(targetEntity: 'TipoIngreso')]
+    #[ORM\JoinColumn(name: 'RECTIPING', referencedColumnName: 'TINDBOIDE')]
+    private ?\App\Entity\GTWIN\TipoIngreso $tipoIngreso = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Institucion", fetch="EAGER")
-     * @ORM\JoinColumn(name="RECINSTIT", referencedColumnName="INSDBOIDE")
-     * @Serializer\Expose
-     * @Serializer\MaxDepth(1)
-     */
-    private $institucion;
+    #[Groups(['show'])]
+    #[MaxDepth(1)]
+    #[ORM\ManyToOne(targetEntity: 'Institucion', fetch: 'EAGER')]
+    #[ORM\JoinColumn(name: 'RECINSTIT', referencedColumnName: 'INSDBOIDE')]
+    private ?\App\Entity\GTWIN\Institucion $institucion = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="OperacionesRecibo", mappedBy="recibo")
-     */
+    #[ORM\OneToMany(targetEntity: 'OperacionesRecibo', mappedBy: 'recibo')]
     private $operaciones;
 
     private $email;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ReferenciaC60", mappedBy="recibo")
-     * @Serializer\Expose
-     * @Serializer\MaxDepth(1)
-     */
+    #[Groups(['show'])]
+    #[MaxDepth(1)]
+    #[ORM\OneToMany(targetEntity: 'ReferenciaC60', mappedBy: 'recibo')]
     private $referenciasC60;
 
     public function __construct()
@@ -350,7 +231,7 @@ class Recibo
         return $this->fechaCobro;
     }
 
-    public function getCostas(): DateTime
+    public function getCostas(): float
     {
         return $this->costas;
     }
@@ -409,7 +290,7 @@ class Recibo
     {
         $check = mb_check_encoding($cuerpo, 'UTF-8');
         if ($check) {
-            $this->cuerpo = mb_convert_encoding($cuerpo, 'ISO-8859-1', 'UTF-8');
+            $this->cuerpo = mb_convert_encoding((string) $cuerpo, 'ISO-8859-1', 'UTF-8');
         }
 
         $this->cuerpo = $cuerpo;
@@ -487,7 +368,7 @@ class Recibo
         return $this;
     }
 
-    public function setCostas(DateTime $costas)
+    public function setCostas(float $costas)
     {
         $this->costas = $costas;
 
@@ -647,9 +528,9 @@ class Recibo
         return $apellido2;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return '' . $this->$numeroRecibo;
+        return '' . $this->numeroRecibo;
     }
 
     public function getOperaciones()
@@ -798,19 +679,11 @@ class Recibo
         return $this;
     }
 
-    /**
-     * Get the value of referenciasC60
-     */
     public function getReferenciasC60()
     {
         return $this->referenciasC60;
     }
 
-    /**
-     * Set the value of referenciasC60
-     *
-     * @return  self
-     */
     public function setReferenciasC60($referenciasC60)
     {
         $this->referenciasC60 = $referenciasC60;
@@ -818,9 +691,7 @@ class Recibo
         return $this;
     }
 
-    /**
-     * @Serializer\VirtualProperty()
-     */
+    #[Groups(['show'])]
     public function getReferenciaC60() {
         return ($this->getLastReferenciaC60())->getRafagaC60Completa();
     }
@@ -839,19 +710,11 @@ class Recibo
         return $lastReference;
     }
 
-    /**
-     * Get the value of institucion
-     */ 
     public function getInstitucion(): Institucion
     {
         return $this->institucion;
     }
 
-    /**
-     * Set the value of institucion
-     *
-     * @return  self
-     */ 
     public function setInstitucion(Institucion $institucion)
     {
         $this->institucion = $institucion;

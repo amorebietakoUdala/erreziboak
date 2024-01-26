@@ -2,71 +2,63 @@
 
 namespace App\Entity\GTWIN;
 
+use App\Repository\GTWIN\MensajesErrorRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Tipo Ingreso.
- *
- * @ORM\Table(name="MSGERROR")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\MensajesErrorRepository",readOnly=true)
  */
+#[ORM\Table(name: 'MSGERROR')]
+#[ORM\Entity(repositoryClass: MensajesErrorRepository::class, readOnly: true)]
 class MensajesError
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="DBOID", type="bigint")
-     * @ORM\Id
      */
+    #[ORM\Column(name: 'DBOID', type: 'bigint')]
+    #[ORM\Id]
     private $id;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="CODE", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'CODE', type: 'integer', nullable: false)]
     private $codigo;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="ERROBJECT", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'ERROBJECT', type: 'integer', nullable: false)]
     private $objetoError;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="ERRORLEVEL", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'ERRORLEVEL', type: 'integer', nullable: false)]
     private $nivelError;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="ERRORTYPE", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'ERRORTYPE', type: 'integer', nullable: false)]
     private $tipoError;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="EXTERNALKY", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'EXTERNALKY', type: 'string', nullable: false)]
     private $claveExterna;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="EXTMESSAGE", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'EXTMESSAGE', type: 'string', nullable: false)]
     private $mensageExterno;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="MSGDESCRIP", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'MSGDESCRIP', type: 'string', nullable: false)]
     private $descripcion;
 
     public function getId()

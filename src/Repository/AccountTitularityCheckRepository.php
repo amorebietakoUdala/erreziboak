@@ -21,30 +21,6 @@ class AccountTitularityCheckRepository extends ServiceEntityRepository
         parent::__construct($registry, AccountTitularityCheck::class);
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function add(AccountTitularityCheck $entity, bool $flush = true): void
-    {
-        $this->_em->persist($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
-    }
-
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function remove(AccountTitularityCheck $entity, bool $flush = true): void
-    {
-        $this->_em->remove($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
-    }
-
     // /**
     //  * @return AccountTitularityCheck[] Returns an array of AccountTitularityCheck objects
     //  */

@@ -5,34 +5,24 @@ namespace App\Entity;
 use App\Repository\ConceptInscriptionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Table(name="conceptInscription")
- * @ORM\Entity(repositoryClass=ConceptInscriptionRepository::class)
- */
+#[ORM\Table(name: 'conceptInscription')]
+#[ORM\Entity(repositoryClass: ConceptInscriptionRepository::class)]
 class ConceptInscription extends Inscription
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Concept::class, inversedBy="conceptInscriptions")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $concept;
+    #[ORM\ManyToOne(targetEntity: Concept::class, inversedBy: 'conceptInscriptions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?\App\Entity\Concept $concept = null;
 
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $price;
+    #[ORM\Column(type: 'float')]
+    private ?float $price = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $externalReference;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $externalReference = null;
 
     public function getId(): ?int
     {

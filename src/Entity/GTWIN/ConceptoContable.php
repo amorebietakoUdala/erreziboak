@@ -2,35 +2,29 @@
 
 namespace App\Entity\GTWIN;
 
+use App\Repository\GTWIN\ConceptoContableRepository;
+use App\Entity\GTWIN\ConceptoRenta;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ConceptoContables.
- *
- * @ORM\Table(name="SP_TRB_CONCON")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\ConceptoContableRepository",readOnly=true)
  */
-class ConceptoContable
+#[ORM\Table(name: 'SP_TRB_CONCON')]
+#[ORM\Entity(repositoryClass: ConceptoContableRepository::class, readOnly: true)]
+class ConceptoContable implements \Stringable
 {
-    /**
-     * @ORM\Column(name="CCODBOIDE", type="bigint")
-     * @ORM\Id
-     */
+    #[ORM\Column(name: 'CCODBOIDE', type: 'bigint')]
+    #[ORM\Id]
     private $id;
 
-    /**
-     * @ORM\Column(name="CCOCODCCO", type="string")
-     */
+    #[ORM\Column(name: 'CCOCODCCO', type: 'string')]
     private $codigo;
 
-    /**
-     * @ORM\Column(name="CCONOMCCO", type="string")
-     */
+    #[ORM\Column(name: 'CCONOMCCO', type: 'string')]
     private $descripcion;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\GTWIN\ConceptoRenta", mappedBy="conceptoContable")
-     */
+    #[ORM\OneToMany(targetEntity: ConceptoRenta::class, mappedBy: 'conceptoContable')]
     private $conceptosRentas;
 
     public function __construct()
@@ -51,7 +45,7 @@ class ConceptoContable
     public function getDescripcion()
     {
         $check = mb_check_encoding($this->descripcion, 'ISO-8859-1');
-        $descripcion = $check ? mb_convert_encoding($this->descripcion, 'UTF-8', 'ISO-8859-1') : $this->descripcion;
+        $descripcion = $check ? mb_convert_encoding((string) $this->descripcion, 'UTF-8', 'ISO-8859-1') : $this->descripcion;
 
         return $descripcion;
     }
@@ -99,7 +93,7 @@ class ConceptoContable
         return $ultimoConceptoRenta;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return ''.$this->getUltimoConceptoEconomico();
     }

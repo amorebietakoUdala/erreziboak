@@ -5,34 +5,25 @@ namespace App\Controller;
 use App\Entity\Payment;
 use App\Controller\BaseController;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\PaymentTypeForm;
 use App\Repository\PaymentRepository;
 
-/**
- * @Route("/{_locale}", requirements={
- *	    "_locale": "es|eu|en"
- * })
- */
+#[Route(path: '/{_locale}', requirements: ['_locale' => 'es|eu|en'])]
 class PaymentController extends BaseController
 {
 
-    private PaymentRepository $paymentRepo;
-
-    public function __construct(PaymentRepository $paymentRepo)
+    public function __construct(private readonly PaymentRepository $paymentRepo)
     {
-        $this->paymentRepo = $paymentRepo;    
     }
 
-    /**
-     * @Route("/admin/payments", name="admin_payments_index", methods={"GET","POST"})
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function listPaymentsAction(Request $request, LoggerInterface $logger)
+    #[Route(path: '/admin/payments', name: 'admin_payments_index', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function listPayments(Request $request, LoggerInterface $logger)
     {
-        $logger->debug('-->listPaymentsAction: Start');
+        $logger->debug('-->listPayments: Start');
         $this->loadQueryParameters($request);
         $criteria = $request->query->all();
         $criteria = $this->createDateTimeObjects($criteria);
@@ -49,17 +40,17 @@ class PaymentController extends BaseController
             $criteria = $this->formatCriteria($criteria);
             $this->setPage(1);
             return $this->render('payment/index.html.twig', [
-                'form' => $form->createView(),
+                'form' => $form,
                 'payments' => $results,
                 'search' => true,
                 'readonly' => false,
                 'filters' => $criteria,            
             ]);
         }
-        $logger->debug('<--listPaymentsAction: End OK');
+        $logger->debug('<--listPayments: End OK');
         $results = $this->paymentRepo->findPaymentsBy($criteria);
         return $this->render('payment/index.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
             'payments' => $results,
             'search' => true,
             'readonly' => false,
@@ -67,13 +58,11 @@ class PaymentController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/admin/payment/{id}", name="admin_show_payment", methods={"GET"})
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function showAction(Request $request, Payment $payment, LoggerInterface $logger)
+    #[Route(path: '/admin/payment/{id}', name: 'admin_show_payment', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function show(Request $request, Payment $payment, LoggerInterface $logger)
     {
-        $logger->debug('-->showAction: Start');
+        $logger->debug('-->show: Start');
         $this->loadQueryParameters($request);
         $logger->debug('Payment number: '.$payment->getId());
         $form = $this->createForm(PaymentTypeForm::class, $payment->toArray(), [
@@ -82,7 +71,7 @@ class PaymentController extends BaseController
         ]);
 
         return $this->render('payment/show.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
             'payment' => $payment,
             'readonly' => true,
             'search' => false,

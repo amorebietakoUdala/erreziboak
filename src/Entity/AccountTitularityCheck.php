@@ -3,96 +3,65 @@
 namespace App\Entity;
 
 use App\Repository\AccountTitularityCheckRepository;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=AccountTitularityCheckRepository::class)
- */
+#[ORM\Entity(repositoryClass: AccountTitularityCheckRepository::class)]
 class AccountTitularityCheck
 {
 
-    public const SUCCESS_TITULAR = "1";
-    public const SUCCESS_AUTHORIZED = "2";
-    public const SUCCESS_UNAUTHORIZED = "-1";
-    public const ERROR_OBSOLET_ACCOUNT = "-2";
-    public const ERROR_GENERAL = "-1000";
+    final public const SUCCESS_TITULAR = "1";
+    final public const SUCCESS_AUTHORIZED = "2";
+    final public const SUCCESS_UNAUTHORIZED = "-1";
+    final public const ERROR_OBSOLET_ACCOUNT = "-2";
+    final public const ERROR_GENERAL = "-1000";
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $idNumber;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $idNumber = null;
 
-    /**
-     * @ORM\Column(type="string", length=30)
-     */
-    private $accountNumber;
+    #[ORM\Column(type: 'string', length: 30)]
+    private ?string $accountNumber = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $checked;
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $checked = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $response;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $response = null;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $sendDate;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $sendDate = null;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $responseDate;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $responseDate = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="accountTitularityChecks")
-     */
-    private $user;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'accountTitularityChecks')]
+    private ?User $user = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $authorized;
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $authorized = null;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $certCode;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $certCode = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $error;
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $error = null;
 
-    /**
-     * @ORM\Column(type="string", length=5, nullable=true)
-     */
-    private $type;
+    #[ORM\Column(type: 'string', length: 5, nullable: true)]
+    private ?string $type = null;
 
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
-     */
-    private $errorCode;
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    private ?string $errorCode = null;
 
-    /**
-     * @ORM\Column(type="string", length=30, nullable=true)
-     */
-    private $alternateAccount;
+    #[ORM\Column(type: 'string', length: 30, nullable: true)]
+    private ?string $alternateAccount = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $errorMessage;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $errorMessage = null;
 
     public function getId(): ?int
     {
@@ -118,7 +87,7 @@ class AccountTitularityCheck
 
     public function getAccountNumberBase64(): ?string
     {
-        return base64_encode($this->accountNumber);
+        return base64_encode((string) $this->accountNumber);
     }
 
 

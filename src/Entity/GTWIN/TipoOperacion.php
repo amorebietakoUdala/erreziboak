@@ -4,26 +4,20 @@ namespace App\Entity\GTWIN;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Table(name="SP_TRB_TIPOPE")
- * @ORM\Entity(repositoryClass="App\Repository\GTWIN\OperacionesExternasRepository",readOnly=true)
- */
+#[ORM\Table(name: 'SP_TRB_TIPOPE')]
+#[ORM\Entity(repositoryClass: \App\Repository\GTWIN\OperacionesExternasRepository::class, readOnly: true)]
 class TipoOperacion
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="TOPDBOIDE", type="bigint")
-     * @ORM\Id
      */
+    #[ORM\Column(name: 'TOPDBOIDE', type: 'bigint')]
+    #[ORM\Id]
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TOPCODTOP", type="string")
-     */
-    private $codOperacion;
+    
+    #[ORM\Column(name: 'TOPCODTOP', type: 'string')]
+    private ?string $codOperacion = null;
 
     public function getId()
     {

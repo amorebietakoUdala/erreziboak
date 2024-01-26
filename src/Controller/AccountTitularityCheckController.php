@@ -10,18 +10,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class AccountTitularityCheckController extends BaseController
 {
-    private $client;
-
-    public function __construct(HttpClientInterface $client)
+    public function __construct(private readonly HttpClientInterface $client)
     {
-        $this->client = $client;
     }
 
     private function parseResponseData($xmlString) {
@@ -50,9 +47,7 @@ class AccountTitularityCheckController extends BaseController
         return $responseArray;
     }
 
-    /**
-     * @Route("/account/titularity/confirmation", name="app_account_titularity_confirmation")
-     */
+    #[Route(path: '/account/titularity/confirmation', name: 'app_account_titularity_confirmation')]
     public function confirmation(Request $request, EntityManagerInterface $em, AccountTitularityCheckRepository $repo, LoggerInterface $logger): Response
     {
         $response = $request->getContent();
@@ -84,12 +79,8 @@ class AccountTitularityCheckController extends BaseController
         return new Response('Received');
     }    
 
-    /**
-     * @Route("/{_locale}/account/titularity/check", name="app_account_titularity_check", requirements={
-     *	    "_locale": "es|eu|en"
-     * })
-     * @IsGranted("ROLE_TITULARITY")
-     */
+    #[Route(path: '/{_locale}/account/titularity/check', name: 'app_account_titularity_check', requirements: ['_locale' => 'es|eu|en'])]
+    #[IsGranted('ROLE_TITULARITY')]
     public function check(Request $request, EntityManagerInterface $em, LoggerInterface $logger): Response
     {
         $form = $this->createForm(AccountTitularityCheckType::class);
@@ -105,17 +96,13 @@ class AccountTitularityCheckController extends BaseController
             return $this->sendRequestToTitularityCheckEndpoint($data, $form, $logger);
         }
 
-        return $this->renderForm('account_titularity_check/check.html.twig', [
+        return $this->render('account_titularity_check/check.html.twig', [
             'form' => $form,
         ]);
     }
 
-    /**
-     * @Route("/{_locale}/account/titularity", name="app_account_titularity_index", requirements={
-     *	    "_locale": "es|eu|en"
-     * })
-     * @IsGranted("ROLE_TITULARITY")
-     */
+    #[Route(path: '/{_locale}/account/titularity', name: 'app_account_titularity_index', requirements: ['_locale' => 'es|eu|en'])]
+    #[IsGranted('ROLE_TITULARITY')]
     public function index(Request $request, AccountTitularityCheckRepository $repo): Response
     {
         $this->loadQueryParameters($request);
@@ -142,7 +129,7 @@ class AccountTitularityCheckController extends BaseController
             ]);
             if ($response->getStatusCode() !== 200) {
                 $this->addFlash('error', 'Status code:'. $response->getStatusCode(). ' Content: ' .$response->getContent());
-                return $this->renderForm('account_titularity_check/check.html.twig', [
+                return $this->render('account_titularity_check/check.html.twig', [
                     'form' => $form,
                 ]);
             }
@@ -150,7 +137,7 @@ class AccountTitularityCheckController extends BaseController
             $logger->info('Response: '. $response->getContent());
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
-            return $this->renderForm('account_titularity_check/check.html.twig', [
+            return $this->render('account_titularity_check/check.html.twig', [
                 'form' => $form,
             ]);
         }

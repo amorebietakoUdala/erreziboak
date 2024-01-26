@@ -3,8 +3,10 @@
 namespace App\Command;
 
 use App\Entity\ReceiptsFile;
+use App\Repository\ReceiptsFileRepository;
 use DateTime;
 use Exception;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,17 +15,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use \Doctrine\ORM\EntityManagerInterface;
 use \Symfony\Component\DependencyInjection\ContainerInterface;
 
+#[AsCommand(name: 'app:convert-daemon')]
 class ConvertDaemonCommand extends Command
 {
-    protected static $defaultName = 'app:convert-daemon';
-    private $em;
-    private $container;
     private $sleep;
 
-    public function __construct(EntityManagerInterface $em,ContainerInterface $container) {
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly ReceiptsFileRepository $repo, 
+        private readonly ContainerInterface $container
+        ) {
         parent::__construct();
-        $this->em = $em;
-        $this->container = $container;
         $this->sleep = 1 * 60; // One minute
     }
 
@@ -39,13 +41,13 @@ class ConvertDaemonCommand extends Command
         $command = $this->getApplication()->find('app:convert-file');
 
         while (true) {
-            $receiptFiles = $this->em->getRepository(ReceiptsFile::class)->findBy([
+            $receiptFiles = $this->repo->findBy([
                 'status' => ReceiptsFile::STATUS_UNPROCESSED,
             ]);
             $io->writeln('Files to process: '.count($receiptFiles));
             $index = 1;
             foreach ($receiptFiles as $receiptFile) {
-                /* @var $receiptFile ReceiptsFile */
+                /** @var ReceiptsFile $receiptFile */
                 $io->writeln('Processing file: '.$index.' of '.count($receiptFiles));
                 $file = $receiptFile->getFileName();
                 $receiptType = $receiptFile->getReceiptsType();
@@ -69,7 +71,7 @@ class ConvertDaemonCommand extends Command
                 } catch (Exception $e) {
                     $io->error($e->getMessage());
                     $returnCode = 1;
-                    /* @var $receiptFile ReceiptsFile */
+                    /** @var ReceiptsFile $receiptFile */
                     $receiptFile->setStatus(ReceiptsFile::STATUS_FAILED);
                     $receiptFile->setProcessedDate(new DateTime());
                     $this->em->persist($receiptFile);

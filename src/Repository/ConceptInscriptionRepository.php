@@ -23,30 +23,6 @@ class ConceptInscriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, ConceptInscription::class);
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function add(ConceptInscription $entity, bool $flush = true): void
-    {
-        $this->_em->persist($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
-    }
-
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function remove(ConceptInscription $entity, bool $flush = true): void
-    {
-        $this->_em->remove($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
-    }
-
     // /**
     //  * @return ConceptInscription[] Returns an array of ConceptInscription objects
     //  */

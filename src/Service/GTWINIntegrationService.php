@@ -23,6 +23,7 @@ use App\Entity\GTWIN\Person;
 use App\Entity\GTWIN\ReferenciaC60;
 use App\Entity\GTWIN\Tarifa;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -70,19 +71,19 @@ class GTWINIntegrationService
 
     public function findByNumReciboDni($numRecibo, $dni): ?Recibo
     {
-        $em = $this->em;
+        
         $numero = substr($dni, 0, -1);
         $letra = strtoupper(substr($dni, -1));
         $numero = $this->__fixDniNumber($numero);
-        $recibo = $em->getRepository(Recibo::class)->findByNumReciboDni($numRecibo, $numero, $letra);
+        $recibo = $this->em->getRepository(Recibo::class)->findByNumReciboDni($numRecibo, $numero, $letra);
 
         return $recibo;
     }
 
     public function findByNumRecibo($numRecibo)
     {
-        $em = $this->em;
-        $recibo = $em->getRepository(Recibo::class)->findOneBy([
+        
+        $recibo = $this->em->getRepository(Recibo::class)->findOneBy([
             'numeroRecibo' => $numRecibo,
         ]);
 
@@ -91,18 +92,17 @@ class GTWINIntegrationService
 
     public function findReferenciaC60($referenciaC60): array
     {
-        $em = $this->em;
         /* Can be more than one */
-        $referenciasC60 = $em->getRepository(ReferenciaC60::class)->findByReferenciaC60($referenciaC60);
+        $referenciasC60 = $this->em->getRepository(ReferenciaC60::class)->findByReferenciaC60($referenciaC60);
         return $referenciasC60;
     }
 
     public function findRecibosByNumeroReferenciaC60($referencia): array
     {
         $recibos = [];
-        $em = $this->em;
+        
         /* Can be more than one */
-        $referenciasC60 = $em->getRepository(ReferenciaC60::class)->findByReferenciaC60($referencia);
+        $referenciasC60 = $this->em->getRepository(ReferenciaC60::class)->findByReferenciaC60($referencia);
         foreach ($referenciasC60 as $referencia) {
             $recibos[] = $referencia->getRecibo();
         }
@@ -112,7 +112,7 @@ class GTWINIntegrationService
     public function findRecibosByNumeroReferenciaC60AndDni($referenciaC60, $dni): array
     {
         $recibos = [];
-        $em = $this->em;
+        
         $numero = null;
         $letra = null;
         if (null !== $dni) {
@@ -121,7 +121,7 @@ class GTWINIntegrationService
             $numero = $this->__fixDniNumber($numero);
         }
         /* Can be more than one */
-        $recibos = $em->getRepository(Recibo::class)->findByReferenciaC60AndDni($referenciaC60, $numero, $letra);
+        $recibos = $this->em->getRepository(Recibo::class)->findByReferenciaC60AndDni($referenciaC60, $numero, $letra);
         //        dd($recibos);
         return $recibos;
     }
@@ -137,8 +137,8 @@ class GTWINIntegrationService
     {
         $dc = substr($dni, -1);
         $numDocumento = substr($dni, 0, -1);
-        $em = $this->em;
-        $person = $em->getRepository(Person::class)->findOneBy([
+        
+        $person = $this->em->getRepository(Person::class)->findOneBy([
             'numDocumento' => $this->__fixDniNumber($numDocumento),
             'digitoControl' => $dc,
         ]);
@@ -170,8 +170,8 @@ class GTWINIntegrationService
     {
         $dc = substr($dni, -1);
         $numDocumento = substr($dni, 0, -1);
-        $em = $this->em;
-        $person = $em->getRepository(Recibo::class)->findByRecibosPendientesByDni(
+        
+        $person = $this->em->getRepository(Recibo::class)->findByRecibosPendientesByDni(
             $this->__fixDniNumber($numDocumento),
             $dc
         );
@@ -193,8 +193,8 @@ class GTWINIntegrationService
             $numDocumento = substr($dni, 0, -1);
             $fixedDocument = $this->__fixDniNumber($numDocumento);
         }
-        $em = $this->em;
-        $importe = $em->getRepository(Recibo::class)->findDeudaByDni($fixedDocument);
+        
+        $importe = $this->em->getRepository(Recibo::class)->findDeudaByDni($fixedDocument);
         if ($importe === null) {
             return "No";
         }
@@ -208,8 +208,8 @@ class GTWINIntegrationService
      */
     public function getReceiptTypes()
     {
-        $em = $this->em;
-        $results = $em->getRepository(TipoIngreso::class)->findBy([]);
+        
+        $results = $this->em->getRepository(TipoIngreso::class)->findBy([]);
         foreach ($results as $result) {
             $result->setDescripcion($result->getDescripcion());
         }
@@ -299,17 +299,17 @@ class GTWINIntegrationService
             $tipoIngreso->getTipoDefecto(),
             'P',
             'V',
+            $actualPrice,
             'F',
-            $concept->getAccountingConcept(),
-            $actualPrice
+            $concept->getAccountingConcept()
         );
         $dboid = $this->__insertExternalOperation('CREA_RECIBO', $inputparams);
         $result = null;
         if ($wait) {
             $operacionExterna = $this->__waitUntilProcessed($dboid);
             if ($operacionExterna->procesadaOk()) {
-                $em = $this->em;
-                $result = $em->getRepository(Recibo::class)->findOneBy(['numeroReferenciaExterna' => $reference]);
+                
+                $result = $this->em->getRepository(Recibo::class)->findOneBy(['numeroReferenciaExterna' => $reference]);
             } else {
                 throw new \Exception($operacionExterna->getMensajeError()->getDescripcion());
             }
@@ -362,17 +362,17 @@ class GTWINIntegrationService
             $tipoIngreso->getTipoDefecto(),
             'P',
             'V',
+            $actualPrice,
             'F',
-            $concept->getAccountingConcept(),
-            $actualPrice
+            $concept->getAccountingConcept()
         );
         $dboid = $this->__insertExternalOperation('CREA_RECIBO', $inputparams);
         $result = null;
         if ($wait) {
             $operacionExterna = $this->__waitUntilProcessed($dboid);
             if ($operacionExterna->procesadaOk()) {
-                $em = $this->em;
-                $result = $em->getRepository(Recibo::class)->findOneBy(['numeroReferenciaExterna' => $reference]);
+                
+                $result = $this->em->getRepository(Recibo::class)->findOneBy(['numeroReferenciaExterna' => $reference]);
             } else {
                 throw new \Exception($operacionExterna->getMensajeError()->getDescripcion());
             }
@@ -381,7 +381,7 @@ class GTWINIntegrationService
         return $result;
     }
 
-    public function createReciboParams($numRecibo, $reference, $codtin, $codins, $nomcom, $dninif, $carcon, $sigpai, $cuerpo, $tipexa, $estado, $situacion, $indpar = 'F', $codcon = '107', $importe)
+    public function createReciboParams($numRecibo, $reference, $codtin, $codins, $nomcom, $dninif, $carcon, $sigpai, $cuerpo, $tipexa, $estado, $situacion, $importe, $indpar = 'F', $codcon = '107')
     {
         $createReciboParamsTemplate = '
 			<CODTIN>{CODTIN}</CODTIN>
@@ -450,22 +450,22 @@ class GTWINIntegrationService
         ];
         $sql = str_replace(array_keys($params), $params, $insert_template);
         $statement = $this->em->getConnection()->prepare($sql);
-        $statement->execute();
+        $statement->executeQuery();
 
         return $dboid;
     }
 
     private function __waitUntilProcessed($dboid)
     {
-        $em = $this->em;
-        $operationExterna = $em->getRepository(OperacionesExternas::class)->find($dboid);
+        
+        $operationExterna = $this->em->getRepository(OperacionesExternas::class)->find($dboid);
         $status = $operationExterna->getEstado();
         $retries = 0;
         while (0 === $status && $retries < 5) {
             sleep(7);
             // Borrar la caché para que vuelva a forzar la lectura de base de datos
-            $em->clear();
-            $operationExterna = $em->getRepository(OperacionesExternas::class)->find($dboid);
+            $this->em->clear();
+            $operationExterna = $this->em->getRepository(OperacionesExternas::class)->find($dboid);
             $status = $operationExterna->getEstado();
             ++$retries;
         }

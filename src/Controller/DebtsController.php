@@ -14,7 +14,7 @@ use App\Service\GTWINIntegrationService;
 use App\Controller\BaseController;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,22 +24,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use Qipsius\TCPDFBundle\Controller\TCPDFController;
 use Symfony\Component\Translation\TranslatableMessage;
 
-/**
- * @IsGranted("ROLE_DEBTS")
- */
+#[IsGranted('ROLE_DEBTS')]
 class DebtsController extends BaseController
 {
 
-    private DebtsFileRepository $debtsFileRepo;
-
-    public function __construct(DebtsFileRepository $debtsFileRepo)
+    public function __construct(private readonly DebtsFileRepository $debtsFileRepo)
     {
-        $this->debtsFileRepo = $debtsFileRepo;    
     }
     
-    /**
-     * @Route("/{_locale}/debts_file/", name="debts_file_list")
-     */
+    #[Route(path: '/{_locale}/debts_file/', name: 'debts_file_list')]
     public function list(Request $request)
     {
         $this->loadQueryParameters($request);
@@ -52,9 +45,7 @@ class DebtsController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/{_locale}/debts/search", name="debts_search")
-     */
+    #[Route(path: '/{_locale}/debts/search', name: 'debts_search')]
     public function search(Request $request, EntityManagerInterface $em, GTWINIntegrationService $gts)
     {
         $this->loadQueryParameters($request);
@@ -65,7 +56,7 @@ class DebtsController extends BaseController
             $data = $form->getData();
             if (!array_key_exists('idNumber', $data)){
                 $this->addFlash('error', 'messages.noIdNumber');
-                return $this->renderForm('debts_files/individualSearch.html.twig', [
+                return $this->render('debts_files/individualSearch.html.twig', [
                     'form' => $form,
                 ]);
             }
@@ -86,20 +77,18 @@ class DebtsController extends BaseController
                     '%idNumber%' => $data['idNumber'], 
                 ]));
             }
-            return $this->renderForm('debts_files/individualSearch.html.twig', [
+            return $this->render('debts_files/individualSearch.html.twig', [
                 'form' => $form,
                 'debt' => $debt,
             ]);
         }
 
-        return $this->renderForm('debts_files/individualSearch.html.twig', [
+        return $this->render('debts_files/individualSearch.html.twig', [
             'form' => $form,
         ]);
     }
 
-    /**
-     * @Route("/{_locale}/debts_file/upload", name="debts_file_upload")
-     */
+    #[Route(path: '/{_locale}/debts_file/upload', name: 'debts_file_upload')]
     public function upload(Request $request, CsvFormatValidator $validator, GTWINIntegrationService $gts, EntityManagerInterface $em)
     {
         $this->loadQueryParameters($request);
@@ -112,7 +101,7 @@ class DebtsController extends BaseController
                 $this->addFlash('error', 'messages.fileNotSelected');
 
                 return $this->render('debts_files/upload.html.twig', [
-                    'form' => $form->createView(),
+                    'form' => $form,
                 ]);
             }
             $validator->setRequiredFields(['Dni']);
@@ -123,7 +112,7 @@ class DebtsController extends BaseController
                 $this->addFlash('error', $validationResult['message']);
 
                 return $this->render('debts_files/upload.html.twig', [
-                    'form' => $form->createView(),
+                    'form' => $form,
                 ]);
             }
             try {
@@ -146,13 +135,11 @@ class DebtsController extends BaseController
         }
 
         return $this->render('debts_files/upload.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 
-    /**
-     * @Route("/{_locale}/debts_file/{debtsFile}/download", name="debts_file_download")
-     */
+    #[Route(path: '/{_locale}/debts_file/{debtsFile}/download', name: 'debts_file_download')]
     public function download(DebtsFile $debtsFile)
     {
         $without_extension = pathinfo($debtsFile->getFileName(), PATHINFO_FILENAME);
@@ -226,9 +213,7 @@ class DebtsController extends BaseController
         return $zipFilename;
     }
 
-    /**
-     * @Route("/{_locale}/debts_file/{dni}/pdf", name="debts_free_pdf_download")
-     */
+    #[Route(path: '/{_locale}/debts_file/{dni}/pdf', name: 'debts_free_pdf_download')]
     public function getDebtsFreePaper(string $dni, GTWINIntegrationService $gts, TCPDFController $pdfService)
     {
         $deuda = $gts->findDeudaTotal($dni);

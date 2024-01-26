@@ -2,43 +2,45 @@
 
 namespace App\Entity;
 
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * Category of the Exam.
- *
- * @ORM\Table(name="category")
- * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
  */
-class Category
+#[ORM\Table(name: 'category')]
+#[ORM\Entity(repositoryClass: CategoryRepository::class)]
+class Category implements \Stringable
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[Groups(['show'])]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: true)]
+    #[Groups(['show'])]
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name_eu", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(name: 'name_eu', type: 'string', length: 255, nullable: true)]
+    #[Groups(['show'])]
     private $nameEu;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Concept")
-     * @ORM\JoinColumn(name="concept_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Concept')]
+    #[ORM\JoinColumn(name: 'concept_id', referencedColumnName: 'id')]
+    #[Groups(['show'])]
+    #[MaxDepth(1)]
     private $concept;
 
     public function getId()
@@ -94,7 +96,7 @@ class Category
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name;
     }

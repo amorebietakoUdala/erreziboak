@@ -5,7 +5,7 @@ import './bootstrap';
 import 'bootstrap';
 import 'popper.js';
 
-import './css/app.scss';
+import './css/app.css';
 
 $(document).ready(function(){
 	$('.js-back').on('click',function(e){
