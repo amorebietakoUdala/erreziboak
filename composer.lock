@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c3ca5f09a01e4edc7441b9ed6d137fd",
+    "content-hash": "d70a1fb609349bbdfc95a7ca6ff6452a",
     "packages": [
         {
             "name": "amorebietakoudala/mipago-bundle",
@@ -115,16 +115,16 @@
         },
         {
             "name": "amorebietakoudala/user-bundle",
-            "version": "2.0.2",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amorebietakoUdala/user-bundle.git",
-                "reference": "1242b5564b36627303c1fd5865c3b7a7e773fc89"
+                "reference": "5d49d60dc01ac78ad46e7e43d887fb8bb74eaf37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amorebietakoUdala/user-bundle/zipball/1242b5564b36627303c1fd5865c3b7a7e773fc89",
-                "reference": "1242b5564b36627303c1fd5865c3b7a7e773fc89",
+                "url": "https://api.github.com/repos/amorebietakoUdala/user-bundle/zipball/5d49d60dc01ac78ad46e7e43d887fb8bb74eaf37",
+                "reference": "5d49d60dc01ac78ad46e7e43d887fb8bb74eaf37",
                 "shasum": ""
             },
             "require": {
@@ -158,9 +158,9 @@
             "description": "AmorebietakoUdala erabiltzaile bundlela",
             "support": {
                 "issues": "https://github.com/amorebietakoUdala/user-bundle/issues",
-                "source": "https://github.com/amorebietakoUdala/user-bundle/tree/2.0.2"
+                "source": "https://github.com/amorebietakoUdala/user-bundle/tree/2.0.3"
             },
-            "time": "2023-12-07T13:38:21+00:00"
+            "time": "2024-01-31T10:04:24+00:00"
         },
         {
             "name": "doctrine/annotations",

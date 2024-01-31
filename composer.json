@@ -9,7 +9,7 @@
         "ext-iconv": "*",
         "amorebietakoudala/mipago-bundle": "^2.0.1",
         "amorebietakoudala/stimulus-controller-bundle": "^1.0",
-        "amorebietakoudala/user-bundle": "2.*",
+        "amorebietakoudala/user-bundle": "^2.0",
         "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",

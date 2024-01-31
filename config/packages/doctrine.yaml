@@ -26,6 +26,7 @@ doctrine:
         enable_lazy_ghost_objects: true
         default_entity_manager: default
         entity_managers:
+            report_fields_where_declared: true
             default:
                 connection: mysql
                 auto_mapping: true
