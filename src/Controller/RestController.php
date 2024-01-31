@@ -36,13 +36,41 @@ use Symfony\Component\Serializer\SerializerInterface;
 class RestController extends AbstractController
 {
 
-    private readonly GTWINIntegrationService $gts;
-    private readonly SerializerInterface $serializer;
+    private array $defaultHeaders = [];
 
-    public function __construct(private readonly PaymentRepository $paymentRepo, private readonly ConceptRepository $conceptRepo, GTWINIntegrationService $gts, SerializerInterface $serializer)
+    public function __construct(
+        private readonly PaymentRepository $paymentRepo, 
+        private readonly ConceptRepository $conceptRepo, 
+        private readonly GTWINIntegrationService $gts, 
+        private readonly SerializerInterface $serializer,
+        private readonly LoggerInterface $logger
+    )
     {
-       $this->gts = $gts;
-       $this->serializer = $serializer;
+        $this->defaultHeaders = [
+            'Content-Type' => 'application/json;charset=utf-8',
+            'Cache-Control' => 'no-cache',
+        ];
+    }
+
+    #[Route(path: '/concepts', name: 'api_get_concepts', methods: ['GET'], options: ['expose' => true])]
+    public function getConcepts() : Response
+    {
+       $this->logger->debug('Getting concepts');
+       $concepts = $this->conceptRepo->findAll();
+       $this->logger->debug('Total Concepts:'. count($concepts));
+       $conceptsArray = [];
+       foreach ($concepts as $key => $value) {
+            $tipoIngreso = $this->gts->findTipoIngresoByConceptoC60($value->getSuffix());
+            $conceptsArray[] = [
+                'concept' => $value,
+                'tipoIngreso' => $tipoIngreso
+            ];
+       }
+       $apiResponse = new ApiResponse('OK', 'Concepts found', $conceptsArray);
+       $this->logger->debug('Before serialization');
+       $json = $this->serializer->serialize($apiResponse,'json', ['groups' => ['show']]);
+       $this->logger->debug('Serialized: '.$json);
+       return new JsonResponse($json, Response::HTTP_OK, $this->defaultHeaders, true);
     }
 
     /**
@@ -268,26 +296,6 @@ class RestController extends AbstractController
 
        return new JsonResponse(
            $this->serializer->serialize(new ApiResponse('OK', 'Tipos de ingreso found', $tiposIngreso),'json', ['groups' => ['show']]), 
-           Response::HTTP_OK, [
-               'Content-Type' => 'application/json;charset=utf-8'
-           ], true
-       );
-   }
-
-    #[Route(path: '/concepts', name: 'api_get_concepts', methods: ['GET'], options: ['expose' => true])]
-    public function getConcepts() 
-    {
-       $concepts = $this->conceptRepo->findAll();
-       $conceptsArray = [];
-       foreach ($concepts as $key => $value) {
-            $tipoIngreso = $this->gts->findTipoIngresoByConceptoC60($value->getSuffix());
-            $conceptsArray[] = [
-                'concept' => $value,
-                'tipoIngreso' => $tipoIngreso
-            ];
-       }
-       return new JsonResponse(
-           $this->serializer->serialize(new ApiResponse('OK', 'Concepts found', $conceptsArray),'json', ['groups' => ['show']]), 
            Response::HTTP_OK, [
                'Content-Type' => 'application/json;charset=utf-8'
            ], true
