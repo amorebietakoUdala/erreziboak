@@ -27,12 +27,14 @@ class Concept implements \Stringable
     /**
      * @var string
      */
+    #[Groups(['show'])]
     #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: true)]
     private $name;
 
     /**
      * @var string
      */
+    #[Groups(['show'])]
     #[ORM\Column(name: 'name_eu', type: 'string', length: 255, nullable: true)]
     private $nameEu;
 
