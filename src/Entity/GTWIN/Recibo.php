@@ -92,7 +92,7 @@ class Recibo implements \Stringable
     private ?\DateTime $fechaCobro = null;
 
     #[ORM\Column(name: 'RECCOSTAS', type: 'decimal', precision: 11, scale: 2, nullable: false)]
-    private ?float $costas = null;
+    private ?string $costas = null;
 
     #[ORM\Column(name: 'RECDNINIF', type: 'string', nullable: false)]
     private $dni;

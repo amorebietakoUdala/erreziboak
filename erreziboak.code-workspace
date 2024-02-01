@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../bundles/mipago-bundle"
+		},
+		{
+			"path": "../../bundles/user-bundle"
+		}
+	],
+	"settings": {}
+}

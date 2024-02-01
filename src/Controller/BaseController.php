@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BaseController extends AbstractController
 {
-    protected array $queryParams = []; 
+    protected array $queryParams = [];
 
     protected function loadQueryParameters(Request $request) {
         if (

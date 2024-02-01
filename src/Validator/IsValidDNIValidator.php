@@ -11,6 +11,7 @@ namespace App\Validator;
 use Doctrine\Common\Annotations\Annotation;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Constraint;
+use App\Validator\IsValidDNI;
 
 /**
  * Description of DNIControlDigitValidator.
@@ -23,9 +24,9 @@ use Symfony\Component\Validator\Constraint;
  */
 class IsValidDNIValidator extends ConstraintValidator
 {
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
-        /* @var $constraint \App\Validator\IsValidDNI */
+        /** @var IsValidDNI  $constraint */
 
         if (null === $value || '' === $value) {
             return;

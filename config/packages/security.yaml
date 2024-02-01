@@ -40,6 +40,10 @@ security:
             logout:
                 path: user_security_logout
 
+            remember_me:
+                secret: "%kernel.secret%"
+                lifetime: 2592000                
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -50,7 +54,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/$, roles: PUBLIC_ACCESS }
-        - { path: ^/receipts, roles: PUBLIC_ACCESS }
+        - { path: ^/(es|eu)/receipts, roles: PUBLIC_ACCESS }
         - { path: ^/api/category/, role: PUBLIC_ACCESS }
         - { path: ^/(es|eu)/returns, roles: ROLE_ERREZIBOAK }
         - { path: ^/api/, role: ROLE_API }

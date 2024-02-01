@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 {% trans_default_domain 'user_bundle' %}
 
+{% block title %}{{ 'messages.appTitle' | trans({},"messages") }}{% endblock %}
+
 {% block message %}
     {% for msg in app.session.flashBag.get('success') %}
 	<div class="alert alert-success margin-top-13">

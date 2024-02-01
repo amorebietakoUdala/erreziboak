@@ -14,7 +14,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 #[AsCommand(name: 'app:convert-file')]
 class ConvertFileCommand extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Converts a file from excel CSV to GTWIN .rec/.lin files.')

@@ -29,7 +29,7 @@ class ConvertDaemonCommand extends Command
         $this->sleep = 1 * 60; // One minute
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Starts the daemon to convert files');

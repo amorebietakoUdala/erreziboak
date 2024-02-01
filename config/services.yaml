@@ -37,6 +37,11 @@ parameters:
   titularity_check_show_last: 1
   request_admin_id: "%env(REQUEST_ADMIN_ID)%"
 
+  department: '%env(DEPARTMENT)%'
+  contactEmail: '%env(CONTACT_EMAIL)%'
+  departmentDefault: '%env(DEPARTMENT_DEFAULT)%'
+  contactEmailDefault: '%env(CONTACT_EMAIL_DEFAULT)%'
+
 services:
     Symfony\Component\Ldap\Ldap:
         arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
@@ -59,6 +64,11 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $targetDirectory: "%receipt_files_directory%"
+            $department: '%department%'
+            $contactEmail: '%contactEmail%'
+            $departmentDefault: '%departmentDefault%'
+            $contactEmailDefault: '%contactEmailDefault%'
+
 
 
     # makes classes in src/ available to be used as services

@@ -41,7 +41,7 @@ class ReferenciaC60
 
     
     #[ORM\Column(name: 'C60EXPEDI', type: 'bigint', nullable: true)]
-    private ?int $expediente = null;
+    private ?string $expediente = null;
 
     
     #[ORM\Column(name: 'C60FECFIN', type: 'datetime', nullable: true)]
@@ -53,23 +53,23 @@ class ReferenciaC60
 
     
     #[ORM\Column(name: 'C60IMPCOS', type: 'decimal', scale: 13, precision: 2, nullable: false)]
-    private ?float $costas = null;
+    private ?string $costas = null;
 
     
     #[ORM\Column(name: 'C60IMPDES', type: 'decimal', scale: 13, precision: 2, nullable: true)]
-    private ?float $descuento = null;
+    private ?string $descuento = null;
 
     
     #[ORM\Column(name: 'C60IMPINT', type: 'decimal', scale: 13, precision: 2, nullable: false)]
-    private ?float $intereses = null;
+    private ?string $intereses = null;
 
     
     #[ORM\Column(name: 'C60IMPORT', type: 'decimal', scale: 13, precision: 2, nullable: false)]
-    private ?float $principal = null;
+    private ?string $principal = null;
 
     
     #[ORM\Column(name: 'C60IMPREC', type: 'decimal', scale: 13, precision: 2, nullable: false)]
-    private ?float $recargo = null;
+    private ?string $recargo = null;
 
     
     #[ORM\Column(name: 'C60MODALI', type: 'integer', nullable: true)]
@@ -196,7 +196,7 @@ class ReferenciaC60
      *
      * @return  int
      */
-    public function getExpediente(): int
+    public function getExpediente(): string
     {
         return $this->expediente;
     }
@@ -207,7 +207,7 @@ class ReferenciaC60
      *
      * @return  self
      */
-    public function setExpediente(int $expediente)
+    public function setExpediente(string $expediente)
     {
         $this->expediente = $expediente;
 
