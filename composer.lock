@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "amorebietakoudala/mipago-bundle",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amorebietakoUdala/mipago-bundle.git",
-                "reference": "6fdc818e9c8e6bf0f7432302aaa7eb962223944d"
+                "reference": "de2627bf003fea50e22e11d86d33cc4a7b2bdd0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amorebietakoUdala/mipago-bundle/zipball/6fdc818e9c8e6bf0f7432302aaa7eb962223944d",
-                "reference": "6fdc818e9c8e6bf0f7432302aaa7eb962223944d",
+                "url": "https://api.github.com/repos/amorebietakoUdala/mipago-bundle/zipball/de2627bf003fea50e22e11d86d33cc4a7b2bdd0a",
+                "reference": "de2627bf003fea50e22e11d86d33cc4a7b2bdd0a",
                 "shasum": ""
             },
             "require": {
@@ -63,9 +63,9 @@
             ],
             "support": {
                 "issues": "https://github.com/amorebietakoUdala/mipago-bundle/issues",
-                "source": "https://github.com/amorebietakoUdala/mipago-bundle/tree/2.0.1"
+                "source": "https://github.com/amorebietakoUdala/mipago-bundle/tree/2.0.2"
             },
-            "time": "2023-12-07T13:12:22+00:00"
+            "time": "2024-02-02T13:42:30+00:00"
         },
         {
             "name": "amorebietakoudala/stimulus-controller-bundle",
