@@ -120,3 +120,8 @@ services:
     Symfony\Component\DependencyInjection\ContainerInterface: "@service_container"
 
     Qipsius\TCPDFBundle\Controller\TCPDFController: "@qipsius.tcpdf"
+
+    # Important priority must 100 or less. Only needed to show error pages in locale language
+    App\EventListener\LocaleEventListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 100 }
