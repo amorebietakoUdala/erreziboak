@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "095d5e6f7239d25b42da4c0b2c55049e",
+    "content-hash": "eb69a230e29ad7bbd065f322ba3467d6",
     "packages": [
         {
             "name": "amorebietakoudala/mipago-bundle",
