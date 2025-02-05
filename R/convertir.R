@@ -149,7 +149,7 @@ crear_datos_generales <- function (tipo_ingreso, cod_institucion, row) {
  	cod_institucion = formatearCampo (cod_institucion,8)
  	referencia = formatearCampo (row["Referencia_Externa"], 24)
  	fecha_inicio_actividad = formatearCampo(paste0(format(Sys.Date(), "%Y%m"),"31"),8)
- 	fecha_fin_actividad = formatearCampo("40001231", 8)
+ 	fecha_fin_actividad = formatearCampo("20251231", 8)
  	cod_zona_recaudacion = formatearCampo("", 5)
  	cod_oficina_recaudacion = formatearCampo("", 5)
  	
