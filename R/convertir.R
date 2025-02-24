@@ -74,8 +74,8 @@ data$Cuerpo6 = as.character(data$Cuerpo6)
 data$Cuerpo7 = as.character(data$Cuerpo7)
  
 formatearNumero <- function (x,tamanio) {
- 	importe = as.character(x)
- 	importe_partido = strsplit(as.character(x),"[\\,|\\.]")[[1]]
+ 	importe = trim(as.character(x))
+ 	importe_partido = strsplit(importe,"[\\,|\\.]")[[1]]
  	enteros = importe_partido[[1]]
  	decimales=0
  	if (length(importe_partido)>1) {
