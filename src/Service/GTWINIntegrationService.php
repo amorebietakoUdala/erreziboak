@@ -131,7 +131,7 @@ class GTWINIntegrationService
      *
      * @param string $dni
      *
-     * @return \App\Entity\GTWIN\Person
+     * @return Person
      */
     public function findByDni($dni)
     {
@@ -164,7 +164,7 @@ class GTWINIntegrationService
      *
      * @param string $dni
      *
-     * @return \App\Entity\GTWIN\Person
+     * @return Person
      */
     public function findByRecibosPendientesByDni($dni)
     {
@@ -487,7 +487,7 @@ class GTWINIntegrationService
 
     public function findConceptoContables()
     {
-        $conceptosContables = $this->em->getRepository(\App\Entity\GTWIN\ConceptoContable::class)->findAll();
+        $conceptosContables = $this->em->getRepository(ConceptoContable::class)->findAll();
 
         return $conceptosContables;
     }

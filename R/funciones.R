@@ -267,6 +267,8 @@ obtener_letra_DNI = function (x) {
 		return(gsub("^([0-9]{7})([[:alpha:]])$", "\\2",x))
 	}
 	if ( regexpr ("^([0-9]{8})([[:alpha:]])$", x) != -1 ) {
+		print("hau da kasua")
+		print(gsub("^([0-9]{8})([[:alpha:]])$", "\\2",x))
 		return(gsub("^([0-9]{8})([[:alpha:]])$", "\\2",x))
 	} else if (regexpr ("^([XYZ][0-9]{7})([A-Z])?$", x) != -1 ) {
 		return(gsub("^([XYZ][0-9]{7})([A-Z])?$", "\\2",x))

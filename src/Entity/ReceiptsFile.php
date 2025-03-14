@@ -36,6 +36,18 @@ class ReceiptsFile
     #[ORM\Column(type: 'integer')]
     private ?int $status = null;
 
+    #[ORM\Column(length: 8, nullable: true)]
+    private ?string $incomeType = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $tributeCode = null;
+
+    #[ORM\ManyToOne(inversedBy: 'receiptsFiles')]
+    private ?User $uploadedBy = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -115,13 +127,64 @@ class ReceiptsFile
 
     public static function createReceiptsFile(array $data)
     {
-        $receiptsFile = new \App\Entity\ReceiptsFile();
+        $receiptsFile = new ReceiptsFile();
         $receiptsFile->setFileName($data['receiptsFileName']);
+        $receiptsFile->setDescription($data['description']);
+        $receiptsFile->setIncomeType($data['incomeType']);
+        $receiptsFile->setTributeCode($data['tributeCode']);
         $receiptsFile->setReceptionDate(new \DateTime());
         $receiptsFile->setReceiptsType($data['receiptsType']);
         $receiptsFile->setReceiptsFinishStatus($data['receiptsFinishStatus']);
         $receiptsFile->setStatus(self::STATUS_UNPROCESSED);
 
         return $receiptsFile;
+    }
+
+    public function getIncomeType(): ?string
+    {
+        return $this->incomeType;
+    }
+
+    public function setIncomeType(?string $incomeType): static
+    {
+        $this->incomeType = $incomeType;
+
+        return $this;
+    }
+
+    public function getTributeCode(): ?int
+    {
+        return $this->tributeCode;
+    }
+
+    public function setTributeCode(?int $tributeCode): static
+    {
+        $this->tributeCode = $tributeCode;
+
+        return $this;
+    }
+
+    public function getUploadedBy(): ?User
+    {
+        return $this->uploadedBy;
+    }
+
+    public function setUploadedBy(?User $uploadedBy): static
+    {
+        $this->uploadedBy = $uploadedBy;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

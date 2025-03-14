@@ -48,10 +48,17 @@ class User extends BaseUser implements AMREUserInterface, PasswordAuthenticatedU
     #[ORM\OneToMany(targetEntity: Audit::class, mappedBy: 'user')]
     private \Doctrine\Common\Collections\Collection|array $audits;
 
+    /**
+     * @var Collection<int, ReceiptsFile>
+     */
+    #[ORM\OneToMany(mappedBy: 'uploadedBy', targetEntity: ReceiptsFile::class)]
+    private Collection $receiptsFiles;
+
     public function __construct()
     {
         $this->accountTitularityChecks = new ArrayCollection();
         $this->audits = new ArrayCollection();
+        $this->receiptsFiles = new ArrayCollection();
     }
 
     /**
@@ -108,6 +115,36 @@ class User extends BaseUser implements AMREUserInterface, PasswordAuthenticatedU
             // set the owning side to null (unless already changed)
             if ($audit->getUser() === $this) {
                 $audit->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReceiptsFile>
+     */
+    public function getReceiptsFiles(): Collection
+    {
+        return $this->receiptsFiles;
+    }
+
+    public function addReceiptsFile(ReceiptsFile $receiptsFile): static
+    {
+        if (!$this->receiptsFiles->contains($receiptsFile)) {
+            $this->receiptsFiles->add($receiptsFile);
+            $receiptsFile->setUploadedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceiptsFile(ReceiptsFile $receiptsFile): static
+    {
+        if ($this->receiptsFiles->removeElement($receiptsFile)) {
+            // set the owning side to null (unless already changed)
+            if ($receiptsFile->getUploadedBy() === $this) {
+                $receiptsFile->setUploadedBy(null);
             }
         }
 

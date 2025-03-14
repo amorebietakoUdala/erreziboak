@@ -18,4 +18,11 @@ class ReceiptsFileRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ReceiptsFile::class);
     }
+
+    public function findAll() {
+        $qb = $this->createQueryBuilder('r')
+            ->leftJoin('r.uploadedBy', 'u')
+            ->orderBy('r.receptionDate', 'DESC');
+        return $qb->getQuery()->getResult();
+    }
 }

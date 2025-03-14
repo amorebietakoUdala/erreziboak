@@ -83,6 +83,6 @@ class ConvertDaemonCommand extends Command
             sleep($this->sleep);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

@@ -11,11 +11,15 @@
             <tr>
             <th data-sortable="true">{{"receiptsFile.id" | trans | capitalize}}</th>
             <th data-sortable="true">{{"receiptsFile.fileName" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"receiptsFile.description" | trans | capitalize}}</th>
             <th data-sortable="true">{{"receiptsFile.receptionDate" | trans | capitalize}}</th>
             <th data-sortable="true">{{"receiptsFile.processedDate" | trans | capitalize}}</th>
             <th data-sortable="true">{{"receiptsFile.receiptsType" | trans | capitalize}}</th>
             <th data-sortable="true">{{"receiptsFile.receiptsFinishStatus" | trans | capitalize}}</th>
             <th data-sortable="true">{{"receiptsFile.status" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"receiptsFile.uploadedBy" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"receiptsFile.incomeType" | trans | capitalize}}</th>
+            <th data-sortable="true">{{"receiptsFile.tributeCode" | trans | capitalize}}</th>
             <th data-sortable="true" data-field="options">{{"table.options" | trans | capitalize}}</th>
             </tr>
          </thead>
@@ -24,11 +28,15 @@
             <tr>
                <td>{{receiptsFile.id}}</td>
                <td>{{receiptsFile.fileName}}</td>
+               <td>{{receiptsFile.description}}</td>
                <td>{{receiptsFile.receptionDate ? receiptsFile.receptionDate | date('Y-m-d H:i:s') : null }}</td>
                <td>{{receiptsFile.processedDate ? receiptsFile.processedDate | date('Y-m-d H:i:s') : null }}</td>
                <td>{{receiptsFile.receiptsType }}</td>
                <td>{{receiptsFile.receiptsFinishStatus }}</td>
                <td>{{ ('receiptsFile.status.choices.' ~ receiptsFile.status) | trans }}</td>
+               <td>{{receiptsFile.uploadedBy is defined and receiptsFile.uploadedBy != null ? receiptsFile.uploadedBy.username : '' }}</td>
+               <td>{{receiptsFile.incomeType }}</td>
+               <td>{{receiptsFile.tributeCode }}</td>
                <td>
                   {% if receiptsFile.status == constant('App\\Entity\\ReceiptsFile::STATUS_PROCESSED') %}
                      <a href="{{ path('receipts_file_download', { 'receiptFile': receiptsFile.id }) }}"><i class="fa fa-download"></i></a>

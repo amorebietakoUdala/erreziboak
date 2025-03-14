@@ -20,7 +20,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * @author ibilbao
  */
-class CsvFormatValidator
+class CsvFormatValidator extends FileValidator
 {
     public const VALID = 0;
     public const TOO_MUCH_FIELDS = 1;
@@ -38,7 +38,7 @@ class CsvFormatValidator
     public const RECEIPTS_TYPE = 1;
     public const DEBTS_TYPE = 2;
 
-    private $validHeaders = [
+    protected $validHeaders = [
         'Nombre',
         'Apellido1',
         'Apellido2',
@@ -57,6 +57,7 @@ class CsvFormatValidator
         'Tributo',
         'Fecha_Inicio_Pago',
         'Fecha_Limite_Pago',
+        'Fecha_Cobro',
         'Referencia_C19',
         'Cuerpo1',
         'Cuerpo2',
@@ -67,7 +68,7 @@ class CsvFormatValidator
         'Cuerpo7',
     ];
 
-    private $requiredFields = [
+    protected $requiredFields = [
         'Dni',
         'Nombre',
         'Apellido1',
@@ -80,11 +81,7 @@ class CsvFormatValidator
         'Fecha_Limite_Pago',
     ];
 
-    private $ibanValidator;
-    private $translator;
-    private $type;
-
-    public function __construct(IsValidIBANValidator $ibanValidator, TranslatorInterface $translator)
+    public function __construct(private IsValidIBANValidator $ibanValidator, protected TranslatorInterface $translator)
     {
         $this->ibanValidator = $ibanValidator;
         $this->translator = $translator;
@@ -127,8 +124,12 @@ class CsvFormatValidator
         return $this;
     }
 
-    public function validate(UploadedFile $file): ?array
+    public function validate(UploadedFile $file, $state = 'P'): ?array
     {
+        // If state is 'C' Fecha_Cobro is required. So we add it to the required fields
+        if ($state === 'C') {
+            $this->requiredFields[] = 'Fecha_Cobro';
+        }
         $csv = Reader::createFromPath($file->getPath() . DIRECTORY_SEPARATOR . $file->getFilename() . $file->getExtension(), 'r');
         $csv->setHeaderOffset(0); //set the CSV header offset
         $csv->setDelimiter(';');
@@ -158,7 +159,7 @@ class CsvFormatValidator
         return $this->checkRequiredFields($counters);
     }
 
-    private function createCounters()
+    protected function createCounters()
     {
         foreach ($this->validHeaders as $field) {
             $counters[$field] = 0;
@@ -167,7 +168,7 @@ class CsvFormatValidator
         return $counters;
     }
 
-    private function checkRequiredFields($counters)
+    protected function checkRequiredFields($counters)
     {
         $fields_with_missing_values = [];
         foreach ($this->requiredFields as $field) {
@@ -189,7 +190,7 @@ class CsvFormatValidator
         ];
     }
 
-    private function getValidationMessage($key, $invalidRow, $invalidValue)
+    protected function getValidationMessage($key, $invalidRow, $invalidValue)
     {
         return $this->translator->trans(
             $key,
@@ -201,7 +202,7 @@ class CsvFormatValidator
         );
     }
 
-    private function getHeaderValidationErrorMessage($key, $invalidHeaders)
+    protected function getHeaderValidationErrorMessage($key, $invalidHeaders)
     {
         return $this->translator->trans(
             $key,
@@ -212,7 +213,7 @@ class CsvFormatValidator
         );
     }
 
-    private function validateHeader($header)
+    protected function validateHeader($header)
     {
         if (count($this->validHeaders) > count($header)) {
             return [

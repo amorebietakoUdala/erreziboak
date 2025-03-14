@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ConceptInscriptionRepository;
+use App\Entity\Concept;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'conceptInscription')]
@@ -16,7 +17,7 @@ class ConceptInscription extends Inscription
 
     #[ORM\ManyToOne(targetEntity: Concept::class, inversedBy: 'conceptInscriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?\App\Entity\Concept $concept = null;
+    private ?Concept $concept = null;
 
     #[ORM\Column(type: 'float')]
     private ?float $price = null;

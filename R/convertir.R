@@ -49,7 +49,16 @@ if ( !is.na(args[3]) ) {
 	estado_recibo = args[3]
 }
 
-if (tipo_recibo == "ID" || tipo_recibo == "RB") {
+# Si tienen estado_recibo 'C', quiere decir que ya están cobrados por lo tanto tenemos que por estado 'C' en todos ellos. Esto se utiliza en el final del fichero de cabecera.
+# Si no. Tienen estado 'P'.
+if ( estado_recibo == "C" ) {
+	estado = estado_recibo
+	estado_recibo = 'V'
+} else {
+	estado = 'P'
+}
+
+if ( ( tipo_recibo == "ID" || tipo_recibo == "RB" )) {
 	estado_recibo = "P"
 }
 
@@ -57,7 +66,9 @@ if (tipo_recibo == "ID" || tipo_recibo == "RB") {
 print(paste("Convertiendo fichero:", args[1])) 
 print(paste(" Tipos de recibo: ", tipo_recibo))
 print(paste(" Estado de recibo: ", estado_recibo))
-data = read.csv(args[1],sep=";", encoding = "UTF-8", stringsAsFactors = FALSE, header = TRUE)
+# colClasses=character obliga a leer todo como character, porque si había un DNI con letra E lo tomaba como número y fallaba la deteccón de la letra.
+data = read.csv(args[1],sep=";", encoding = "UTF-8", stringsAsFactors = FALSE, header = TRUE, colClasses = "character")
+head(data);
 fichero = split_path(args[1])[1]
 fichero_sin_extension = strsplit(fichero,".",TRUE)[[1]][1]
 # extension = strsplit(fichero,".",TRUE)[[1]][2]
@@ -65,14 +76,8 @@ path = paste0(dirname(args[1]),"/")
 
 data$Fecha_Inicio_Pago = as.POSIXct(data$Fecha_Inicio_Pago, format="%d/%m/%Y")
 data$Fecha_Limite_Pago = as.POSIXct(data$Fecha_Limite_Pago, format="%d/%m/%Y")
-data$Cuerpo1 = as.character(data$Cuerpo1)
-data$Cuerpo2 = as.character(data$Cuerpo2)
-data$Cuerpo3 = as.character(data$Cuerpo3)
-data$Cuerpo4 = as.character(data$Cuerpo4)
-data$Cuerpo5 = as.character(data$Cuerpo5)
-data$Cuerpo6 = as.character(data$Cuerpo6)
-data$Cuerpo7 = as.character(data$Cuerpo7)
- 
+data$Fecha_Cobro = as.POSIXct(data$Fecha_Cobro, format="%d/%m/%Y")
+
 formatearNumero <- function (x,tamanio) {
  	importe = trim(as.character(x))
  	importe_partido = strsplit(importe,"[\\,|\\.]")[[1]]
@@ -332,14 +337,28 @@ crear_base_imponible <- function (row) {
  	codigo_remesa = formatearCampo("", 10)
  	
  	importe2 = formatearNumero(as.character(row["Importe"]), 9)
- 	estado = formatearCampo("P", 1)
+
+	# P (Pendiente), C (Cobrado), A (Anulado). Obligatorio. Debe ir en mayúsculas
+ 	estado = formatearCampo(estado, 1)
+
+	# Esto es igual para todo el fichero, lo establecemos al principio.
+	# V (Voluntaria), E (Ejecutiva), P (Pte. Emisión)
  	situacion = formatearCampo(estado_recibo, 1)
  	paralizado = formatearCampo("F", 1)
  	fecha_creacion = formatearFecha(Sys.Date(),8)
+	# Estos son obligatorios si situación es disntinto de P
  	fecha_ini_voluntaria = formatearFecha(row["Fecha_Inicio_Pago"],8)
  	fecha_fin_voluntaria = formatearFecha(row["Fecha_Limite_Pago"],8)
- 	fecha_cobro = formatearFecha("", 8)
+
+	# Este campo es obligatorio si estado es C. Teoricamente esto ya viene validado desde la interfaz.
+	if ( estado == 'C' && !is.na(row["Fecha_Cobro"]) ) {
+		fecha_cobro = formatearFecha(row["Fecha_Cobro"], 8)
+	} else {
+		fecha_cobro = formatearFecha("", 8)
+	}
+	# Este campo es obligatorio si estado es A
  	fecha_anulacion = formatearFecha("", 8)
+	# Estos son obligatorios si situación es E
  	fecha_pase_ejecutiva = formatearFecha("", 8)
  	fecha_aceptacion_not_apremio = formatearFecha("", 8)
  	fecha_vencimiento_not_apremio = formatearFecha("", 8)
