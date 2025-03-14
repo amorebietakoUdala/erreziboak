@@ -122,13 +122,13 @@ class Recibo implements \Stringable
     #[MaxDepth(1)]
     #[ORM\ManyToOne(targetEntity: 'TipoIngreso')]
     #[ORM\JoinColumn(name: 'RECTIPING', referencedColumnName: 'TINDBOIDE')]
-    private ?\App\Entity\GTWIN\TipoIngreso $tipoIngreso = null;
+    private ?TipoIngreso $tipoIngreso = null;
 
     #[Groups(['show'])]
     #[MaxDepth(1)]
     #[ORM\ManyToOne(targetEntity: 'Institucion', fetch: 'EAGER')]
     #[ORM\JoinColumn(name: 'RECINSTIT', referencedColumnName: 'INSDBOIDE')]
-    private ?\App\Entity\GTWIN\Institucion $institucion = null;
+    private ?Institucion $institucion = null;
 
     #[ORM\OneToMany(targetEntity: 'OperacionesRecibo', mappedBy: 'recibo')]
     private $operaciones;

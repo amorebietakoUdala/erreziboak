@@ -4,9 +4,12 @@
       <meta charset="utf-8">
    </head>
    <body>
-      {{ 'messages.wait' | trans }}<br/>
-
-      {{ 'messages.download' | trans }}<br/>
-      <a href="{{ absolute_url(path('receipts_file_download', {'receiptFile': receiptFile.id})) }}">{{ path('receipts_file_download', {'receiptFile': receiptFile.id}) }}</a>
+      {{ 'messages.wait' | trans }}<br>
+      {{ 'messages.uploadedBy' | trans ({'%uploadedBy%': receiptFile.uploadedBy.username}) }}<br>
+      <br>
+      {{ receiptFile.description }}<br>
+      <br>
+      {{ 'messages.download' | trans }}<br>
+      <a href="{{ absolute_url(path('receipts_file_download', {'receiptFile': receiptFile.id})) }}">{{ absolute_url(path('receipts_file_download', {'receiptFile': receiptFile.id})) }}</a>
    </body>
 </html>

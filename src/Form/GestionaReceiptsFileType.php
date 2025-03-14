@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\ReceiptsFile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -10,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
-class ReceiptsFileType extends AbstractType
+class GestionaReceiptsFileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -48,6 +47,14 @@ class ReceiptsFileType extends AbstractType
                     'choice.validated' => 'V',
 #                    'choice.payd' => 'C',
                 ],
+            ])
+            ->add('incomeType', null, [
+                'label' => 'receiptsFile.incomeType',
+                'help' => 'receiptsFile.help.incomeType',
+            ])
+            ->add('tributeCode', null, [
+                'label' => 'receiptsFile.tributeCode',
+                'help' => 'receiptsFile.help.tributeCode',
             ])
         ;
     }

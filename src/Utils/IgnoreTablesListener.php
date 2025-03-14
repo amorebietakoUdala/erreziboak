@@ -24,16 +24,16 @@ class IgnoreTablesListener {
      */
     public function postGenerateSchema(GenerateSchemaEventArgs $args)
     {
-
         $schema = $args->getSchema();
         $em = $args->getEntityManager();
 
         $ignoredTables = $this->ignoredTables;
-//		dump($this->ignoredEntities);die;
+		//dump($this->ignoredEntities);die;
         foreach ($this->ignoredEntities as $entityName) {
             $ignoredTables[] = strtolower($em->getClassMetadata($entityName)->getTableName());
         }
 
+        //dump($ignoredTables);
         foreach ($schema->getTableNames() as $longTableName) {
             $table=$schema->getTable($longTableName);
             $table_name=strtolower($table->getShortestName($table->getNamespaceName()));
@@ -44,12 +44,12 @@ class IgnoreTablesListener {
 
                 if (in_array($foreign_table_name, $ignoredTables)) {    //if the fk points to one of the entities i'm ignoring
                     $table->removeForeignKey($fk->getName());   //i remove fk constrains from generated schema (NOT FROM MY CURRENT DB!!!)
-//                  dump('removed FK '.$fk->getName().' from '.$table_name.' pointing to '.$foreign_table_name.'.['.implode(', ', $fk->getForeignColumns()).']');
+                  //dump('removed FK '.$fk->getName().' from '.$table_name.' pointing to '.$foreign_table_name.'.['.implode(', ', $fk->getForeignColumns()).']');
                 } 
             }
             if (in_array($table_name, $ignoredTables)) { //if i have to ignore the $table_name table
                 $schema->dropTable($longTableName);     //remove the table from generated schema -- NOT FROM DB!!
-//              dump('removed ignored table/entity '.$longTableName);
+              //dump('removed ignored table/entity '.$longTableName);
             }
 
         }

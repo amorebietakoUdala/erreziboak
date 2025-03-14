@@ -86,24 +86,24 @@ services:
     App\Utils\IgnoreTablesListener:
         class: App\Utils\IgnoreTablesListener
         public: true
+        tags:
+            - { name: doctrine.event_listener, event: postGenerateSchema }
         arguments:
-            # tags:
-            #     - { name: doctrine.event_listener, event: postGenerateSchema }
             $ignoredEntities:
                 [
-                'App:GTWIN\Recibo',
-                'App:GTWIN\TipoIngreso',
-                'App:GTWIN\TipoOperacion',
-                'App:GTWIN\OperacionesExternas',
-                'App:GTWIN\OperacionesRecibo',
-                'App:GTWIN\MensajesError',
-                'App:GTWIN\Person',
-                'App:GTWIN\Institucion',
-                'App:GTWIN\ConceptoContable',
-                'App:GTWIN\ConceptoRenta',
-                'App:GTWIN\Tarifa',
-                'App:GTWIN\InstitucionTipoIngreso',
-                'App:GTWIN\ReferenciaC60',
+                'App\Entity\GTWIN\Recibo',
+                'App\Entity\GTWIN\TipoIngreso',
+                'App\Entity\GTWIN\TipoOperacion',
+                'App\Entity\GTWIN\OperacionesExternas',
+                'App\Entity\GTWIN\OperacionesRecibo',
+                'App\Entity\GTWIN\MensajesError',
+                'App\Entity\GTWIN\Person',
+                'App\Entity\GTWIN\Institucion',
+                'App\Entity\GTWIN\ConceptoContable',
+                'App\Entity\GTWIN\ConceptoRenta',
+                'App\Entity\GTWIN\Tarifa',
+                'App\Entity\GTWIN\InstitucionTipoIngreso',
+                'App\Entity\GTWIN\ReferenciaC60',
                 ]
 
     App\Service\GTWINIntegrationService:

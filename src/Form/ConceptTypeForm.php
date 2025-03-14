@@ -10,6 +10,7 @@ namespace App\Form;
 
 use App\Entity\Concept;
 use App\Entity\GTWIN\Institucion;
+use App\Entity\GTWIN\Tarifa;
 use App\Entity\GTWIN\TipoIngreso;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -71,7 +72,7 @@ class ConceptTypeForm extends AbstractType
             'data' => 'AMOREBIE',
         ]);
         $builder->add('accountingConcept', EntityType::class, [
-            'class' => \App\Entity\GTWIN\Tarifa::class,
+            'class' => Tarifa::class,
             'em' => 'oracle',
             'query_builder' => function (EntityRepository $er) {
                 $qb = $er->createQueryBuilder('u')

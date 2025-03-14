@@ -14,10 +14,13 @@ class FileUploader
         $this->targetDirectory = $targetDirectory;
     }
 
-    public function upload(UploadedFile $file)
+    public function upload(UploadedFile $file, $gestiona = false)
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+        if ($gestiona) {
+            $safeFilename = $safeFilename . '-gestiona';
+        }
         $fileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
 
         try {

@@ -14,6 +14,7 @@ doctrine:
                     charset: utf8mb4
                     collate: utf8mb4_unicode_ci
             oracle:
+                schema_filter: ~^.*$~
                 driver: "%env(GTWIN_DATABASE_DRIVER)%"
                 host: "%env(GTWIN_DATABASE_HOST)%"
                 port: "%env(GTWIN_DATABASE_PORT)%"
@@ -25,6 +26,8 @@ doctrine:
     orm:
         enable_lazy_ghost_objects: true
         default_entity_manager: default
+        controller_resolver:
+            auto-mapping: false
         entity_managers:
             default:
                 connection: mysql

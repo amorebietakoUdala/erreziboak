@@ -4,11 +4,15 @@ namespace App\Controller;
 
 use App\Controller\BaseController;
 use App\Entity\ReceiptsFile;
+use App\Form\GestionaReceiptsFileType;
 use App\Form\ReceiptsFileType;
 use App\Repository\ReceiptsFileRepository;
 use App\Service\CsvFormatValidator;
 use App\Service\FileUploader;
+use App\Service\GestionaFileConverter;
+use App\Service\GestionaValidator;
 use Doctrine\ORM\EntityManagerInterface;
+use Dom\Entity;
 use Exception;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Mailer\MailerInterface;
@@ -25,8 +29,65 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ReceiptsFileController extends BaseController
 {
 
-    public function __construct(private readonly ReceiptsFileRepository $receiptFileRepo, private readonly MailerInterface $mailer)
+    public function __construct(
+        private readonly ReceiptsFileRepository $receiptFileRepo, 
+        private readonly MailerInterface $mailer,
+        private readonly EntityManagerInterface $em,
+        private readonly string $targetDirectory)
     {
+    }
+
+    #[Route(path: '/gestiona/upload', name: 'receipts_file_gestiona_upload')]
+    public function gestionaUpload(Request $request, FileUploader $fileUploader, GestionaValidator $validator)
+    {
+        $this->loadQueryParameters($request);
+        $form = $this->createForm(GestionaReceiptsFileType::class);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $file */
+            $data = $form->getData();
+            $file = $form['file']->getData();
+            if (null === $file) {
+                $this->addFlash('error', 'messages.fileNotSelected');
+
+                return $this->render('receipts_file/gestiona-upload.html.twig', [
+                    'form' => $form,
+                ]);
+            }
+            $validationResult = $validator->validate($file, $data['receiptsFinishStatus']);
+            if ($validationResult['status'] !== $validator::VALID) {
+                $this->addFlash('error', $validationResult['message']);
+
+                return $this->render('receipts_file/gestiona-upload.html.twig', [
+                    'form' => $form,
+                ]);
+            }
+            try {
+                $converter = new GestionaFileConverter('AMOREBIE', $data['incomeType'], $data['tributeCode']);
+                $receiptsFileName = $fileUploader->upload($file, true);
+                $data['receiptsFileName'] = $receiptsFileName;
+                $receiptsFileObject = ReceiptsFile::createReceiptsFile($data);
+                $outputFile = $converter->convert($this->targetDirectory.'/'.$receiptsFileName);
+                $receiptsFileObject->setFileName($outputFile);
+                $receiptsFileObject->setUploadedBy($this->getUser());
+                $this->em->persist($receiptsFileObject);
+                $this->em->flush();
+                $this->addFlash('success', 'messages.successfullySended');
+
+                if (true === $this->getParameter('send_receiptfile_messages')) {
+                    $this->sendMail($receiptsFileObject);
+                }
+
+                return $this->redirectToRoute('receipts_file_index');
+            } catch (Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->render('receipts_file/gestiona-upload.html.twig', [
+            'form' => $form,
+        ]);
     }
 
     #[Route(path: '/upload', name: 'receipts_file_upload')]
@@ -47,7 +108,7 @@ class ReceiptsFileController extends BaseController
                     'form' => $form,
                 ]);
             }
-            $validationResult = $validator->validate($file);
+            $validationResult = $validator->validate($file, $data['receiptsFinishStatus']);
             if ($validationResult['status'] !== $validator::VALID) {
                 $this->addFlash('error', $validationResult['message']);
 
@@ -59,6 +120,7 @@ class ReceiptsFileController extends BaseController
                 $receiptsFileName = $fileUploader->upload($file);
                 $data['receiptsFileName'] = $receiptsFileName;
                 $receiptsFileObject = ReceiptsFile::createReceiptsFile($data);
+                $receiptsFileObject->setUploadedBy($this->getUser());
                 $em->persist($receiptsFileObject);
                 $em->flush();
                 $this->addFlash('success', 'messages.successfullySended');
@@ -97,9 +159,7 @@ class ReceiptsFileController extends BaseController
     public function list(Request $request)
     {
         $this->loadQueryParameters($request);
-        $receiptsFiles = $this->receiptFileRepo->findBy([], [
-            'receptionDate' => 'DESC',
-        ]);
+        $receiptsFiles = $this->receiptFileRepo->findAll();
 
         return $this->render('receipts_file/index.html.twig', [
             'receiptsFiles' => $receiptsFiles,
