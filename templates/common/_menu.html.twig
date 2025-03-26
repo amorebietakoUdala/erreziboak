@@ -8,7 +8,7 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-		<li class="nav-item">
+		{# <li class="nav-item">
 		  <a class="nav-link" href="{{ path('receipt_find') }}">{{ 'navitem.receiptsFind' | trans |capitalize }}</a>
 		</li>
         <li class="nav-item dropdown">
@@ -18,7 +18,7 @@
             <div id="js-menu-pagos" class="dropdown-menu" aria-labelledby="navbarTaxes">
                 <a class="dropdown-item" href="{{ path('exam_new') }}">{{"navitem.exams" | trans | capitalize}}</a>
             </div>
-        </li>
+        </li> #}
         {% if app.user %}
         {% if is_granted('ROLE_RECEIPTS') %}
 			<li class="nav-item dropdown">
@@ -40,6 +40,17 @@
 				<div class="dropdown-menu" aria-labelledby="navbarReturns">
 					<a class="dropdown-item" href="{{ path('returns_file_upload') }}">{{ 'navitem.convertReturnsFile' | trans |capitalize }}</a>
 					<a class="dropdown-item" href="{{ path('returns_file_list') }}">{{ 'navitem.list' | trans |capitalize }}</a>
+				</div>
+			</li>
+		{% endif %}
+		{% if is_granted('ROLE_SICALWIN') %}
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarSicalwin" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{{ 'navitem.sicalwin' | trans | capitalize }}
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarSicalwin">
+					<a class="dropdown-item" href="{{ path('sicalwin_file_upload') }}">{{ 'navitem.convertSicalwinFile' | trans |capitalize }}</a>
+					<a class="dropdown-item" href="{{ path('sicalwin_file_list') }}">{{ 'navitem.list' | trans |capitalize }}</a>
 				</div>
 			</li>
 		{% endif %}

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="{{app.request.locale}}">
+   <head>
+      <meta charset="utf-8">
+   </head>
+   <body>
+      {{ 'messages.wait' | trans }}<br/>
+
+      {{ 'messages.download' | trans }}<br/>
+      <a href="{{ absolute_url(path('sicalwin_file_download', {'id': sicalwinFile.id})) }}">{{ absolute_url(path('sicalwin_file_download', {'id': sicalwinFile.id})) }}</a><br/>
+
+      {{ 'mail.totalAmount' | trans }}: {{ sicalwinFile.totalAmount|number_format(2, ',', '.') }}<br/>
+   </body>
+</html>

@@ -1,0 +1,41 @@
+{% if sicalwinFiles is defined and sicalwinFiles|length > 0 %}
+   <table id="taula" class="table bootstrap-table mt-3"
+      {{ stimulus_controller('table', { 
+         'exportName': 'providers',
+      }) }}
+      data-page-number="{{ page }}" 
+      data-page-size="{{ pageSize }}"
+      data-page-sortName="{{ sortName }}"
+      data-page-sortOrder="{{ sortOrder }}">
+      <thead>
+         <tr>
+         <th data-sortable="true">{{"sicalwinFile.id" | trans | capitalize}}</th>
+         <th data-sortable="true">{{"sicalwinFile.fileName" | trans | capitalize}}</th>
+         <th data-sortable="true">{{"sicalwinFile.receptionDate" | trans | capitalize}}</th>
+         <th data-sortable="true">{{"sicalwinFile.processedDate" | trans | capitalize}}</th>
+         <th data-sortable="true">{{"sicalwinFile.totalAmount" | trans | capitalize}}</th>
+         <th data-sortable="true">{{"sicalwinFile.status" | trans | capitalize}}</th>
+         <th data-sortable="true" data-field="options">{{"table.options" | trans | capitalize}}</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for sicalwinFile in sicalwinFiles %}
+         <tr>
+            <td>{{sicalwinFile.id}}</td>
+            <td>{{sicalwinFile.fileName}}</td>
+            <td>{{sicalwinFile.receptionDate ? sicalwinFile.receptionDate | date('Y-m-d H:i:s') : null }}</td>
+            <td>{{sicalwinFile.processedDate ? sicalwinFile.processedDate | date('Y-m-d H:i:s') : null }}</td>
+            <td>{{sicalwinFile.totalAmount ? sicalwinFile.totalAmount | number_format(2, ',', '.') : null }}</td>
+            <td>{{ ('sicalwinFile.status.choices.' ~ sicalwinFile.status) | trans }}</td>
+            <td>
+               {% if sicalwinFile.status == constant('App\\Entity\\SicalwinFile::STATUS_PROCESSED') %}
+                  <a href="{{ path('sicalwin_file_download', { 'id': sicalwinFile.id }) }}"><i class="fa fa-download"></i></a>
+               {% endif %}
+            </td>
+         </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+{% else %}
+   <div class="mt-2 p-2 border border-black text-center bg-light">{{"messages.results0" | trans }}</div>
+{% endif %}
