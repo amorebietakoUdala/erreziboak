@@ -36,6 +36,7 @@ class FileValidator
     public const RECEIPTS_TYPE = 1;
     public const DEBTS_TYPE = 2;
     public const GESTIONA_TYPE = 3;
+    public const GESTIONA_SICALWIN_TYPE = 4;
 
     protected $validHeaders = [
     ];

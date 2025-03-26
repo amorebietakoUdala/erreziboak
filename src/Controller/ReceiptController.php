@@ -10,7 +10,6 @@ use App\Entity\Payment;
 use App\Form\ReceiptSearchForm;
 use App\Service\GTWINIntegrationService;
 use App\Validator\IsValidIBANValidator;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -18,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/{_locale}', requirements: ['_locale' => 'es|eu|en'])]
 class ReceiptController extends AbstractController
@@ -34,6 +34,7 @@ class ReceiptController extends AbstractController
     //     $result = $repo->findRecibosByNumeroReferenciaC60($referenciac60);
     //     dd($result->getRecibo()->getNumeroRecibo());
     // }
+    #[IsGranted('ROLE_ADMIN')]
     #[Route(path: '/receipts', name: 'receipt_find', methods: ['GET', 'POST'])]
     public function findReceipts(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts)
     {
@@ -160,6 +161,7 @@ class ReceiptController extends AbstractController
         return $params;
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route(path: '/pay/{receipt}', name: 'receipt_forwarded_pay', methods: ['POST'])]
     public function payForwardedReceipt(Recibo $receipt, LoggerInterface $logger)
     {
@@ -181,6 +183,7 @@ class ReceiptController extends AbstractController
         $logger->debug('-->payForwardedReceipt: End OK');
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route(path: '/pay/reference/{referencia}', name: 'referenciac60_pay', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function payForwardedC60Reference(Request $request, $referencia, LoggerInterface $logger, GTWINIntegrationService $gts)
     {
@@ -211,6 +214,7 @@ class ReceiptController extends AbstractController
         $logger->debug('-->payForwardedC60Reference: End OK');
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route(path: '/pay/{numeroRecibo}/{dni}', name: 'receipt_pay', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function payReceipt(Request $request, $numeroRecibo, $dni, GTWINIntegrationService $gts, LoggerInterface $logger)
     {
