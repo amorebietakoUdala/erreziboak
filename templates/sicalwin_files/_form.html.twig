@@ -15,15 +15,19 @@
 					}) }}
 					{{ form_widget(form.file, {'attr': {'class': 'col-sm-10 form-control-file form-control-sm'}}) }}
 				</div>
-{#				<div class="col-lg-2">
-					{{ form_label(form.receiptsType) }}
-					{{ form_widget(form.receiptsType, {'attr': {'class': 'js-receiptsType form-control form-control-sm'}}) }}
+				<div class="col-lg-2">
+					{{ form_label(form.codigoConvocatoria) }}
+					{{ form_widget(form.codigoConvocatoria, {'attr': {'class': 'form-control form-control-sm'}}) }}
 				</div>
 				<div class="col-lg-2">
-					{{ form_label(form.receiptsFinishStatus) }}
-					{{ form_widget(form.receiptsFinishStatus, {'attr': {'class': 'js-receiptsFinishStatus form-control form-control-sm'}}) }}
+					{{ form_label(form.discriminadorConcesion) }}
+					{{ form_widget(form.discriminadorConcesion, {'attr': {'class': 'form-control form-control-sm'}}) }}
 				</div>
-#}			</div>
+				<div class="col-lg-2">
+					{{ form_label(form.fechaConcesion) }}
+					{{ form_widget(form.fechaConcesion, {'attr': {'class': 'form-control form-control-sm', 'data-controller' : 'datetimepicker', 'data-datetimepicker-show-clock-value': 'false', 'data-datetimepicker-format-value': 'dd/MM/yyyy'}}) }}
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

@@ -416,7 +416,7 @@ class GestionaFileRowDTO
    }
 
    private function getCleanImporte() {
-      return str_replace(' €', '', $this->importe);
+      return \str_replace(' €', '', $this->importe);
    }
 
    public function getFechaInicioPago()

@@ -102,6 +102,9 @@ sicalwinFile.receptionDate: "Bidaltze data"
 sicalwinFile.processedDate: "Prozesatze data"
 sicalwinFile.totalAmount: "Zenbateko osoa"
 sicalwinFile.status: "Egoera"
+sicalwinFile.codigoConvocatoria: "Deialdi kodea"
+sicalwinFile.discriminadorConcesion: "Emakida diskriminatzailea"
+sicalwinFile.fechaConcesion: "Emakida data"
 
 debtsFile.id: "Id"
 debtsFile.fileName: "Fitxategia"
@@ -258,6 +261,7 @@ table.options: "Aukerak"
 "El concepto se ha eliminado correctamente.": "Kontzeptua behar bezala ezabatu da."
 "Payment was successfull": "Ordainketa behar den moduan gauzatu da."
 "Payment was NOT successfull": "Arazoa bat egon da ordainketa egiterakoan. Ez da ordainketarik egin."
+"Conversión de ficheros Gestiona-Sicalwin" : "Gestiona-Sicalwin fitxategien eraldaketa"
 
 "YYYY-MM-DD HH:MM": "UUUU-HH-EE HH:MM"
 

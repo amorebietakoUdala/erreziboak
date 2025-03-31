@@ -53,6 +53,7 @@ class SicalwinFileController extends BaseController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
             $file = $form['file']->getData();
             if (null === $file) {
                 $this->addFlash('error', 'messages.fileNotSelected');
@@ -75,7 +76,6 @@ class SicalwinFileController extends BaseController
                 $sicalwinFileName = $fileUploader->upload($file);
                 $data['sicalwinFileName'] = $sicalwinFileName;
                 $sicalwinFileObject = SicalwinFile::createSicalwinFile($data);
-
                 $totalAmount = $this->processSicalwinFile($this->getParameter('sicalwin_file_upload_directory'), $sicalwinFileObject, $this->generator);
                 $sicalwinFileObject->setProcessedDate(new \DateTime());
                 $sicalwinFileObject->setStatus(SicalwinFile::STATUS_PROCESSED);

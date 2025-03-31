@@ -10,6 +10,7 @@ namespace App\Service;
 
 use App\DTO\GestionaSicalwinFileRowDTO;
 use App\Entity\SicalwinFile;
+use App\Utils\Validaciones;
 use League\Csv\Reader;
 
 /**
@@ -107,7 +108,57 @@ class SicalwinGeneratorService
         'Fecha de caducidad' => 8,
     ];
 
+    // Fields and default values
+    // codigoConcesion, organoGestor *, codigoConvocatoria *, instrumentoAyuda *, paisTercero *, NIF *, discriminadorConcesion *, fechaConcesion *, costeTotal *, importeNominal *, ayudaEquivalente *, region *, entidadEncargada, intermediarioFinanciero, objetivo, periodoActividad *, codigoProyecto, Version 1.0, Plantilla CONCESION
+    private const CONCESIONES_FIELDS = [
+        'codigoConcesion' => '',
+        'organoGestor' => 'L01480031',
+        'codigoConvocatoria' => '', 
+        'instrumentoAyuda' => 'SUBV', 
+        'paisTercero' => 'ES', 
+        'NIF' => '', 
+        'discriminadorConcesion' => '', 
+        'fechaConcesion' => '', 
+        'costeTotal' => '',
+        'importeNominal' => '', 
+        'ayudaEquivalente' => '', 
+        'region' => 'ES213', 
+        'entidadEncargada' => '', 
+        'intermediarioFinanciero' => '', 
+        'objetivo' => '', 
+        'periodoActividad' => '', 
+        'codigoProyecto' => '', 
+        'Version' => '', 
+        'Plantilla CONCESION' => '',
+    ];
 
+    // Fields and default values
+    // organoGestor, paisTercero, NIF_CIF, nombre, primerApellido, segundoApellido, razonSocial, grupoEmpresarial, paisDomicilio, domicilio, codigoPostal, provincia, municipio, tipoBeneficiario, region, sectores, partido, numeroSoporte, Version 1.1, Plantilla DATPER
+    private const TERCEROS_FIELDS = [
+        'organoGestor' => 'L01480031', 
+        'paisTercero' => '', 
+        'NIF_CIF' => '', 
+        'nombre' => '', 
+        'primerApellido' => '', 
+        'segundoApellido' => '', 
+        'razonSocial' => '',
+        'grupoEmpresarial' => '', 
+        'paisDomicilio' => 'ES', 
+        'domicilio' => '', 
+        'codigoPostal' => '48340', 
+        'provincia' => 'BIZKAIA', 
+        'municipio' => 'AMOREBIETA-ETXANO', 
+        'tipoBeneficiario' => 'FSA', 
+        'region' => 'ES213', 
+        'sectores' => '', 
+        'partido' => '', 
+        'numeroSoporte' => '', 
+        'Version 1.1' => '', 
+        'Plantilla DATPER' => '',
+    ];
+
+    public function __construct( private ExcelGeneratorService $excelGeneratorService ){
+    }
 
     public function createFileFrom(string $path, SicalwinFile $sicalwinFile): float
     {
@@ -120,17 +171,24 @@ class SicalwinGeneratorService
         $totalAmount = 0;
         $mainContent = [];
         $bankuakContent = [];
+        $tercerosContent = [];
+        $concesionesContent = [];
         foreach ($records as $offset => $record) {
             $dtoRow = GestionaSicalwinFileRowDTO::createGestionaSicalwinFileRowDTOFromArray($record);
             $mainContent[] = $this->createMainRowFrom($dtoRow);
             $bankuakContent[] = $this->createBankuakRowFrom($dtoRow);
+            $tercerosContent[] = $this->createTercerosRowFrom($dtoRow);
+            $concesionesContent[] = $this->createConcesionesRowFrom($dtoRow, $sicalwinFile);
             $totalAmount += $dtoRow->getImporteSubvencionFloat();
         }
-
         $mainFile = $this->saveFile($mainContent, $path.'/'.$this->getFilenameWithoutExtension($file).'-datu-orokorrak');
         $bankuakFile = $this->saveFile($bankuakContent, $path.'/'.$this->getFilenameWithoutExtension($file).'-bankuak');
+        $tercerosFile = $this->excelGeneratorService->generateSpreadSheet(array_keys(self::TERCEROS_FIELDS), $tercerosContent, $path, $this->getFilenameWithoutExtension($file).'-terceros');
+        $concesionesFile = $this->excelGeneratorService->generateSpreadSheet(array_keys(self::CONCESIONES_FIELDS), $concesionesContent, $path, $this->getFilenameWithoutExtension($file).'-concesiones');
         $files[] = $mainFile;
         $files[] = $bankuakFile;
+        $files[] = $tercerosFile;
+        $files[] = $concesionesFile;
         $this->zipFiles($files, $file);
 
         return $totalAmount;
@@ -240,6 +298,75 @@ class SicalwinGeneratorService
         return $cuenta;
     }
 
+    // organoGestor, paisTercero, NIF_CIF,nombre, primerApellido, segundoApellido, razonSocial, grupoEmpresarial, paisDomicilio, domicilio, codigoPostal, provincia, municipio, tipoBeneficiario, region, sectores, partido, numeroSoporte, Version 1.1, Plantilla DATPER
+    private function createTercerosRowFromArray(array $row) {
+        $tercerosRow = self::TERCEROS_FIELDS;
+        $validacionDni = Validaciones::valida_nif_cif_nie($row['NIF_CIF']);
+        // If it's DNI, we fill it with 'ES' else, we live it blank.
+        if ( $validacionDni === 1 ) {
+            $tercerosRow['paisTercero'] = 'ES';
+        } else {
+            $tercerosRow['paisTercero'] = '';
+        }
+        $tercerosRow['NIF_CIF'] = $row['NIF_CIF'];
+        $nombreApellidosArray = $this->splitNombreApellidos($row['NombreSolicitante']);
+        $tercerosRow['nombre'] = $this->getNombre($nombreApellidosArray);
+        $tercerosRow['primerApellido'] = $this->getApellido1($nombreApellidosArray);
+        $tercerosRow['segundoApellido'] = $this->getApellido2($nombreApellidosArray);
+        $tercerosRow['domicilio'] = $row['Dir'];
+        
+        return $tercerosRow;
+    }
+
+    // organoGestor, paisTercero, NIF_CIF,nombre, primerApellido, segundoApellido, razonSocial, grupoEmpresarial, paisDomicilio, domicilio, codigoPostal, provincia, municipio, tipoBeneficiario, region, sectores, partido, numeroSoporte, Version 1.1, Plantilla DATPER
+    private function createTercerosRowFrom( GestionaSicalwinFileRowDTO $dtoRow ) {
+        $row = [];
+        $row['NIF_CIF'] = $dtoRow->getDni();
+        $row['NombreSolicitante'] = $dtoRow->getNombreSolicitante();
+        $row['Dir'] = $dtoRow->getDir();
+
+        return $this->createTercerosRowFromArray($row);
+    }
+
+    // codigoConcesion, organoGestor, codigoConvocatoria, instrumentoAyuda, paisTercero, NIF, discriminadorConcesion, fechaConcesion, costeTotal, importeNominal, ayudaEquivalente, region, entidadEncargada, intermediarioFinanciero, objetivo, periodoActividad, codigoProyecto, Version 1.0, Plantilla CONCESION
+    private function createConcesionesRowFromArray(array $row) {
+        $concesionesRow = self::CONCESIONES_FIELDS;
+        
+        $validacionDni = Validaciones::valida_nif_cif_nie($row['NIF']);
+        // If it's DNI, we fill it with 'ES' else, we live it blank.
+        if ( $validacionDni === 1 ) {
+            $concesionesRow['paisTercero'] = 'ES';
+        } else {
+            $concesionesRow['paisTercero'] = '';
+        }
+        $concesionesRow['codigoConvocatoria'] = $row['codigoConvocatoria'];
+        $concesionesRow['NIF'] = $row['NIF'];
+        $concesionesRow['discriminadorConcesion'] = $row['discriminadorConcesion'];
+        $concesionesRow['fechaConcesion'] = $row['fechaConcesion'];
+        $concesionesRow['costeTotal'] = $row['costeTotal']; 
+        $concesionesRow['importeNominal'] = $row['importeNominal'];
+        $concesionesRow['ayudaEquivalente'] = $row['ayudaEquivalente'];
+        $concesionesRow['periodoActividad'] = $row['periodoActividad'];
+        
+        return $concesionesRow;
+    }
+
+    // codigoConcesion, organoGestor, codigoConvocatoria, instrumentoAyuda, paisTercero, NIF, discriminadorConcesion, fechaConcesion, costeTotal, importeNominal, ayudaEquivalente, region, entidadEncargada, intermediarioFinanciero, objetivo, periodoActividad, codigoProyecto, Version 1.0, Plantilla CONCESION
+    private function createConcesionesRowFrom( GestionaSicalwinFileRowDTO $dtoRow, SicalwinFile $sicalwinFile ) {
+        $row = [];
+        $row['codigoConvocatoria'] = $sicalwinFile->getCodigoConvocatoria();
+        $row['NIF'] = $dtoRow->getDni();
+        $row['discriminadorConcesion'] = $sicalwinFile->getDiscriminadorConcesion();
+        $row['fechaConcesion'] = ($sicalwinFile->getFechaConcesion())->format('d/m/Y');
+        $row['costeTotal'] = \number_format($dtoRow->getImporteSubvencionFloat(), 2, ',', '');
+        $row['importeNominal'] = \number_format($dtoRow->getImporteSubvencionFloat(), 2, ',', '');
+        $row['ayudaEquivalente'] = \number_format($dtoRow->getImporteSubvencionFloat(), 2, ',', '');
+        $row['periodoActividad'] = ($sicalwinFile->getFechaConcesion())->format('Y').';'.($sicalwinFile->getFechaConcesion())->format('Y');
+
+        return $this->createConcesionesRowFromArray($row);
+    }
+
+
     private function generateFileContentsFormArray( array $mainContent ): string {
         $fileContent ='';
         foreach ($mainContent as $row) {
@@ -285,4 +412,34 @@ class SicalwinGeneratorService
     private function getFilename(string $fullPath) {
         return pathinfo($fullPath, PATHINFO_BASENAME);
     }
+
+    private function limpiarEspacios($texto) {
+        return preg_replace('/\s+/', ' ', $texto);
+    }
+
+    private function splitNombreApellidos(string $nombreCompleto) {
+        $nombreApellidosArray =  explode(" ", $this->limpiarEspacios($nombreCompleto));
+        return $nombreApellidosArray;
+    }
+
+    private function getNombre(array $nombreApellidosArray) {
+        return $nombreApellidosArray[0];
+    }
+
+    private function getApellido1 (array $nombreApellidosArray) {
+        return $nombreApellidosArray[1];
+    }
+
+    private function getApellido2 (array $nombreApellidosArray) {
+        $apellido2 = '';
+        if ( count($nombreApellidosArray) >= 3) {
+            for ($i = 2; $i < count($nombreApellidosArray); $i++) {
+                $apellido2 = $apellido2. ' '. $nombreApellidosArray[$i]. ' ';
+            }            
+            return trim($apellido2);
+        } else {
+            return '';
+        }
+    }
+
 }

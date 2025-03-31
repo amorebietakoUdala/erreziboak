@@ -102,6 +102,9 @@ sicalwinFile.receptionDate: "Fecha de recepción"
 sicalwinFile.processedDate: "Fecha de procesamiento"
 sicalwinFile.totalAmount: "Montante total"
 sicalwinFile.status: "Estado"
+sicalwinFile.codigoConvocatoria: "Código convocatoria"
+sicalwinFile.discriminadorConcesion: "Discriminador concesión"
+sicalwinFile.fechaConcesion: "Fecha concesión"
 
 debtsFile.id: "Id"
 debtsFile.fileName: "Fichero"
@@ -259,7 +262,7 @@ table.options: "Opciones"
 "El concepto se ha eliminado correctamente.": "El concepto se ha eliminado correctamente."
 "Payment was successfull": "El pago se ha realizado correctamente."
 "Payment was NOT successfull": "Ha ocurrido un error al realizar el pago. NO se ha realizado correctamente."
-
+"Conversión de ficheros Gestiona-Sicalwin" : "Conversión de ficheros Gestiona-Sicalwin"
 "YYYY-MM-DD HH:MM": "AAAA-MM-DD HH:MM"
 
 mail.totalAmount: "Montante total"

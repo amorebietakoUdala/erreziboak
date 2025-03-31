@@ -24,6 +24,9 @@ class GestionaSicalwinFileRowDTO
    private string $importeSubvencion;
    private string $numCuenta;
    private string $dir;
+   private string $nombre;
+   private string $primerApellido;
+   private string $segundoApellido;
 
    public function __toArray(): array
    {
@@ -46,7 +49,7 @@ class GestionaSicalwinFileRowDTO
       $gestionGestionaFileRowDTO->nombreSolicitante = $nombreSolicitante;
       $gestionGestionaFileRowDTO->importeSubvencion = $importeSubvencion;
       $gestionGestionaFileRowDTO->numCuenta = $numCuenta;
-      $gestionGestionaFileRowDTO->dir = $dir;
+      $gestionGestionaFileRowDTO->dir = mb_convert_encoding($dir, 'UTF-8', 'Windows-1252');
       return $gestionGestionaFileRowDTO;
    }
 
@@ -61,7 +64,7 @@ class GestionaSicalwinFileRowDTO
       $this->nombreSolicitante = $record['NombreSolicitante'];
       $this->importeSubvencion = $record['ImporteSubvencion/Tributo'];
       $this->numCuenta = $record['NumCuenta'];
-      $this->dir = $record['Dir'];
+      $this->dir = mb_convert_encoding($record['Dir'], 'UTF-8', 'Windows-1252');
    }
 
    public function getExpediente()

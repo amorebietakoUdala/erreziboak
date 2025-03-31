@@ -136,6 +136,7 @@ class GestionaValidator extends FileValidator
         return $this->checkRequiredFields($counters);
     }
 
+    // No need to validate because file comes from Gestiona directly and it's no filled manually
     private function validateRecord($record, $numFila)
     {
         return null;
