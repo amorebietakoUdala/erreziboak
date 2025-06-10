@@ -18,6 +18,11 @@ class HomeController extends AbstractController
             $request->setLocale('es');
         }
 
-        return $this->redirectToRoute('receipt_find');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        if ($isAdmin) {
+            return $this->redirectToRoute('receipt_find');
+        }
+        return $this->redirectToRoute('receipts_file_upload');
+
     }
 }
