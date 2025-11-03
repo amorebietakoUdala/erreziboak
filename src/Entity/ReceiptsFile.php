@@ -130,8 +130,8 @@ class ReceiptsFile
         $receiptsFile = new ReceiptsFile();
         $receiptsFile->setFileName($data['receiptsFileName']);
         $receiptsFile->setDescription($data['description']);
-        $receiptsFile->setIncomeType($data['incomeType']);
-        $receiptsFile->setTributeCode($data['tributeCode']);
+        $receiptsFile->setIncomeType(isset($data['incomeType']) ? $data['incomeType'] : null);
+        $receiptsFile->setTributeCode(isset($data['tributeCode']) ? $data['tributeCode'] : null);
         $receiptsFile->setReceptionDate(new \DateTime());
         $receiptsFile->setReceiptsType($data['receiptsType']);
         $receiptsFile->setReceiptsFinishStatus($data['receiptsFinishStatus']);

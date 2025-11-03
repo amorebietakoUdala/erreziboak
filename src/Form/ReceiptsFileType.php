@@ -49,6 +49,14 @@ class ReceiptsFileType extends AbstractType
 #                    'choice.payd' => 'C',
                 ],
             ])
+            ->add('incomeType', null, [
+                'label' => 'receiptsFile.incomeType',
+                'help' => 'receiptsFile.help.incomeType',
+            ])
+            ->add('tributeCode', null, [
+                'label' => 'receiptsFile.tributeCode',
+                'help' => 'receiptsFile.help.tributeCode',
+            ])
         ;
     }
 
