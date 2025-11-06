@@ -10,6 +10,7 @@ namespace App\Service;
 
 use App\DTO\GestionaFileRowDTO;
 use League\Csv\CallbackStreamFilter;
+use League\Csv\CharsetConverter;
 use League\Csv\Reader;
 use League\Csv\StreamFilter;
 use League\Csv\Writer;
@@ -49,6 +50,7 @@ class GestionaFileConverter
         // Cambiamos el nombre al fichero original para que luevo se meta en el zip junto con el resto de ficheros
         $this->renombrarArchivo($file, $outputFileName.'-original.txt');
         $writer = Writer::createFromPath($outputFileName, 'w');
+        CharsetConverter::addTo($writer, 'UTF-8', 'Windows-1252');
         $writer->setDelimiter(';');
         $writer->insertOne($receiptFileRow->getHeaders());
         $writer->insertAll($outputFileContent);
