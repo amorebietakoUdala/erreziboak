@@ -179,6 +179,12 @@ class GTWINIntegrationService
         return $person;
     }
 
+
+    private function esNumericoConLetra($cadena): bool  {
+        $cadenaSinUltima = substr($cadena, 0, -1);
+        return is_numeric($cadenaSinUltima);
+    }
+
     /**
      * Calculate the principal debt amount of a person by DNI.
      *
@@ -189,16 +195,41 @@ class GTWINIntegrationService
     public function findDeudaTotal($dni): ?string
     {
         $fixedDocument = $dni;
-        if (Validaciones::valida_nif_cif_nie($dni) > 0) {
-            $numDocumento = substr($dni, 0, -1);
+        // If without last character is numeric fill with 0s to make a valid documentNumber
+        if ($this->esNumericoConLetra($dni)) {
+            $dni = str_pad($dni, 9, '0', STR_PAD_LEFT);
+            $fixedDocument = $dni;
+        }
+        if (Validaciones::valida_nif_cif_nie($fixedDocument) > 0) {
+            $numDocumento = substr($fixedDocument, 0, -1);
             $fixedDocument = $this->__fixDniNumber($numDocumento);
         }
-        
         $importe = $this->em->getRepository(Recibo::class)->findDeudaByDni($fixedDocument);
-        if ($importe === null) {
+        if ($importe === null || $importe === 0) {
             return "No";
         }
         return $importe;
+    }
+
+    /**
+     * Checks if the a person has Debts by DNI.
+     *
+     * @param string $dni
+     *
+     * @return null|array
+     */
+    public function hasDebts($dni): ?array {
+        $person = $this->findByDni($dni);
+        if (null === $person) {
+            return null;
+        }
+        $importe = $this->findDeudaTotal($dni);
+        $response = [
+            'nif' => $dni,
+            'full_name' => $person->getNombreCompletoOrdenado(),
+            'debts' => ( $importe === "No" ) ? false : true,
+        ];
+        return $response;
     }
 
     /**

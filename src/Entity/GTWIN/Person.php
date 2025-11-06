@@ -135,4 +135,9 @@ class Person implements \Stringable
 
         return $this;
     }
+
+    public function getNombreCompletoOrdenado(): string
+    {
+        return "$this->nombre $this->apellido1 $this->apellido2";
+    }
 }

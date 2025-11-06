@@ -310,4 +310,25 @@ class RestController extends AbstractController
        );
    }
 
+    #[Route(path: '/person/{dni}/has-debts', name: 'api_get_has_debts', methods: ['GET'], options: ['expose' => true])]
+    public function getHasDebts(string $dni) 
+    {
+       $dni = mb_strtoupper($dni);
+       $debts = $this->gts->hasDebts($dni);
+       if ($debts === null) {
+           return new JsonResponse(
+               $this->serializer->serialize(new ApiResponse('KO', 'Person not found', null),'json', ['groups' => ['show']]), 
+               Response::HTTP_OK, [
+                   'Content-Type' => 'application/json;charset=utf-8'
+               ], true
+           );
+       }
+       $message = $debts['debts'] ? 'has debts' : 'has no debts';
+       return new JsonResponse(
+           $this->serializer->serialize(new ApiResponse('OK', $message, $debts),'json', ['groups' => ['show']]), 
+           Response::HTTP_OK, [
+               'Content-Type' => 'application/json;charset=utf-8'
+           ], true
+       );
+   }
 }
