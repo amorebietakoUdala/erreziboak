@@ -1,3 +1,4 @@
+import './bootstrap.js';
 import $ from 'jquery';
 
 import './bootstrap';
