@@ -132,6 +132,8 @@ receipt.ultimoDiaPago: "Limite Pago"
 receipt.payd: "Pagado"
 receipt.email: "Email de notificación"
 receipt.referenciaC60: "Referencia"
+receipt.tipoIngreso: "Tipo de recibo"
+receipt.domiciliado: "¿Está domiciliado?"
 options: "Opciones"
 
 inscription.dni: "DNI"
@@ -238,6 +240,7 @@ messages.noDebt: "No tiene deuda"
 messages.noDebtsFound: "No consta en GTWIN ningún recibo pendiente de pago para el DNI, NIE o CIF '%idNumber%'"
 messages.hasDebt: "¿Tiene recibos pendientes en GTWIN?"
 messages.uploadedBy: "El usuario '%uploadedBy%' ha subido un fichero de recibos con la siguiente descripción:"
+messages.noUnpaidReceipts: "No tiene recibos pendientes de pago"
 
 label.quantity: "Tasa"
 

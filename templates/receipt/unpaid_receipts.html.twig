@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{'messages.appTitle' | trans }}
+{% endblock title %}
+
+{% block body %}
+	<main>
+      <div class="container-fluid mt-2">
+         {% if receipts is defined and receipts|length > 0 %}
+         <table id="taula" class="table bootstrap-table mt-2" {{ stimulus_controller('table', { 
+            'exportName': 'concepts',
+         }) }}>
+            <thead>
+               <tr>
+                  <th data-sortable="true">{{"receipt.numeroRecibo" | trans | capitalize}}</th>
+                  <th data-sortable="true">{{"receipt.tipoIngreso" | trans | capitalize}}</th>
+                  <th data-sortable="true">{{"receipt.importe" | trans | capitalize}}</th>
+                  <th data-sortable="true">{{"receipt.ultimoDiaPago" | trans | capitalize}}</th>
+                  <th data-sortable="true">{{"receipt.domiciliado" | trans }}</th>
+                  <th data-sortable="true" data-field="options">{{"confirmation.pay" | trans | capitalize}}</th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for receipt in receipts %}
+                  <tr>
+                     <td>{{ receipt.numeroRecibo }}</td>
+                     <td>{{ receipt.tipoIngreso.descripcion }}</td>
+                     <td>{{ receipt.importe | format_number({grouping_used:true}, locale: 'es')}}
+                     <td>{{ receipt.fechaLimitePagoBanco | date('Y-m-d') }}</td>
+                     <td>{{ receipt.estaDomiciliado ? "messages.si" | trans : "messages.no" | trans }}</td>
+                     <td>
+                        <a href="{{ path ("receipt_forwarded_pay",{'numeroRecibo': receipt.numeroRecibo })}}" data-action="click->table#onClick" data-pagination="false"><i class="fa fa-credit-card" title="{{ 'confirmation.pay' | trans}}"></i></a>&nbsp;
+                     </td>
+                  </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+         {% else %}
+            <div class="alert alert-info" role="alert">
+               {{ 'messages.noUnpaidReceipts' | trans }}
+            </div>
+         {% endif %}
+      </div>
+	</main>
+{% endblock body %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('receipt_search') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('receipt_search') }}
+{% endblock %}

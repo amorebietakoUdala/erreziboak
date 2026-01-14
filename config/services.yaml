@@ -46,6 +46,13 @@ parameters:
   departmentDefault: '%env(DEPARTMENT_DEFAULT)%'
   contactEmailDefault: '%env(CONTACT_EMAIL_DEFAULT)%'
 
+  clientId: '%env(CLIENT_ID)%'
+  clientSecret: '%env(CLIENT_SECRET)%'
+  urlAuthorize: '%env(ENDPOINT_ROOT)%/trustedx-authserver/oauth/izenpe'
+  urlAccessToken: '%env(ENDPOINT_ROOT)%/trustedx-authserver/oauth/izenpe/token'
+  urlResourceOwnerDetails: '%env(ENDPOINT_ROOT)%/trustedx-resources/openid/v1/users/me'
+  redirectUri: 'app_giltza'
+
 services:
     Symfony\Component\Ldap\Ldap:
         arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']

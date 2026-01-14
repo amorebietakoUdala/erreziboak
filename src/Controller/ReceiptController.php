@@ -8,6 +8,7 @@ use App\Entity\GTWIN\Recibo;
 use App\Entity\GTWIN\ReferenciaC60;
 use App\Entity\Payment;
 use App\Form\ReceiptSearchForm;
+use App\Repository\PaymentRepository;
 use App\Service\GTWINIntegrationService;
 use App\Validator\IsValidIBANValidator;
 use Psr\Log\LoggerInterface;
@@ -16,6 +17,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -23,7 +25,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ReceiptController extends AbstractController
 {
 
-    public function __construct(private readonly MailerInterface $mailer)
+    public function __construct(
+        private readonly MailerInterface $mailer, 
+        private readonly GTWINIntegrationService $gts,
+        private readonly PaymentRepository $paymentRepo,
+    )
     {
     }
 
@@ -34,6 +40,46 @@ class ReceiptController extends AbstractController
     //     $result = $repo->findRecibosByNumeroReferenciaC60($referenciac60);
     //     dd($result->getRecibo()->getNumeroRecibo());
     // }
+
+    public function removeAlreadyPaid($recibos)
+    {
+        $recibosNoPagados = [];
+        foreach ($recibos as $recibo) {
+            $payment = $this->paymentRepo->findOneBy([
+                'referenceNumber' => str_pad((string) $recibo->getNumeroRecibo(), 10, '0', STR_PAD_LEFT),
+                'status' => Payment::PAYMENT_STATUS_OK,
+            ]);
+            if (null === $payment) {
+                $recibosNoPagados[] = $recibo;
+            }
+        }
+
+        return $recibosNoPagados;
+    }
+
+    #[Route(path: '/my-unpaid-receipts', name: 'my_receipts_unpayed_receipts', methods: ['GET'])]
+    public function getPersonReceipts(Request $request): Response
+    {
+        if (!$request->getSession()->has('giltzaUser')) {
+            return $this->redirectToRoute('app_giltza');
+        }
+        $giltzaUser = $request->getSession()->get('giltzaUser');
+        //dump($giltzaUser);
+        $dni = $giltzaUser['dni'];
+        $exists = $this->gts->personExists($dni);
+        if ($exists) {
+            $recibos = $this->gts->findByRecibosPendientesByDni($dni);
+            $recibosNoPagados = $this->removeAlreadyPaid($recibos);
+        } else {
+            $recibosNoPagados = [];
+            $this->addFlash('error', 'messages.personNotExists');
+        }
+
+        return $this->render('receipt/unpaid_receipts.html.twig', [
+            'receipts' => $recibosNoPagados,
+        ]);
+    }
+
     #[IsGranted('ROLE_ADMIN')]
     #[Route(path: '/receipts', name: 'receipt_find', methods: ['GET', 'POST'])]
     public function findReceipts(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts)
@@ -161,10 +207,13 @@ class ReceiptController extends AbstractController
         return $params;
     }
 
-    #[IsGranted('ROLE_ADMIN')]
-    #[Route(path: '/pay/{receipt}', name: 'receipt_forwarded_pay', methods: ['POST'])]
-    public function payForwardedReceipt(Recibo $receipt, LoggerInterface $logger)
+    #[Route(path: '/pay/{numeroRecibo}', name: 'receipt_forwarded_pay', methods: ['GET'])]
+    public function payForwardedReceipt(string $numeroRecibo, LoggerInterface $logger, Request $request)
     {
+        if (!$request->getSession()->has('giltzaUser')) {
+            return $this->redirectToRoute('app_giltza');
+        }
+        $receipt= $this->gts->findByNumRecibo($numeroRecibo);
         $logger->debug('-->payForwardedReceipt: Start');
         if (null != $receipt) {
             $logger->debug('<--payForwardedReceipt: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequest');
