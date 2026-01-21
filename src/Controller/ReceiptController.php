@@ -72,6 +72,7 @@ class ReceiptController extends AbstractController
         if ( isset($giltzaUser['cif']) && isset($giltzaUser['person_status']) && $giltzaUser['person_status'] === 'RE' ) {
             $dni = $giltzaUser['cif'];
         }
+        $this->logger->info("Giltza User DNI or CIF: $dni" );
         $exists = $this->gts->personExists($dni);
         if ($exists) {
             $recibos = $this->gts->findByRecibosPendientesByDni($dni);
@@ -88,9 +89,9 @@ class ReceiptController extends AbstractController
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route(path: '/receipts', name: 'receipt_find', methods: ['GET', 'POST'])]
-    public function findReceipts(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts)
+    public function findReceipts(Request $request)
     {
-        $logger->debug('-->findReceipts: Start');
+        $this->logger->debug('-->findReceipts: Start');
         $referenciaC60 = $request->get('referenciaC60');
         $email = $request->get('email');
         $form = $this->createForm(ReceiptSearchForm::class, [
@@ -119,7 +120,7 @@ class ReceiptController extends AbstractController
                     'references' => $results,
                 ]);
             }
-            $references = $gts->findReferenciaC60($data['referenciaC60']);
+            $references = $this->gts->findReferenciaC60($data['referenciaC60']);
             $fechaLimitePagoBanco = null;
             $importeTotal = 0;
             $concepto = null;
@@ -153,8 +154,8 @@ class ReceiptController extends AbstractController
             ]);
         }
 
-        $logger->debug('<--findReceipts: Results: ' . count($results));
-        $logger->debug('<--findReceipts: End OK');
+        $this->logger->debug('<--findReceipts: Results: ' . count($results));
+        $this->logger->debug('<--findReceipts: End OK');
 
         return $this->render('receipt/search.html.twig', [
             'form' => $form,
@@ -214,20 +215,20 @@ class ReceiptController extends AbstractController
     }
 
     #[Route(path: '/pay/{numeroRecibo}', name: 'receipt_forwarded_pay', methods: ['GET'])]
-    public function payForwardedReceipt(string $numeroRecibo, LoggerInterface $logger, Request $request)
+    public function payForwardedReceipt(string $numeroRecibo, Request $request)
     {
         if (!$request->getSession()->has('giltzaUser')) {
             return $this->redirectToRoute('app_giltza');
         }
         $receipt= $this->gts->findByNumRecibo($numeroRecibo);
-        $logger->debug('-->payForwardedReceipt: Start');
+        $this->logger->debug('-->payForwardedReceipt: Start');
         if (null != $receipt) {
-            $logger->debug('<--payForwardedReceipt: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequest');
+            $this->logger->debug('<--payForwardedReceipt: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequest');
 
             return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequest', $this->__createMiPagoParametersArray($receipt));
         } else {
             $this->addFlash('error', 'Recibo no encontrado');
-            $logger->debug('<--payForwardedReceipt: End Recibo no encontrado');
+            $this->logger->debug('<--payForwardedReceipt: End Recibo no encontrado');
             $form = $this->createForm(ReceiptSearchForm::class);
 
             return $this->render('receipt/search.html.twig', [
@@ -235,16 +236,16 @@ class ReceiptController extends AbstractController
                 'references' => [],
             ]);
         }
-        $logger->debug('-->payForwardedReceipt: End OK');
+        $this->logger->debug('-->payForwardedReceipt: End OK');
     }
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route(path: '/pay/reference/{referencia}', name: 'referenciac60_pay', methods: ['GET', 'POST'], options: ['expose' => true])]
-    public function payForwardedC60Reference(Request $request, $referencia, LoggerInterface $logger, GTWINIntegrationService $gts)
+    public function payForwardedC60Reference(Request $request, $referencia)
     {
-        $logger->debug('-->payForwardedC60Reference: Start');
+        $this->logger->debug('-->payForwardedC60Reference: Start');
         $email = $request->get('email');
-        $references = $gts->findReferenciaC60($referencia);
+        $references = $this->gts->findReferenciaC60($referencia);
         if (count($references) === 0) {
             $this->addFlash('error', 'messages.referenceNotFound');
             return $this->redirectToRoute('receipt_find', [
@@ -254,33 +255,33 @@ class ReceiptController extends AbstractController
         }
 
         if (null !== $references) {
-            $logger->debug('<--payForwardedC60Reference: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequest');
+            $this->logger->debug('<--payForwardedC60Reference: End Forwarded to MiPago\Bundle\Controller\PaymentController::sendRequest');
 
             return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequest', $this->__createMiPagoParametersArrayFromC60Reference($references, $email));
         } else {
             $this->addFlash('error', 'Recibo no encontrado');
-            $logger->debug('<--payForwardedC60Reference: End Recibo no encontrado');
+            $this->logger->debug('<--payForwardedC60Reference: End Recibo no encontrado');
 
             return $this->redirectToRoute('receipt_find', [
                 'referenciaC60' => $referencia,
                 'email' => $email,
             ]);
         }
-        $logger->debug('-->payForwardedC60Reference: End OK');
+        $this->logger->debug('-->payForwardedC60Reference: End OK');
     }
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route(path: '/pay/{numeroRecibo}/{dni}', name: 'receipt_pay', methods: ['GET', 'POST'], options: ['expose' => true])]
-    public function payReceipt(Request $request, $numeroRecibo, $dni, GTWINIntegrationService $gts, LoggerInterface $logger)
+    public function payReceipt(Request $request, $numeroRecibo, $dni)
     {
-        $logger->debug('-->payReceipt: Start');
+        $this->logger->debug('-->payReceipt: Start');
         $user = $this->getUser();
         $roles = (null === $user) ? ['IS_AUTHENTICATED_ANONYMOUSLY'] : $user->getRoles();
         $email = $request->get('email');
         $form = $this->createForm(ReceiptSearchForm::class, null);
         if (null === $user && (null === $dni || null === $numeroRecibo)) {
             $this->addFlash('error', 'El dni y el número de recibo son obligatorios');
-            $logger->debug('<--payReceipt: End El dni y el número de recibo son obligatorios');
+            $this->logger->debug('<--payReceipt: End El dni y el número de recibo son obligatorios');
 
             return $this->render('receipt/search.html.twig', [
                 'form' => $form,
@@ -288,10 +289,10 @@ class ReceiptController extends AbstractController
                 'email' => $email,
             ]);
         }
-        $receipt = $gts->findByNumReciboDni($numeroRecibo, $dni);
+        $receipt = $this->gts->findByNumReciboDni($numeroRecibo, $dni);
         if (null === $receipt) {
             $this->addFlash('error', 'Recibo no encontrado');
-            $logger->debug('<--payReceipt: End Recibo no encontrado');
+            $this->logger->debug('<--payReceipt: End Recibo no encontrado');
 
             return $this->render('receipt/search.html.twig', [
                 'form' => $form,
@@ -299,24 +300,24 @@ class ReceiptController extends AbstractController
                 'email' => $email,
             ]);
         }
-        $logger->debug('<--payReceipt: End Forwarded to sendRequest');
+        $this->logger->debug('<--payReceipt: End Forwarded to sendRequest');
         $receipt->setEmail($email);
 
         return $this->forward('MiPago\Bundle\Controller\PaymentController::sendRequest', $this->__createMiPagoParametersArray($receipt));
     }
 
     #[Route(path: '/receiptConfirmation', name: 'receipt_confirmation', methods: ['GET', 'POST'])]
-    public function receiptConfirmation(Request $request, LoggerInterface $logger, GTWINIntegrationService $gts)
+    public function receiptConfirmation(Request $request)
     {
-        $logger->debug('-->ReceiptConfirmation: Start');
+        $this->logger->debug('-->ReceiptConfirmation: Start');
         $payment = $request->get('payment');
         $reference_number = intval($payment->getReferenceNumberDC());
-        $logger->info('ReferenceNumberDC: ' . $reference_number . ', Status: ' . $payment->getStatus() . ', PaymentId: ' . $payment->getId());
+        $this->logger->info('ReferenceNumberDC: ' . $reference_number . ', Status: ' . $payment->getStatus() . ', PaymentId: ' . $payment->getId());
         /* A reference number can be specify one or more receipts */
-        $recibos = $gts->findRecibosByNumeroReferenciaC60($payment->getReferenceNumberDC());
+        $recibos = $this->gts->findRecibosByNumeroReferenciaC60($payment->getReferenceNumberDC());
         $this->sendConfirmationEmails($recibos, $payment);
-        $message = $this->__updatePayment($recibos, $payment, $logger, $gts);
-        $logger->debug('<--ReceiptConfirmation: End OK');
+        $message = $this->__updatePayment($recibos, $payment);
+        $this->logger->debug('<--ReceiptConfirmation: End OK');
 
         return new JsonResponse($message);
     }
@@ -368,7 +369,7 @@ class ReceiptController extends AbstractController
     //     $this->mailer->send($message);
     // }
 
-    private function __updatePayment($recibos, Payment $payment, LoggerInterface $logger, GTWINIntegrationService $gts)
+    private function __updatePayment($recibos, Payment $payment)
     {
         $errors = [];
         $allErrors = [];
@@ -376,28 +377,28 @@ class ReceiptController extends AbstractController
         foreach ($recibos as $recibo) {
             // No need to update
             if (null === $recibo->getNumeroRecibo()) {
-                $logger->info('Receipt not found: ' . $recibo->getNumeroRecibo());
+                $this->logger->info('Receipt not found: ' . $recibo->getNumeroRecibo());
                 $errors[] =  'Receipt not found: ' . $recibo->getNumeroRecibo();
                 $allErrors[] = 'Receipt not found: ' . $recibo->getNumeroRecibo();
             }
             if ($recibo->getEstaPagado()) {
-                $logger->info('Already paid: ' . $recibo->getNumeroRecibo());
+                $this->logger->info('Already paid: ' . $recibo->getNumeroRecibo());
                 $errors[] =  'Already paid: ' . $recibo->getNumeroRecibo();
                 $allErrors[] = 'Already paid: ' . $recibo->getNumeroRecibo();
             }
 
             if (null === $payment) {
-                $logger->info('No payment to update status');
+                $this->logger->info('No payment to update status');
                 $errors[] =  'No payment to update status';
                 $allErrors[] =  'No payment to update status';
             }
             if (!$payment->isPaymentSuccessfull()) {
-                $logger->info('Payment not successfull');
+                $this->logger->info('Payment not successfull');
                 $errors[] =  'Payment not successfull';
                 $allErrors[] =  'Payment not successfull';
             }
             if (count($errors) === 0) {
-                $gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $recibo->getImporteTotal(), $payment->getTimestamp(), $payment->getRegisteredPaymentId(), $index);
+                $this->gts->paidWithCreditCard($recibo->getNumeroRecibo(), $recibo->getFraccion(), $recibo->getImporteTotal(), $payment->getTimestamp(), $payment->getRegisteredPaymentId(), $index);
             }
             $errors = [];
             $index += 1;
