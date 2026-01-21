@@ -67,13 +67,11 @@ class ReceiptController extends AbstractController
             return $this->redirectToRoute('app_giltza');
         }
         $giltzaUser = $request->getSession()->get('giltzaUser');
-        dump($giltzaUser);
         $this->logger->debug('Giltza User: ' . $this->serializer->serialize($giltzaUser, 'json'));
         $dni = $giltzaUser['dni'];
         if ( isset($giltzaUser['cif']) && isset($giltzaUser['person_status']) && $giltzaUser['person_status'] === 'RE' ) {
             $dni = $giltzaUser['cif'];
         }
-        dump($dni);
         $exists = $this->gts->personExists($dni);
         if ($exists) {
             $recibos = $this->gts->findByRecibosPendientesByDni($dni);
