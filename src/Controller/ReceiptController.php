@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route(path: '/{_locale}', requirements: ['_locale' => 'es|eu|en'])]
 class ReceiptController extends AbstractController
@@ -29,6 +30,8 @@ class ReceiptController extends AbstractController
         private readonly MailerInterface $mailer, 
         private readonly GTWINIntegrationService $gts,
         private readonly PaymentRepository $paymentRepo,
+        private readonly LoggerInterface $logger,
+        private readonly SerializerInterface $serializer,
     )
     {
     }
@@ -64,8 +67,13 @@ class ReceiptController extends AbstractController
             return $this->redirectToRoute('app_giltza');
         }
         $giltzaUser = $request->getSession()->get('giltzaUser');
-        //dump($giltzaUser);
+        dump($giltzaUser);
+        $this->logger->debug('Giltza User: ' . $this->serializer->serialize($giltzaUser, 'json'));
         $dni = $giltzaUser['dni'];
+        if ( isset($giltzaUser['cif']) && isset($giltzaUser['person_status']) && $giltzaUser['person_status'] === 'RE' ) {
+            $dni = $giltzaUser['cif'];
+        }
+        dump($dni);
         $exists = $this->gts->personExists($dni);
         if ($exists) {
             $recibos = $this->gts->findByRecibosPendientesByDni($dni);

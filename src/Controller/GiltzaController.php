@@ -25,16 +25,12 @@ class GiltzaController extends AbstractController
             'clientId'                => $paramBag->get('clientId'),    // The client ID assigned to you by the provider
             'clientSecret'            => $paramBag->get('clientSecret'),    // The client password assigned to you by the provider
             'redirectUri'             => $urlGenerator->generate($paramBag->get('redirectUri'),[],UrlGeneratorInterface::ABSOLUTE_URL),
+#            'redirectUri'             => $paramBag->get('redirectUri'),
             'urlAuthorize'            => $paramBag->get('urlAuthorize'),
             'urlAccessToken'          => $paramBag->get('urlAccessToken'),
             'urlResourceOwnerDetails' => $paramBag->get('urlResourceOwnerDetails'),
         ]);
     }
-
-    // #[Route(path: '/my-debts', name: 'app_home')]
-    // public function home() {
-    //     return $this->redirectToRoute('app_giltza');
-    // }
 
     #[Route(path: '/giltza/{_locale}', name: 'app_giltza', requirements: ['_locale' => 'es|eu|en'])]
     public function giltza(Request $request, string $_locale = 'es'): Response

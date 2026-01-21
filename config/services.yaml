@@ -52,7 +52,7 @@ parameters:
   urlAccessToken: '%env(ENDPOINT_ROOT)%/trustedx-authserver/oauth/izenpe/token'
   urlResourceOwnerDetails: '%env(ENDPOINT_ROOT)%/trustedx-resources/openid/v1/users/me'
   redirectUri: 'app_giltza'
-
+  #redirectUri: 'https://garapenak.amorebieta-etxano.eus:7001/erreziboak/giltza'
 services:
     Symfony\Component\Ldap\Ldap:
         arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
