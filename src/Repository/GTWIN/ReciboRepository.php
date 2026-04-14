@@ -6,6 +6,7 @@ use App\Entity\GTWIN\Recibo;
 use App\Entity\GTWIN\ReferenciaC60;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * ReciboRepository.
@@ -107,7 +108,18 @@ class ReciboRepository extends EntityRepository
 
     public function findByRecibosPendientesByDni($dni, $letra)
     {
-        return $this->findByRecibosDni($dni, $letra, Recibo::ESTADO_PENDIENTE, Recibo::SITUACION_VOLUNTARIA);
+        $qb = $this->createQueryBuilder('r')
+            ->andWhere('r.dni= :dni')
+            ->andWhere('r.letra= :letra')
+            ->andWhere('r.estado = :estado')
+            ->setParameter('dni', $dni)
+            ->setParameter('letra', $letra)
+            ->setParameter('estado', Recibo::ESTADO_PENDIENTE);
+        //$qb = $this->andWhereNotTraspasado($qb);
+        $qb = $this->andWhereNotEsPadreFracciones($qb);
+        //$qb = $this->andWhereNotParalized($qb);
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
     public function findByRecibosDni($dni, $letra, $estado = Recibo::ESTADO_PENDIENTE, $situacion = Recibo::SITUACION_VOLUNTARIA)
@@ -170,4 +182,28 @@ class ReciboRepository extends EntityRepository
 
         return $new_criteria;
     }
+
+    private function andWhereNotTraspasado(QueryBuilder $qb)
+    {
+        $qb->andWhere('r.traspasado = :traspasado')
+            ->setParameter('traspasado', Recibo::FALSE);
+
+        return $qb;
+    }
+    private function andWhereNotEsPadreFracciones(QueryBuilder $qb)
+    {
+        $qb->andWhere('r.esPadreFracciones = :esPadreFracciones')
+            ->setParameter('esPadreFracciones', Recibo::FALSE);
+
+        return $qb;
+    }
+
+    private function andWhereNotParalized(QueryBuilder $qb)
+    {
+        $qb->andWhere('r.paralizado = :paralizado')
+            ->setParameter('paralizado', Recibo::FALSE);
+
+        return $qb;
+    }
+
 }

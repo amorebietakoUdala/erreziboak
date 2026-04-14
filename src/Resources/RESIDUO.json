@@ -1,0 +1,19 @@
+{
+      "Ref. Catastral:":[0,19],
+      "Uso:":[55,40],
+      "Valor catastral B.I.:":[95,12],
+      "Coeficiente básico:":[110,9],
+      "Componente basico:":[123,11],
+      "Habitantes:":[147,6],
+      "Coef. Habitantes:":[153,9],
+      "Categoría IAE:":[190,25],
+      "Coef. Epigrafe IAE:":[215,9],
+      "Superficie B.I:":[224,13],
+      "Coef. Superficie B.I.:":[250,9],
+      "Coef. Específico":[268,13],
+      "Componente especifico:":[281,9],
+      "Cuota tasa:":[290,13],
+      "Bonificación:":[314,80],
+      "Porc. Bonificación:":[423,8],
+      "Importe bonificación:":[433,12]
+}

@@ -27,15 +27,32 @@ class ReceiptSearchForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('referenciaC60', TextType::class, [
-            'label' => 'receipt.referenciaC60',
-        ]);
-        $builder->add('email', TextType::class, [
-            'label' => 'receipt.email',
-            'required' => false,
-            'constraints' => [
-                new Email(),
-            ],
-        ]);
+                'label' => 'receipt.referenciaC60',
+                'required' => false,
+            ])
+            ->add('numeroReferenciaExterna', TextType::class, [
+                'label' => 'receipt.referencia',
+                'required' => false,
+            ])
+            ->add('dni', TextType::class, [
+                'label' => 'receipt.dni',
+                'required' => false,
+                'constraints' => [
+                    new IsValidDNI()
+                ]
+            ])
+            ->add('numeroRecibo', TextType::class, [
+                'label' => 'receipt.numeroRecibo',
+                'required' => false,
+            ])
+            // ->add('email', TextType::class, [
+            //     'label' => 'receipt.email',
+            //     'required' => false,
+            //     'constraints' => [
+            //         new Email(),
+            //     ],
+            // ])
+            ;
         $builder->add('search', SubmitType::class, [
             'label' => 'receipt.search',
         ]);

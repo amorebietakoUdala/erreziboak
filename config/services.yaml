@@ -79,6 +79,7 @@ services:
             $contactEmail: '%contactEmail%'
             $departmentDefault: '%departmentDefault%'
             $contactEmailDefault: '%contactEmailDefault%'
+            $inctypeBodyDefinitionsPath: '%kernel.project_dir%/src/Resources/'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -88,6 +89,7 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/Resources/'
 
     # App\Service\CsvFormatValidator: null
 

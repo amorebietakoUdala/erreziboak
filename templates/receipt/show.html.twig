@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+   {% if receipt is defined and receipt != null %}
+      <div class="container">
+         <div class="row g-3 text-center text-uppercase">
+            <div class="col-lg-11">
+               <h3 class="border-bottom">{{ 'receipt.descripcion' | trans }}</h3>
+            </div>
+            <div class="col-lg-1">
+               <h3 class="border-bottom">{{ 'receipt.anyo' | trans }}</h3>
+            </div>
+         </div>
+         <div class="row g-3 text-center">
+            <div class="col-lg-11 pb-2 h5">{{ receipt.tipoIngreso.descripcion }}</div>
+            <div class="col-lg-1 pb-2 h5">{{ receipt.anyoContable }}</div>
+         </div>
+         <div class="row g-3 text-center text-uppercase">
+            <div class="col-lg"><h3 class="border-bottom">{{ 'receipt.numeroRecibo' | trans }}</h3></div>
+            <div class="col-lg"><h3 class="border-bottom">{{ 'receipt.referencia' | trans }}</h3></div>
+            <div class="col-lg"><h3 class="border-bottom">{{ 'receipt.expediente' | trans }}</h3></div>
+            <div class="col-lg"><h3 class="border-bottom">{{ 'receipt.recargo' | trans }}</h3></div>
+            <div class="col-lg"><h3 class="border-bottom">{{ 'receipt.importe' | trans }}</h3></div>
+         </div>
+         <div class="row g-3 text-center">
+            <div class="col-lg pb-1 h5">{{ receipt.numeroRecibo }}</div>
+            <div class="col-lg pb-1 h5">{{ receipt.numeroReferenciaExterna }}</div>
+            <div class="col-lg pb-1 h5">{{ receipt.numeroExpedienteLiquidacion }}</div>
+            <div class="col-lg pb-1 h5">{{ receipt.recargo }}</div>
+            <div class="col-lg pb-1 h5">{{ receipt.importeTotal | format_number(locale: 'es') }} €</div>
+         </div>
+         <div class="row g-3 mt-1">
+            <div class="col-lg-12 border border-secondary">
+               <div class="row">
+                  {% if cuerpo is defined %}
+                     {% if cuerpo | length == 1 %}
+                        <div class="col-lg-auto">{{ cuerpo[0] }}</div>
+                     {% else %}
+                        {% for name, value in cuerpo %}
+                           {# {% if not value is empty %} #}
+                              <div class="col-lg-3">{{ name | trans }}&nbsp;{{ value | replace({'+' : ''}) }}</div>
+                           {# {% endif %} #}
+                        {% endfor %}
+                     {% endif %}
+                  {% endif %}
+               </div>
+            </div>
+         </div>
+         <div class="row g-3 mt-1 align-items-baseline justify-content-start">
+            <div class="col-lg-auto h3">{{ 'receipt.nombre' | trans }}</div>
+            <div class="col-lg-8 border-bottom h5">{{ receipt.nombreCompleto }}</div>
+            <div class="col-lg-auto h3">{{ 'receipt.dni' | trans }}</div>
+            <div class="col-lg border-bottom h5">{{ receipt.dniConLetra }}</div>
+         </div>
+         <div class="row g-3 mt-1 align-items-baseline justify-content-start">
+            <div class="col-lg-auto h3">{{ 'receipt.direccion' | trans }}</div>
+            <div class="col-lg-8 border-bottom h5">{{ receipt.direccionFiscal }}</div>
+            <div class="col-lg-auto h3">{{ 'receipt.codigoPostal' | trans }}</div>
+            <div class="col-lg border-bottom h5">{{ receipt.codigoPostalFiscal }}</div>
+         </div>
+         <div class="row g-3 mt-1 align-items-baseline justify-content-start">
+            <div class="col-lg-auto h3">{{ 'receipt.municipio' | trans }}</div>
+            <div class="col-lg-3 border-bottom h5">{{ receipt.municipioFiscal }}</div>
+            <div class="col-lg-auto h3">{{ 'receipt.provincia' | trans }}</div>
+            <div class="col-lg-2 border-bottom h5">{{ receipt.provinciaFiscal }}</div>
+         </div>
+         {# <div class="row g-3 text-center text-uppercase">
+            <div class="col-lg"><h3 class="border-bottom">Emisora</h3></div>
+            <div class="col-lg"><h3 class="border-bottom">Modalidad</h3></div>
+            <div class="col-lg"><h3 class="border-bottom">Referencia</h3></div>
+            <div class="col-lg"><h3 class="border-bottom">Identificacion</h3></div>
+            <div class="col-lg"><h3 class="border-bottom">Fecha de pago</h3></div>
+         </div>
+         <div class="row g-3 text-center">
+            <div class="col-lg pb-1 h5">{{receipt.institucion.entidadOrdenante}}</div>
+            <div class="col-lg pb-1 h5">521</div>
+            <div class="col-lg pb-1 h5">{{ dump(receipt.referenciasC60) }}</div>
+            <div class="col-lg pb-1 h5"></div>
+            <div class="col-lg pb-1 h5">{{ receipt.fechaFinVoluntaria | date('Y-m-d') }}</div>
+         </div> #}
+         {# <div>{{ receipt.importeTotal | format_number({grouping_used:true}, locale: 'es')}}
+         <div>{{ receipt.fechaLimitePagoBanco != null ? receipt.fechaLimitePagoBanco | date('Y-m-d') : '' }}</td>
+         <div>{{ receipt.situacion }}</td>
+         <div>{{ receipt.estaDomiciliado ? "messages.si" | trans : "messages.no" | trans }}</td>
+         <div>{{ receipt.estaTraspasado ? "messages.si" | trans : "messages.no" | trans }}</td>
+         <div>{{ receipt.estaParalizado ? "messages.si" | trans : "messages.no" | trans }}</td>
+         <div>{{ receipt.estaIncluidoEnPlanDePagos ? "messages.si" | trans : "messages.no" | trans }}</td> #}
+      </div>
+   {% else %}
+      <div class="alert alert-warning">
+         {{ 'messages.reciboNoEncontrado' | trans }}
+      </div>
+   {% endif %}
+{% endblock body %}
+
+{% block header %}{% endblock header %}
+{% block menu %}{% endblock %}
+
+{% block stylesheets %}
+   {{ parent() }}
+	{{ encore_entry_link_tags('receipt_search') }}
+{% endblock %}
+
+{% block javascripts %}
+   {{ parent() }}
+	{{ encore_entry_script_tags('receipt_search') }}
+{% endblock %}

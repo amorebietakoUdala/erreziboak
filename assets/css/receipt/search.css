@@ -1,5 +1,5 @@
 @import '~bootstrap-table/dist/bootstrap-table';
 .modal-dialog {
-    max-width: 900px;
+    max-width: 1400px;
     margin: 1.75rem auto;
 }

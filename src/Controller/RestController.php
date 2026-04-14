@@ -260,8 +260,6 @@ class RestController extends AbstractController
        );
    }
 
-
-
     #[Route(path: '/institucion/{codigo}', name: 'api_get_institucion', methods: ['GET'], options: ['expose' => true])]
     public function getInstitucion($codigo) 
     {

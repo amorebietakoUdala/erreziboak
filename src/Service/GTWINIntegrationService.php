@@ -15,7 +15,6 @@ use App\Entity\GTWIN\Institucion;
 use App\Entity\GTWIN\Recibo;
 use App\Entity\GTWIN\TipoIngreso;
 use App\Entity\GTWIN\OperacionesExternas;
-use App\Entity\Receipt;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use App\Utils\Validaciones;
@@ -42,7 +41,11 @@ class GTWINIntegrationService
     private $logger = null;
     private $client = null;
 
-    public function __construct(EntityManagerInterface $em, LoggerInterface $logger, HttpClientInterface $client)
+    public function __construct(
+        EntityManagerInterface $em, 
+        LoggerInterface $logger, 
+        HttpClientInterface $client,
+        )
     {
         $this->em = $em;
         $this->logger = $logger;
@@ -53,11 +56,34 @@ class GTWINIntegrationService
         // ]);
     }
 
+    public function find($id) {
+        $recibosGTWIN = $this->em->getRepository(Recibo::class)->find($id);
+
+        return $recibosGTWIN;
+    }
+
+
+    public function findByCriteria(array $criteria)
+    {
+        $newCriteria = $this->__remove_blank_filters($criteria);
+        unset($newCriteria['email']);
+        if (null !== $criteria['dni']) {
+            $numero = substr($criteria['dni'], 0, -1);
+            $letra = substr($criteria['dni'], -1);
+            $numero = $this->__fixDniNumber($numero);
+            $newCriteria['dni'] = $numero;
+            $newCriteria['letra'] = $letra;
+        }
+        $recibosGTWIN = $this->em->getRepository(Recibo::class)->findBy($newCriteria);
+
+        return $recibosGTWIN;
+    }
+
     public function findByExample(Recibo $criteria)
     {
         $newCriteria = $this->__remove_blank_filters($criteria->__toArray());
         unset($newCriteria['email']);
-        if (null !== $criteria->getDni()) {
+        if (null !== $criteria['dni']) {
             $numero = substr($criteria->getDni(), 0, -1);
             $letra = substr($criteria->getDni(), -1);
             $numero = $this->__fixDniNumber($numero);
@@ -94,6 +120,13 @@ class GTWINIntegrationService
     {
         /* Can be more than one */
         $referenciasC60 = $this->em->getRepository(ReferenciaC60::class)->findByReferenciaC60($referenciaC60);
+        return $referenciasC60;
+    }
+
+    public function findReferenciasC60(Recibo $recibo): array
+    {
+        /* Can be more than one */
+        $referenciasC60 = $this->em->getRepository(ReferenciaC60::class)->findByRecibo($recibo);
         return $referenciasC60;
     }
 
@@ -135,9 +168,8 @@ class GTWINIntegrationService
      */
     public function findByDni($dni)
     {
-        $dc = substr($dni, -1);
-        $numDocumento = substr($dni, 0, -1);
-        
+        $dc = substr(trim($dni), -1);
+        $numDocumento = mb_substr(trim($dni), 0, -1);
         $person = $this->em->getRepository(Person::class)->findOneBy([
             'numDocumento' => $this->__fixDniNumber($numDocumento),
             'digitoControl' => $dc,

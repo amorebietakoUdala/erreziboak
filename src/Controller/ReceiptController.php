@@ -2,19 +2,17 @@
 
 namespace App\Controller;
 
-//use App\Entity\Receipt;
-
 use App\Entity\GTWIN\Recibo;
-use App\Entity\GTWIN\ReferenciaC60;
+use App\Service\BarcodeService;
 use App\Entity\Payment;
 use App\Form\ReceiptSearchForm;
 use App\Repository\PaymentRepository;
 use App\Service\GTWINIntegrationService;
+use App\Service\JsonConfigManager;
 use App\Validator\IsValidIBANValidator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +21,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route(path: '/{_locale}', requirements: ['_locale' => 'es|eu|en'])]
-class ReceiptController extends AbstractController
+class ReceiptController extends BaseController
 {
+
+    private $definiciones = null;
 
     public function __construct(
         private readonly MailerInterface $mailer, 
@@ -32,8 +32,11 @@ class ReceiptController extends AbstractController
         private readonly PaymentRepository $paymentRepo,
         private readonly LoggerInterface $logger,
         private readonly SerializerInterface $serializer,
+        private readonly JsonConfigManager $jcm,
+
     )
     {
+        $this->definiciones = $this->jcm->all();
     }
 
 
@@ -63,15 +66,22 @@ class ReceiptController extends AbstractController
     #[Route(path: '/my-unpaid-receipts', name: 'my_receipts_unpayed_receipts', methods: ['GET'])]
     public function getPersonReceipts(Request $request): Response
     {
+        $this->loadQueryParameters($request);
+        $this->queryParams['pageSize'] = $request->get('pageSize', 100);
         if (!$request->getSession()->has('giltzaUser')) {
             return $this->redirectToRoute('app_giltza');
         }
         $giltzaUser = $request->getSession()->get('giltzaUser');
         $this->logger->debug('Giltza User: ' . $this->serializer->serialize($giltzaUser, 'json'));
-        $dni = $giltzaUser['dni'];
+
+        $dni = null;
         if ( isset($giltzaUser['cif']) && isset($giltzaUser['person_status']) && $giltzaUser['person_status'] === 'RE' ) {
             $dni = $giltzaUser['cif'];
         }
+        if ( null === $dni && isset($giltzaUser['dni']) ) {
+            $dni = $giltzaUser['dni'];
+        }
+
         $this->logger->info("Giltza User DNI or CIF: $dni" );
         $exists = $this->gts->personExists($dni);
         if ($exists) {
@@ -83,33 +93,83 @@ class ReceiptController extends AbstractController
         }
 
         return $this->render('receipt/unpaid_receipts.html.twig', [
+            'dni' => $dni,
             'receipts' => $recibosNoPagados,
         ]);
     }
 
-    #[IsGranted('ROLE_ADMIN')]
+    // #[Route('/barcode/{value}', name: 'barcode')]
+    // public function barcode(string $value, BarcodeService $barcodeService): Response
+    // {
+    //     $image = $barcodeService->generateCode128($value);
+
+    //     return new Response($image, 200, [
+    //         'Content-Type' => 'image/png',
+    //     ]);
+    // }
+
+    #[Route(path: '/receipt/{id}', name: 'receipt_show', methods: ['GET'])]
+    public function show(Request $request, string $id)
+    {
+        if (!$request->getSession()->has('giltzaUser')) {
+            return $this->redirectToRoute('app_giltza');
+        }
+        $giltzaUser = $request->getSession()->get('giltzaUser');
+        $this->logger->debug('Giltza User: ' . $this->serializer->serialize($giltzaUser, 'json'));
+        // $dni = $giltzaUser['dni'];
+        // if ( isset($giltzaUser['cif']) && isset($giltzaUser['person_status']) && $giltzaUser['person_status'] === 'RE' ) {
+        //     $dni = $giltzaUser['cif'];
+        // }
+
+        /** @var Recibo $recibo */
+        $recibo = $this->gts->find($id);
+        // if ($recibo->getDniConLetra() !== $dni ) {
+        //     return $this->render('receipt/show.html.twig', [
+        //         'receipt' => null,
+        //         'cuerpo' => null,
+        //     ]);
+        // }
+        $cuerpo = $recibo->getCamposBaseImponible($this->definiciones);
+        //$recibo = null;
+        return $this->render('receipt/show.html.twig', [
+            'receipt' => $recibo,
+            'cuerpo' => $cuerpo,
+        ]);
+    }
+
+    #[IsGranted('ROLE_RECEIPTS')]
     #[Route(path: '/receipts', name: 'receipt_find', methods: ['GET', 'POST'])]
     public function findReceipts(Request $request)
     {
         $this->logger->debug('-->findReceipts: Start');
+        $this->loadQueryParameters($request);
         $referenciaC60 = $request->get('referenciaC60');
         $email = $request->get('email');
         $form = $this->createForm(ReceiptSearchForm::class, [
             'referenciaC60' => $referenciaC60,
             'email' => $email,
         ]);
-        $results = [];
+        $receipts = [];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             $email = $data['email'];
-            if (null === $data['referenciaC60']) {
-                $this->addFlash('error', 'Debe especificar una referencia');
+            // Not necesary to fill referenciac60
+            // if (null === $data['referenciaC60']) {
+            //     $this->addFlash('error', 'Debe especificar una referencia');
+
+            //     return $this->render('receipt/search.html.twig', [
+            //         'form' => $form,
+            //         'references' => $results,
+            //     ]);
+            // }
+            if (null === $data['referenciaC60'] && null === $data['numeroRecibo'] && null === $data['dni'] && null === $data['numeroReferenciaExterna'] ) {
+                $this->addFlash('error', 'messages.atLeastOneCriteria');
 
                 return $this->render('receipt/search.html.twig', [
                     'form' => $form,
-                    'references' => $results,
+                    'receipts' => $receipts,
                 ]);
             }
             if (null !== $data['referenciaC60'] && !is_numeric($data['referenciaC60'])) {
@@ -117,49 +177,60 @@ class ReceiptController extends AbstractController
 
                 return $this->render('receipt/search.html.twig', [
                     'form' => $form,
-                    'references' => $results,
+                    'references' => $receipts,
+                    'receipts' => $receipts,
                 ]);
             }
-            $references = $this->gts->findReferenciaC60($data['referenciaC60']);
-            $fechaLimitePagoBanco = null;
-            $importeTotal = 0;
-            $concepto = null;
-            if (null === $references || 0 === count($references)) {
-                $this->addFlash('error', 'messages.referenceNotFound');
+            if ( null !== $data['referenciaC60'] ) {
+                $references = $this->gts->findReferenciaC60($data['referenciaC60']);
+                $receipts = $references;
             } else {
-                $fechaLimitePagoBanco = $references[0]->getFechaLimitePagoBanco();
-                $concepto = 'many';
-                if (count($references) === 1) {
-                    $concepto = $references[0]->getRecibo()->getTipoIngreso()->getDescripcion();
-                }
-                foreach ($references as $reference) {
-                    $importeTotal += ($reference->getCostas() + $reference->getRecargo()  + $reference->getIntereses() + $reference->getPrincipal());
-                }
-                if ($fechaLimitePagoBanco < new \DateTime()) {
-                    $this->addFlash('error', 'messages.fechaLimitePagoBancoVencida');
-                    return $this->render('receipt/search.html.twig', [
-                        'form' => $form,
-                        'references' => [],
-                    ]);
-                }
+                $references = $this->gts->findByCriteria($data);
             }
+            $receipts = $references;   
+            // Uncomment is references are needed.
+            // $fechaLimitePagoBanco = null;
+            // $importeTotal = 0;
+            // $concepto = null;
+            // if (null === $references || 0 === count($references)) {
+            //     $this->addFlash('error', 'messages.referenceNotFound');
+            // } else {
+            //     $fechaLimitePagoBanco = $references[0]->getFechaLimitePagoBanco();
+            //     $concepto = 'many';
+            //     if (count($references) === 1) {
+            //         $concepto = $references[0]->getRecibo()->getTipoIngreso()->getDescripcion();
+            //     }
+            //     foreach ($references as $reference) {
+            //         $importeTotal += ($reference->getCostas() + $reference->getRecargo()  + $reference->getIntereses() + $reference->getPrincipal());
+            //     }
+            //     if ($fechaLimitePagoBanco < new \DateTime()) {
+            //         $this->addFlash('error', 'messages.fechaLimitePagoBancoVencida');
+            //         return $this->render('receipt/search.html.twig', [
+            //             'form' => $form,
+            //             'references' => [],
+            //         ]);
+            //     }
+            // }
             return $this->render('receipt/search.html.twig', [
                 'form' => $form,
-                'fechaLimitePagoBanco' => $fechaLimitePagoBanco !== null ? $fechaLimitePagoBanco->format('Y/m/d') : null,
-                'importeTotal' => $importeTotal,
+                // 'fechaLimitePagoBanco' => $fechaLimitePagoBanco !== null ? $fechaLimitePagoBanco->format('Y/m/d') : null,
+                // 'importeTotal' => $importeTotal,
                 'referenciaC60' => $data['referenciaC60'],
                 'references' => $references,
-                'concepto' => $concepto,
+                'receipts' => $receipts,
+                // 'concepto' => $concepto,
                 'email' => $data['email'],
+                'readonly' => false,
             ]);
         }
 
-        $this->logger->debug('<--findReceipts: Results: ' . count($results));
+        
+        $this->logger->debug('<--findReceipts: Results: ' . count($receipts));
         $this->logger->debug('<--findReceipts: End OK');
 
         return $this->render('receipt/search.html.twig', [
             'form' => $form,
-            'references' => $results,
+            'receipts' => $receipts,
             'search' => true,
             'readonly' => false,
         ]);
@@ -169,7 +240,7 @@ class ReceiptController extends AbstractController
     {
         $params = [
             'reference_number' => $receipt->getNumeroRecibo(),
-            'payment_limit_date' => $receipt->getFechaLimitePagoBanco()->format('Ymd'),
+            // 'payment_limit_date' => $receipt->getFechaLimitePagoBanco()->format('Ymd'),
             'sender' => $this->getParameter('mipago.sender'),
             'suffix' => $receipt->getTipoIngreso()->getConceptoC60(),
             'quantity' => $receipt->getImporteTotal(),

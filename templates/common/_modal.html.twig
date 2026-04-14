@@ -1,0 +1,13 @@
+<div class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-modal-target="modal">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" data-modal-target="modalTitle">{{ title | default('title') }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" data-modal-target="modalBody">
+         <div class="text-center">{{ message | default('override message') }}</div>
+      </div>
+    </div>
+  </div>
+</div>

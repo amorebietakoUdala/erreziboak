@@ -6,6 +6,7 @@ use App\Repository\GTWIN\ReciboRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Query\Expr\Func;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
@@ -20,8 +21,14 @@ class Recibo implements \Stringable
 {
     final public const SITUACION_VOLUNTARIA = 'V';
     final public const SITUACION_EJECUTIVA = 'E';
+    // No sabemos exactamente qué significa la PENDIENTE de notificar?.
+    final public const SITUACION_P = 'P';
+    final public const TIPO_EXACCION_ID = 'ID';
     final public const ESTADO_PENDIENTE = 'P';
     final public const ESTADO_COBRADO = 'C';
+    final public const FALSE = 'F';
+    final public const TRUE = 'T';
+
     /**
      * @var string
      */
@@ -46,7 +53,7 @@ class Recibo implements \Stringable
     #[ORM\Column(name: 'RECANYCON', type: 'integer', nullable: false)]
     private $anyoContable;
 
-    #[ORM\Column(name: 'RECTIPEXA', type: 'integer', nullable: false)]
+    #[ORM\Column(name: 'RECTIPEXA', type: 'string', nullable: false)]
     private $tipoExaccion;
 
     #[ORM\Column(name: 'RECCODREM', type: 'string', length: 10, nullable: false)]
@@ -117,6 +124,27 @@ class Recibo implements \Stringable
 
     #[ORM\Column(name: 'CUEIBANCO', type: 'string', length: 30, nullable: false)]
     private $codigoIBAN;
+
+    #[ORM\Column(name: 'RECIMPREC', type: 'decimal', precision: 11, scale: 2, nullable: true)]
+    private $recargo;
+
+    #[ORM\Column(name: 'RECEXPLIQ', type: 'string', length: 30, nullable: true)]
+    private $numeroExpedienteLiquidacion;
+
+    #[ORM\Column(name: 'RECDIRFIS', type: 'string', length: 97, nullable: true)]
+    private $direccionFiscal;
+
+    #[ORM\Column(name: 'RECCPOFIS', type: 'string', length: 8, nullable: true)]
+    private $codigoPostalFiscal;
+
+    #[ORM\Column(name: 'RECMUNFIS', type: 'string', length: 50, nullable: true)]
+    private $municipioFiscal;
+
+    #[ORM\Column(name: 'RECPROFIS', type: 'string', length: 50, nullable: true)]
+    private $provinciaFiscal;
+
+    #[ORM\Column(name: 'RECINDAPR', type: 'string', length: 1, nullable: true)]
+    private $aprobada;
 
     #[Groups(['show'])]
     #[MaxDepth(1)]
@@ -211,22 +239,22 @@ class Recibo implements \Stringable
         return $this->paralizado;
     }
 
-    public function getFechaCreacion(): DateTime
+    public function getFechaCreacion(): ?DateTime
     {
         return $this->fechaCreacion;
     }
 
-    public function getFechaInicioVoluntaria(): DateTime
+    public function getFechaInicioVoluntaria(): ?DateTime
     {
         return $this->fechaInicioVoluntaria;
     }
 
-    public function getFechaFinVoluntaria(): DateTime
+    public function getFechaFinVoluntaria(): ?DateTime
     {
         return $this->fechaFinVoluntaria;
     }
 
-    public function getFechaCobro(): DateTime
+    public function getFechaCobro(): ?DateTime
     {
         return $this->fechaCobro;
     }
@@ -340,28 +368,28 @@ class Recibo implements \Stringable
         return $this;
     }
 
-    public function setFechaCreacion(DateTime $fechaCreacion)
+    public function setFechaCreacion(?DateTime $fechaCreacion)
     {
         $this->fechaCreacion = $fechaCreacion;
 
         return $this;
     }
 
-    public function setFechaInicioVoluntaria(DateTime $fechaInicioVoluntaria)
+    public function setFechaInicioVoluntaria(?DateTime $fechaInicioVoluntaria)
     {
         $this->fechaInicioVoluntaria = $fechaInicioVoluntaria;
 
         return $this;
     }
 
-    public function setFechaFinVoluntaria(DateTime $fechaFinVoluntaria)
+    public function setFechaFinVoluntaria(?DateTime $fechaFinVoluntaria)
     {
         $this->fechaFinVoluntaria = $fechaFinVoluntaria;
 
         return $this;
     }
 
-    public function setFechaCobro(DateTime $fechaCobro)
+    public function setFechaCobro(?DateTime $fechaCobro)
     {
         $this->fechaCobro = $fechaCobro;
 
@@ -430,6 +458,16 @@ class Recibo implements \Stringable
         return $this;
     }
 
+
+    public function quitarCeroInicial(string $value): string {
+        return preg_replace('/^0(.*)/', '$1', $value);
+    }
+
+
+    public function getDniConLetra(): string {
+        return $this->quitarCeroInicial($this->getDni().$this->getLetra());
+    }
+
     public function getCodInstitucion()
     {
         return $this->codInstitucion;
@@ -468,12 +506,17 @@ class Recibo implements \Stringable
 
     public function estaParalizado()
     {
-        return 'T' === $this->getParalizado();
+        return Recibo::TRUE === $this->getParalizado();
+    }
+
+    public function estaIncluidoEnPlanDePagos()
+    {
+        return Recibo::TRUE === $this->getIncluidoEnPlanDePagos();
     }
 
     public function estaTraspasado()
     {
-        return 'T' === $this->getTraspasado();
+        return Recibo::TRUE === $this->getTraspasado();
     }
 
     public function estaDomiciliado()
@@ -545,12 +588,12 @@ class Recibo implements \Stringable
         return $this;
     }
 
-    public function getFechaLimitePagoBanco(): DateTime
+    public function getFechaLimitePagoBanco(): ?DateTime
     {
         return $this->fechaLimitePagoBanco;
     }
 
-    public function setFechaLimitePagoBanco(DateTime $fechaLimitePagoBanco)
+    public function setFechaLimitePagoBanco(?DateTime $fechaLimitePagoBanco)
     {
         $this->fechaLimitePagoBanco = $fechaLimitePagoBanco;
 
@@ -718,6 +761,124 @@ class Recibo implements \Stringable
     public function setInstitucion(Institucion $institucion)
     {
         $this->institucion = $institucion;
+
+        return $this;
+    }
+
+    public function getRecargo() 
+    {
+        return $this->recargo;
+    }
+
+    public function setRecargo($recargo)
+    {
+        $this->recargo = $recargo;
+
+        return $this;
+    }
+
+    public function getNumeroExpedienteLiquidacion()
+    {
+        return $this->numeroExpedienteLiquidacion;
+    }
+
+    public function setNumeroExpedienteLiquidacion($numeroExpedienteLiquidacion)
+    {
+        $this->numeroExpedienteLiquidacion = $numeroExpedienteLiquidacion;
+
+        return $this;
+    }
+
+    public function getDireccionFiscal()
+    {
+        return $this->direccionFiscal;
+    }
+
+    public function setDireccionFiscal($direccionFiscal)
+    {
+        $this->direccionFiscal = $direccionFiscal;
+
+        return $this;
+    }
+
+    public function getCodigoPostalFiscal()
+    {
+        return $this->codigoPostalFiscal;
+    }
+
+    public function setCodigoPostalFiscal($codigoPostalFiscal)
+    {
+        $this->codigoPostalFiscal = $codigoPostalFiscal;
+
+        return $this;
+    }
+
+    public function getMunicipioFiscal()
+    {
+        return $this->municipioFiscal;
+    }
+
+    public function setMunicipioFiscal($municipioFiscal)
+    {
+        $this->municipioFiscal = $municipioFiscal;
+
+        return $this;
+    }
+
+    public function getProvinciaFiscal()
+    {
+        return $this->provinciaFiscal;
+    }
+
+    public function setProvinciaFiscal($provinciaFiscal)
+    {
+        $this->provinciaFiscal = $provinciaFiscal;
+
+        return $this;
+    }
+
+    public function getCamposBaseImponible(array $definiciones): array {
+        $cuerpo = mb_convert_encoding($this->getCuerpo(), 'UTF-8');
+        $cuerpoArray = [];
+
+        if ( array_key_exists($this->getTipoIngreso()->getCodigo(), $definiciones) ) {
+            foreach($definiciones[$this->getTipoIngreso()->getCodigo()] as $key => $value) {
+                $cuerpoArray[$key] = mb_trim(mb_substr($cuerpo,$value[0],$value[1]));
+            }
+        } else {
+            $cuerpoArray[0] = $cuerpo;
+        }
+        return $cuerpoArray;
+    }
+
+    public function getCamposBaseImponibleJson(array $definiciones): string {
+        return json_encode($this->getCamposBaseImponible($definiciones));
+    }
+
+    public function getAprobada()
+    {
+        return $this->aprobada;
+    }
+
+    public function setAprobada($aprobada)
+    {
+        $this->aprobada = $aprobada;
+
+        return $this;
+    }
+
+    public function estaAprobada(): bool {
+        return self::TRUE === $this->getAprobada();
+    }
+
+    public function getEsPadreFracciones()
+    {
+        return $this->esPadreFracciones;
+    }
+
+    public function setEsPadreFracciones($esPadreFracciones)
+    {
+        $this->esPadreFracciones = $esPadreFracciones;
 
         return $this;
     }

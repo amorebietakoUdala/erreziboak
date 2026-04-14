@@ -5,18 +5,20 @@
 {% endblock %}
 
 {% block body %}
-	<main class="container-fluid">
+	<main class="container-fluid" {{ stimulus_controller('modal', {'title' : 'option.details' | trans }) }}>
 		<div class="mt-2">
 			{{ include('receipt/_searchForm.html.twig',{}) }}
 		</div>
 		<div class="container-fluid">
-			{% if references|length > 0 %}
-				{% if references|length > 1 %}
+			{% if receipts|length > 0 %}
+				{% include "receipt/_list.html.twig" %}
+				{# {% if references|length > 1 %}
 					{% set concepto = 'messages.many' | trans({'%number%' : references|length}) %}
-				{% endif %}
-				<div id="js-payMultiple" data-referencia="{{ referenciaC60 }}" data-concepto="{{ concepto }}" data-importe="{{ importeTotal|number_format(2, ',', '.') }}" data-ultimodiapago="{{ fechaLimitePagoBanco }}" data-email="{{ email }}"></div>
+				{% endif %} #}
+				{# <div id="js-payMultiple" data-referencia="{{ referenciaC60 }}" data-concepto="{{ concepto }}" data-importe="{{ importeTotal|number_format(2, ',', '.') }}" data-ultimodiapago="{{ fechaLimitePagoBanco }}" data-email="{{ email }}"></div> #}
 			{% endif %}
 		</div>
+		{% include "common/_modal.html.twig" with {'message': 'message', 'title': 'title'} %}
 	</main>
 {% endblock %}
 

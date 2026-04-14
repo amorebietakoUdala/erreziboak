@@ -225,20 +225,6 @@ class ReferenciaC60
     }
 
     /**
-     * Set the value of fechaFinInteres
-     *
-     * @param  string  $fechaFinInteres
-     *
-     * @return  self
-     */
-    public function setFechaFinInteres(\Datetime $fechaFinInteres): self
-    {
-        $this->fechaFinInteres = $fechaFinInteres;
-
-        return $this;
-    }
-
-    /**
      * Get the value of fechaLimitePagoBanco
      *
      * @return  \Datetime
@@ -246,20 +232,6 @@ class ReferenciaC60
     public function getFechaLimitePagoBanco(): \Datetime
     {
         return $this->fechaLimitePagoBanco;
-    }
-
-    /**
-     * Set the value of fechaLimitePagoBanco
-     *
-     * @param  string  $fechaLimitePagoBanco
-     *
-     * @return  self
-     */
-    public function setFechaLimitePagoBanco(\Datetime $fechaLimitePagoBanco): self
-    {
-        $this->fechaLimitePagoBanco = $fechaLimitePagoBanco;
-
-        return $this;
     }
 
     /**

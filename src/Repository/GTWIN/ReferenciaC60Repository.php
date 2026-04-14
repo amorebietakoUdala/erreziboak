@@ -2,6 +2,7 @@
 
 namespace App\Repository\GTWIN;
 
+use App\Entity\GTWIN\Recibo;
 use \Doctrine\ORM\EntityRepository;
 use App\Entity\GTWIN\ReferenciaC60;
 
@@ -42,6 +43,16 @@ class ReferenciaC60Repository extends EntityRepository
         $qb = $this->createQueryBuilder('c60')
             ->andWhere('c60.referenciaC60 = :referenciaC60')
             ->setParameter('referenciaC60', $referenciaC60);
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+    public function findByRecibo(Recibo $recibo): array
+    {
+        $qb = $this->createQueryBuilder('c60')
+            ->andWhere('c60.recibo = :recibo')
+            ->setParameter('recibo', $recibo->getId());
         $result = $qb->getQuery()->getResult();
 
         return $result;
