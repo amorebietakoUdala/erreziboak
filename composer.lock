@@ -4,8 +4,52 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "397da9d9a48d6868970026eb8810bfed",
+    "content-hash": "3388e2505650f1fb5e8c732bf3ded5b0",
     "packages": [
+        {
+            "name": "amorebietakoudala/giltza-bundle",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/amorebietakoUdala/giltza-bundle.git",
+                "reference": "ad23e5a1c7c709dec2c8f10fc96ed5ec3f2f0332"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/amorebietakoUdala/giltza-bundle/zipball/ad23e5a1c7c709dec2c8f10fc96ed5ec3f2f0332",
+                "reference": "ad23e5a1c7c709dec2c8f10fc96ed5ec3f2f0332",
+                "shasum": ""
+            },
+            "require": {
+                "league/oauth2-client": "^2.7",
+                "php": ">=8.2",
+                "symfony/framework-bundle": "^6.4|^7.0",
+                "symfony/http-foundation": "^6.4|^7.0",
+                "symfony/http-kernel": "^6.4|^7.0",
+                "symfony/routing": "^6.4|^7.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "symfony": {
+                    "bundle": "AMREU\\GiltzaBundle\\GiltzaBundle"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "AMREU\\GiltzaBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "description": "Integración de Giltza para Symfony",
+            "support": {
+                "issues": "https://github.com/amorebietakoUdala/giltza-bundle/issues",
+                "source": "https://github.com/amorebietakoUdala/giltza-bundle/tree/0.2.0"
+            },
+            "time": "2026-03-05T11:17:05+00:00"
+        },
         {
             "name": "amorebietakoudala/mipago-bundle",
             "version": "2.0.2",
@@ -12199,5 +12243,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.6.0"
 }

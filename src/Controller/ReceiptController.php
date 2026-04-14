@@ -69,7 +69,7 @@ class ReceiptController extends BaseController
         $this->loadQueryParameters($request);
         $this->queryParams['pageSize'] = $request->get('pageSize', 100);
         if (!$request->getSession()->has('giltzaUser')) {
-            return $this->redirectToRoute('app_giltza');
+            return $this->redirectToRoute('amreu_giltza_login');
         }
         $giltzaUser = $request->getSession()->get('giltzaUser');
         $this->logger->debug('Giltza User: ' . $this->serializer->serialize($giltzaUser, 'json'));
@@ -112,7 +112,7 @@ class ReceiptController extends BaseController
     public function show(Request $request, string $id)
     {
         if (!$request->getSession()->has('giltzaUser')) {
-            return $this->redirectToRoute('app_giltza');
+            return $this->redirectToRoute('amreu_giltza_login');
         }
         $giltzaUser = $request->getSession()->get('giltzaUser');
         $this->logger->debug('Giltza User: ' . $this->serializer->serialize($giltzaUser, 'json'));
@@ -289,7 +289,7 @@ class ReceiptController extends BaseController
     public function payForwardedReceipt(string $numeroRecibo, Request $request)
     {
         if (!$request->getSession()->has('giltzaUser')) {
-            return $this->redirectToRoute('app_giltza');
+            return $this->redirectToRoute('amreu_giltza_login');
         }
         $receipt= $this->gts->findByNumRecibo($numeroRecibo);
         $this->logger->debug('-->payForwardedReceipt: Start');

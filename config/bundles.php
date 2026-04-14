@@ -19,4 +19,5 @@ return [
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     MiPago\Bundle\MiPagoBundle::class => ['all' => true],
     Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
+    AMREU\GiltzaBundle\GiltzaBundle::class => ['all' => true],
 ];
