@@ -111,26 +111,18 @@ class ReceiptController extends BaseController
     #[Route(path: '/receipt/{id}', name: 'receipt_show', methods: ['GET'])]
     public function show(Request $request, string $id)
     {
-        if (!$request->getSession()->has('giltzaUser')) {
-            return $this->redirectToRoute('amreu_giltza_login');
+        if ( $this->getUser() && $this->isGranted('ROLE_RECEIPTS') ) {
+            $this->logger->debug('User is granted ROLE_RECEIPTS no need to login with Giltza');
+        } else {
+            if (!$request->getSession()->has('giltzaUser')) {
+                return $this->redirectToRoute('amreu_giltza_login');
+            }
+            $giltzaUser = $request->getSession()->get('giltzaUser');
+            $this->logger->debug('Giltza User: ' . $this->serializer->serialize($giltzaUser, 'json'));
         }
-        $giltzaUser = $request->getSession()->get('giltzaUser');
-        $this->logger->debug('Giltza User: ' . $this->serializer->serialize($giltzaUser, 'json'));
-        // $dni = $giltzaUser['dni'];
-        // if ( isset($giltzaUser['cif']) && isset($giltzaUser['person_status']) && $giltzaUser['person_status'] === 'RE' ) {
-        //     $dni = $giltzaUser['cif'];
-        // }
-
         /** @var Recibo $recibo */
         $recibo = $this->gts->find($id);
-        // if ($recibo->getDniConLetra() !== $dni ) {
-        //     return $this->render('receipt/show.html.twig', [
-        //         'receipt' => null,
-        //         'cuerpo' => null,
-        //     ]);
-        // }
         $cuerpo = $recibo->getCamposBaseImponible($this->definiciones);
-        //$recibo = null;
         return $this->render('receipt/show.html.twig', [
             'receipt' => $recibo,
             'cuerpo' => $cuerpo,
