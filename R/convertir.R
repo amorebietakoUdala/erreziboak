@@ -193,7 +193,7 @@ crear_datos_domiciliacion <- function (row) {
  	{
  		vectorIBAN = trocearCuentaBancaria(row['Cuenta_Corriente'])
  	}
- 	if ( typeof(vectorIBAN) == "character" && vectorIBAN == "Invalid" ) {
+ 	if ( length(vectorIBAN) == 1 && vectorIBAN == "Invalid" ) {
  		return ("Invalid")
  	}
  	if ( length(vectorIBAN) == 6 ) {
