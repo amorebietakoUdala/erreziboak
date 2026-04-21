@@ -83,8 +83,6 @@ class ReceiptController extends BaseController
             $dni = $giltzaUser['dni'];
         }
 
-        $dni='72318623E';
-
         $this->logger->info("Giltza User DNI or CIF: $dni" );
         $exists = $this->gts->personExists($dni);
         if ($exists) {
