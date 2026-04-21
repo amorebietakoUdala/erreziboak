@@ -63,16 +63,17 @@ data-page-sortOrder="{{ sortOrder }}">
                {% endif %}
             </td>
             <td>
+               <a href="{{ path ("receipt_show",{'id': receipt.id}) }}" data-action="click->modal#openModal"><i class="fa fa-info" title="{{ 'option.details' | trans}}"></i></a>&nbsp;
                {% if not is_granted("ROLE_USER") %}
-                  {% if ( ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_VOLUNTARIA') and not receipt.estaDomiciliado and not receipt.periodoPagoVoluntarioVencido )
+                  {% if ( ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_VOLUNTARIA') and not receipt.estaDomiciliado and not receipt.periodoPagoVoluntarioVencido and not receipt.tieneOperacionesDePagoConTarjeta )
                      or ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_EJECUTIVA') and not receipt.estaTraspasado and not receipt.estaParalizado )
-                     or ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_P') and receipt.tipoExaccion == constant('App\\Entity\\GTWIN\\Recibo::TIPO_EXACCION_ID') and receipt.estaAprobada ) 
+                     or ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_P') and receipt.tipoExaccion == constant('App\\Entity\\GTWIN\\Recibo::TIPO_EXACCION_ID') and receipt.estaAprobada )
+                     or ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and receipt.tieneDevolucionesDelBanco and not receipt.tieneOperacionesDePagoConTarjeta ) 
                      )
                   %}
                   <a href="{{ path ("receipt_forwarded_pay",{'numeroRecibo': receipt.numeroRecibo })}}" data-action="click->table#onClick" data-pagination="false"><i class="fa fa-credit-card" title="{{ 'confirmation.pay' | trans}}"></i></a>&nbsp;
                   {% endif %}
                {% endif %}
-               <a href="{{ path ("receipt_show",{'id': receipt.id}) }}" data-action="click->modal#openModal"><i class="fa fa-info" title="{{ 'option.details' | trans}}"></i></a>
             </td>
          </tr>
       {% endfor %}

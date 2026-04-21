@@ -21,6 +21,8 @@ use App\Utils\Validaciones;
 use App\Entity\GTWIN\Person;
 use App\Entity\GTWIN\ReferenciaC60;
 use App\Entity\GTWIN\Tarifa;
+use App\Entity\GTWIN\OperacionesRecibo;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -612,4 +614,24 @@ class GTWINIntegrationService
         }        
         return $result;
     }
+
+    /**
+     * Find the operations of a receipt, ordered by date desc
+     */
+    public function getOperacionesRecibo($receiptId): array {
+        //$operacionesRecibo = $this->em->getRepository(OperacionesRecibo::class)->findBy(['recibo' => $receiptId], ['fechaOperacion' => 'DESC']);
+        $operacionesRecibo = $this->em->getRepository(OperacionesRecibo::class)->findBy(['recibo' => $receiptId]);
+
+        return $operacionesRecibo;
+    }
+
+    /**
+     * Find the operations of a receipt, ordered by date desc
+     */
+    public function getUltimaOperacion($receiptId): ?OperacionesRecibo {
+        $operacionesRecibo = $this->getOperacionesRecibo($receiptId);
+
+        return $operacionesRecibo[0] ?? null;
+    }
+
 }

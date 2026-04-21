@@ -60,7 +60,6 @@ class PaymentRepository extends ServiceEntityRepository
             }
         }
         //	$qb->orderBy($orderBy[0], $orderBy[1]);
-        //	dump($qb,$criteriaAnd);die;
         return $qb;
     }
 

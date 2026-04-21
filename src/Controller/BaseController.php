@@ -81,7 +81,6 @@ class BaseController extends AbstractController
     protected function formatCriteria($criteria) {
         $new_criteria = [];
         foreach ($criteria as $key => $value) {
-            dump($criteria, $key, $value);
             if (!empty($value) ) {
                 if ( gettype($value) === "object" && $value::class === "DateTime") {
                     /** @var \DateTime $value */

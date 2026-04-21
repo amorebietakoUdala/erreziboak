@@ -1,6 +1,8 @@
 doctrine:
     dbal:
         default_connection: mysql
+        types:
+            legacy_oracle_date: App\Doctrine\Type\LegacyOracleDateType
         connections:
             mysql:
                 # IMPORTANT: You MUST configure your server version,

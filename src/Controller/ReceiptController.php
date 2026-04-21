@@ -11,6 +11,7 @@ use App\Service\GTWINIntegrationService;
 use App\Service\JsonConfigManager;
 use App\Validator\IsValidIBANValidator;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -81,6 +82,8 @@ class ReceiptController extends BaseController
         if ( null === $dni && isset($giltzaUser['dni']) ) {
             $dni = $giltzaUser['dni'];
         }
+
+        $dni='72318623E';
 
         $this->logger->info("Giltza User DNI or CIF: $dni" );
         $exists = $this->gts->personExists($dni);
@@ -414,23 +417,6 @@ class ReceiptController extends BaseController
         $this->mailer->send($email);
         return;
     }
-
-    // private function __sendMessage($subject, Recibo $receipt, Payment $payment, $emails)
-    // {
-    //     $from = $this->getParameter('mailer_from');
-    //     $message = new Swift_Message($subject);
-
-    //     $message->setFrom($from);
-    //     $message->setTo($emails);
-    //     $message->setBody(
-    //         $this->renderView('receipt/PaymentConfirmationMail.html.twig', [
-    //             'receipt' => $receipt,
-    //             'payment' => $payment,
-    //         ])
-    //     );
-    //     $message->setContentType('text/html');
-    //     $this->mailer->send($message);
-    // }
 
     private function __updatePayment($recibos, Payment $payment)
     {

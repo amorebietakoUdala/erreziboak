@@ -44,11 +44,11 @@ class ReferenciaC60
     private ?string $expediente = null;
 
     
-    #[ORM\Column(name: 'C60FECFIN', type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'C60FECFIN', type: 'legacy_oracle_date', nullable: true)]
     private ?\Datetime $fechaFinInteres = null;
 
     
-    #[ORM\Column(name: 'C60FECLIM', type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'C60FECLIM', type: 'legacy_oracle_date', nullable: false)]
     private ?\Datetime $fechaLimitePagoBanco = null;
 
     

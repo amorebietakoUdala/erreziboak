@@ -82,20 +82,20 @@ class Recibo implements \Stringable
     #[ORM\Column(name: 'RECINDPAR', type: 'string', length: 1, nullable: false)]
     private $paralizado;
 
-    #[ORM\Column(name: 'RECFECCRE', type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'RECFECCRE', type: 'legacy_oracle_date', nullable: false)]
     private ?\DateTime $fechaCreacion = null;
 
-    #[ORM\Column(name: 'RECFECINI', type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'RECFECINI', type: 'legacy_oracle_date', nullable: false)]
     private ?\DateTime $fechaInicioVoluntaria = null;
 
-    #[ORM\Column(name: 'RECFECFIN', type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'RECFECFIN', type: 'legacy_oracle_date', nullable: false)]
     private ?\DateTime $fechaFinVoluntaria = null;
 
     #[Groups(['show'])]
-    #[ORM\Column(name: 'RECFECLNV', type: 'datetime')]
+    #[ORM\Column(name: 'RECFECLNV', type: 'legacy_oracle_date')]
     private ?\DateTime $fechaLimitePagoBanco = null;
 
-    #[ORM\Column(name: 'RECFECCOB', type: 'datetime', nullable: false)]
+    #[ORM\Column(name: 'RECFECCOB', type: 'legacy_oracle_date', nullable: false)]
     private ?\DateTime $fechaCobro = null;
 
     #[ORM\Column(name: 'RECCOSTAS', type: 'decimal', precision: 11, scale: 2, nullable: false)]
@@ -659,10 +659,37 @@ class Recibo implements \Stringable
         return $errores;
     }
 
+    public function getUltimaOperacion(): ?OperacionesRecibo
+    {
+        $fechaOperacion = null;
+        $ultimaOperacion = null;
+        
+        foreach ($this->operaciones as $operacion) {
+            if ( $fechaOperacion === null || $operacion->getFechaOperacion() > $fechaOperacion ) {
+                $fechaOperacion = $operacion->getFechaOperacion();
+                $ultimaOperacion = $operacion;
+            }
+        }
+
+        return $ultimaOperacion ?? null;
+    }
+
+
     public function tieneOperacionesDePagoConTarjeta()
     {
         foreach ($this->operaciones as $operacion) {
-            if ('PAGO_TAR' === $operacion->getTipoOperacion()->getCodOperacion()) {
+            if (OperacionesRecibo::CODIGO_PAGO_TARJETA === $operacion->getTipoOperacion()->getCodOperacion()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function tieneDevolucionesDelBanco(): bool
+    {
+        foreach ($this->operaciones as $operacion) {
+            if (OperacionesRecibo::CODIGO_DEVOLUCION_BANCARIA === $operacion->getTipoOperacion()->getCodOperacion()) {
                 return true;
             }
         }

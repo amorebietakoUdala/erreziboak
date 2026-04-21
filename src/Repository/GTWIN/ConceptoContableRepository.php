@@ -24,9 +24,6 @@ class ConceptoContableRepository extends EntityRepository
                 ->setParameter('codigoTipoIngreso', $tipoIngreso)
                 ->orderBy('ti.codigo', 'ASC');
 
-        dump($qb->getQuery(), $qb->getQuery()->getResult());
-        die;
-
         return $qb->getQuery()->getResult();
     }
 

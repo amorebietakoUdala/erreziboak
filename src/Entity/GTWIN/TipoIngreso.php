@@ -21,25 +21,27 @@ class TipoIngreso implements \Stringable
     #[ORM\Column(name: 'TINCODTIN', type: 'string', nullable: false)]
     private $codigo;
 
-    #[Groups(['show'])]
     #[ORM\Column(name: 'TINNOMTIN', type: 'string', nullable: false)]
+    #[Groups(['show'])]
     private $descripcion;
 
     #[ORM\Column(name: 'TINDEFECT', type: 'string', nullable: false)]
     private $tipoDefecto;
 
     #[ORM\Column(name: 'TINCC60ID', type: 'string', nullable: false)]
+    #[Groups(['show'])]
     private $conceptoC60ID;
 
-    #[Groups(['show'])]
     #[ORM\Column(name: 'TINCC60AU', type: 'string', nullable: false)]
+    #[Groups(['show'])]
     private $conceptoC60AU;
 
     #[ORM\Column(name: 'TINCC60SC', type: 'string', nullable: false)]
     private $conceptoC60SC;
 
-    #[Groups(['show'])]
     #[ORM\Column(name: 'TINCODO60', type: 'string', nullable: false)]
+    // #[Groups(['show'])]
+    // #[MaxDepth(1)]
     private $conceptoC60;
 
     #[ORM\OneToMany(targetEntity: 'Tarifa', mappedBy: 'tipoIngreso')]
@@ -47,8 +49,8 @@ class TipoIngreso implements \Stringable
 
     #[ORM\JoinTable(name: 'SP_TRB_TININS')]
     #[ORM\OneToMany(targetEntity: 'InstitucionTipoIngreso', mappedBy: 'tipoIngreso')]
-    #[Groups(['show'])]
-    #[MaxDepth(1)]
+    // #[Groups(['show'])]
+    // #[MaxDepth(1)]
     private $instituciones;
 
     public function __construct()
