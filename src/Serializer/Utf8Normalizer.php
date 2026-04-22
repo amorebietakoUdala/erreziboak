@@ -10,13 +10,18 @@ class Utf8Normalizer implements NormalizerInterface, NormalizerAwareInterface
 {
     use NormalizerAwareTrait;
 
+    public function getSupportedTypes(?string $format): array
+    {
+        return ['*' => true];
+    }
+
     public function supportsNormalization($data, string $format = null, array $context = []): bool
     {
         // Evita bucle infinito
         return !isset($context['utf8_normalized']);
     }
 
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize($object, string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $context['utf8_normalized'] = true;
 

@@ -20,15 +20,15 @@ class ReceiptsFileType extends AbstractType
                 'mapped' => false,
                 'required' => true,
                 'constraints' => [
-                    new File([
-                        'maxSize' => '4096k',
-                        'mimeTypes' => [
+                    new File(
+                        maxSize: '4096k',
+                        mimeTypes: [
                             'text/plain',
                             'application/vnd.ms-excel',
                         ],
-                        'mimeTypesMessage' => 'Select a valid csv file.',
-                    ]),
-                ],
+                        mimeTypesMessage: 'Select a valid csv file.',
+                    )
+                ]
             ])
             ->add('description', null, [
                 'label' => 'receiptsFile.description',

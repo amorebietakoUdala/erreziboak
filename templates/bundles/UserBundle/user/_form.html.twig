@@ -1,4 +1,3 @@
-{% trans_default_domain 'user_bundle' %}
 {{ form_start(form) }}
 
 <div class="container-fluid m-0">
@@ -42,11 +41,11 @@
 <div class="row justify-content-center mt-2 mb-2">
 {% if not readonly %}
 	<div class="col-lg-auto">
-		<button class="btn btn-primary" type="submit">{{ "btn.user.save" | trans }}</button>
+		<button class="btn btn-primary" type="submit">{{ "btn.user.save" | trans({}, 'user_bundle') }}</button>
 	</div>
 {% endif %}
 	<div class="col-lg-auto">
-		<a href="{{ returnUrl is defined and not returnUrl is empty ? returnUrl : path('admin_user_index') }}" class="btn btn-secondary">{{ "btn.user.cancel" | trans }}</a>
+		<a href="{{ returnUrl is defined and not returnUrl is empty ? returnUrl : path('admin_user_index') }}" class="btn btn-secondary">{{ "btn.user.cancel" | trans({}, 'user_bundle') }}</a>
 	</div>
 </div>
 

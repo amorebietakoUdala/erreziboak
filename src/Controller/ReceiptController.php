@@ -17,7 +17,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -32,7 +32,6 @@ class ReceiptController extends BaseController
         private readonly GTWINIntegrationService $gts,
         private readonly PaymentRepository $paymentRepo,
         private readonly LoggerInterface $logger,
-        private readonly SerializerInterface $serializer,
         private readonly JsonConfigManager $jcm,
 
     )
@@ -68,12 +67,12 @@ class ReceiptController extends BaseController
     public function getPersonReceipts(Request $request): Response
     {
         $this->loadQueryParameters($request);
-        $this->queryParams['pageSize'] = $request->get('pageSize', 100);
+        $this->queryParams['pageSize'] = $request->query->get('pageSize', 100);
         if (!$request->getSession()->has('giltzaUser')) {
             return $this->redirectToRoute('amreu_giltza_login');
         }
         $giltzaUser = $request->getSession()->get('giltzaUser');
-        $this->logger->debug('Giltza User: ' . $this->serializer->serialize($giltzaUser, 'json'));
+        $this->logger->debug('Giltza User: ' . json_encode($giltzaUser));
 
         $dni = null;
         if ( isset($giltzaUser['cif']) && isset($giltzaUser['person_status']) && $giltzaUser['person_status'] === 'RE' ) {
@@ -82,6 +81,8 @@ class ReceiptController extends BaseController
         if ( null === $dni && isset($giltzaUser['dni']) ) {
             $dni = $giltzaUser['dni'];
         }
+
+        $dni = '72318623E';
 
         $this->logger->info("Giltza User DNI or CIF: $dni" );
         $exists = $this->gts->personExists($dni);
@@ -119,7 +120,7 @@ class ReceiptController extends BaseController
                 return $this->redirectToRoute('amreu_giltza_login');
             }
             $giltzaUser = $request->getSession()->get('giltzaUser');
-            $this->logger->debug('Giltza User: ' . $this->serializer->serialize($giltzaUser, 'json'));
+            $this->logger->debug('Giltza User: ' . json_encode($giltzaUser));
         }
         /** @var Recibo $recibo */
         $recibo = $this->gts->find($id);
@@ -136,18 +137,12 @@ class ReceiptController extends BaseController
     {
         $this->logger->debug('-->findReceipts: Start');
         $this->loadQueryParameters($request);
-        $referenciaC60 = $request->get('referenciaC60');
-        $email = $request->get('email');
-        $form = $this->createForm(ReceiptSearchForm::class, [
-            'referenciaC60' => $referenciaC60,
-            'email' => $email,
-        ]);
+        $form = $this->createForm(ReceiptSearchForm::class);
         $receipts = [];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $email = $data['email'];
             // Not necesary to fill referenciac60
             // if (null === $data['referenciaC60']) {
             //     $this->addFlash('error', 'Debe especificar una referencia');
@@ -212,7 +207,6 @@ class ReceiptController extends BaseController
                 'references' => $references,
                 'receipts' => $receipts,
                 // 'concepto' => $concepto,
-                'email' => $data['email'],
                 'readonly' => false,
             ]);
         }

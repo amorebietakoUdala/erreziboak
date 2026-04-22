@@ -7,7 +7,7 @@ use App\Controller\BaseController;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use App\Form\PaymentTypeForm;
 use App\Repository\PaymentRepository;
 
