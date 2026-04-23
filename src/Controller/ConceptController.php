@@ -12,7 +12,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route(path: '/{_locale}', requirements: ['_locale' => 'es|eu|en'])]
@@ -123,7 +123,7 @@ class ConceptController extends BaseController
     #[Route(path: '/concept/tiposIngreso/select', name: 'admin_tipos_ingreso_select', methods: ['GET'])]
     public function getTiposIngresoInstitucion(Request $request, GTWINIntegrationService $gts, SerializerInterface $serializer)
     {
-        $tiposIngreso = $gts->findTipoIngresoInstitucion($request->get('entity'));
+        $tiposIngreso = $gts->findTipoIngresoInstitucion($request->query->get('entity'));
 
         return new JsonResponse($serializer->serialize($tiposIngreso, 'json',['groups' => ['show']]), Response::HTTP_OK, [], true);
     }
@@ -132,7 +132,7 @@ class ConceptController extends BaseController
     #[Route(path: '/concept/tarifas/select', name: 'admin_tarifas_select', methods: ['GET'])]
     public function getTarifasTipoIngreso(Request $request, GTWINIntegrationService $gts, SerializerInterface $serializer)
     {
-        $tarifas = $gts->findTarifasTipoIngreso($request->get('suffix'));
+        $tarifas = $gts->findTarifasTipoIngreso($request->query->get('suffix'));
 
         return new JsonResponse($serializer->serialize($tarifas, 'json',['groups' => ['show']]), Response::HTTP_OK, [], true);
     }

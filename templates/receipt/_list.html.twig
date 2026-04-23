@@ -19,12 +19,12 @@ data-page-sortOrder="{{ sortOrder }}">
             <th data-sortable="true">{{"receipt.estado" | trans | capitalize}}</th>
          {% endif %}
          <th data-sortable="true">{{"receipt.situacion" | trans | capitalize}}</th>
-         <th data-sortable="true">{{"receipt.tipoExaccion" | trans | capitalize}}</th>
-         <th data-sortable="true">{{"receipt.domiciliado" | trans }}</th>
+         {# <th data-sortable="true">{{"receipt.tipoExaccion" | trans | capitalize}}</th>
+         <th data-sortable="true">{{"receipt.domiciliado" | trans }}</th> #}
          <th data-sortable="true">{{"receipt.traspasado" | trans }}</th>
          <th data-sortable="true">{{"receipt.paralizado" | trans }}</th>
          <th data-sortable="true">{{"receipt.incluidoEnPlanDePagos" | trans }}</th>
-         <th data-sortable="true">{{"receipt.aprobada" | trans }}</th>
+         {# <th data-sortable="true">{{"receipt.aprobada" | trans }}</th> #}
          <th data-sortable="true">{{"receipt.observaciones" | trans }}</th>
          <th data-sortable="true" data-field="options">{{"options" | trans | capitalize}}</th>
       </tr>
@@ -43,12 +43,16 @@ data-page-sortOrder="{{ sortOrder }}">
                <td>{{ receipt.estado }}</td>
             {% endif %}
             <td>{{ receipt.situacion }}</td>
-            <td>{{ receipt.tipoExaccion }}</td>
-            <td>{{ receipt.estaDomiciliado ? "messages.si" | trans : "messages.no" | trans }}</td>
+            {# 
+               <td>{{ receipt.tipoExaccion }}</td>
+               <td>{{ receipt.estaDomiciliado ? "messages.si" | trans : "messages.no" | trans }}</td>
+            #}
             <td>{{ receipt.estaTraspasado ? "messages.si" | trans : "messages.no" | trans }}</td>
             <td>{{ receipt.estaParalizado ? "messages.si" | trans : "messages.no" | trans }}</td>
             <td>{{ receipt.estaIncluidoEnPlanDePagos ? "messages.si" | trans : "messages.no" | trans }}</td>
-            <td>{{ receipt.estaAprobada ? "messages.si" | trans : "messages.no" | trans }}</td>
+            {#             
+               <td>{{ receipt.estaAprobada ? "messages.si" | trans : "messages.no" | trans }}</td>
+             #}
             <td>
                {% if ( receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_VOLUNTARIA') and receipt.estaDomiciliado and not receipt.periodoPagoVoluntarioVencido ) %}
                   {{ 'messages.reciboDomiciliado' | trans | raw }}
@@ -58,17 +62,17 @@ data-page-sortOrder="{{ sortOrder }}">
                   {{ 'messages.reciboParalizado' | trans | raw }}
                {% elseif ( receipt.estaTraspasado ) %}
                   {{ 'messages.reciboTraspasado' | trans | raw }}
-               {% elseif ( receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_VOLUNTARIA') and receipt.periodoPagoVoluntarioVencido ) %}
+               {% elseif ( receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_VOLUNTARIA') and receipt.fechaLimitePagoBancoVencida ) %}
                   {{ 'messages.reciboFueraPlazo' | trans | raw }}
                {% endif %}
             </td>
             <td>
                <a href="{{ path ("receipt_show",{'id': receipt.id}) }}" data-action="click->modal#openModal"><i class="fa fa-info" title="{{ 'option.details' | trans}}"></i></a>&nbsp;
                {% if not is_granted("ROLE_USER") %}
-                  {% if ( ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_VOLUNTARIA') and not receipt.estaDomiciliado and not receipt.periodoPagoVoluntarioVencido and not receipt.tieneOperacionesDePagoConTarjeta )
+                  {% if ( ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_VOLUNTARIA') and not receipt.estaDomiciliado and not receipt.fechaLimitePagoBancoVencida and not receipt.tieneOperacionesDePagoConTarjeta )
                      or ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_EJECUTIVA') and not receipt.estaTraspasado and not receipt.estaParalizado )
                      or ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and receipt.situacion == constant('App\\Entity\\GTWIN\\Recibo::SITUACION_P') and receipt.tipoExaccion == constant('App\\Entity\\GTWIN\\Recibo::TIPO_EXACCION_ID') and receipt.estaAprobada )
-                     or ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and receipt.tieneDevolucionesDelBanco and not receipt.tieneOperacionesDePagoConTarjeta ) 
+                     or ( receipt.estado == constant('App\\Entity\\GTWIN\\Recibo::ESTADO_PENDIENTE') and not receipt.fechaLimitePagoBancoVencida and receipt.tieneDevolucionesDelBanco and not receipt.tieneOperacionesDePagoConTarjeta ) 
                      )
                   %}
                   <a href="{{ path ("receipt_forwarded_pay",{'numeroRecibo': receipt.numeroRecibo })}}" data-action="click->table#onClick" data-pagination="false"><i class="fa fa-credit-card" title="{{ 'confirmation.pay' | trans}}"></i></a>&nbsp;

@@ -20,14 +20,14 @@ class SicalwinFileType extends AbstractType
                 'mapped' => false,
                 'required' => true,
                 'constraints' => [
-                    new File([
-                        'maxSize' => '4096k',
-                        'mimeTypes' => [
+                    new File(
+                        maxSize : '4096k',
+                        mimeTypes : [
                             'text/plain',
                             'application/vnd.ms-excel',
                         ],
-                        'mimeTypesMessage' => 'Select a valid csv file.',
-                    ]),
+                        mimeTypesMessage : 'Select a valid csv file.',
+                    ),
                 ],
             ])
             ->add('codigoConvocatoria', TextType::class,[
