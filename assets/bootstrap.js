@@ -14,7 +14,8 @@ export const app = startStimulusApp(require.context(
 // app.debug = true;
 
 // register any custom, 3rd party controllers here
-app.register('locale', locale );
+// Removed because of locale is now handled by the links in the header, and not by a stimulus controller. If we want to use stimulus for this in the future, we can re-enable it and add the necessary code to handle the click events on the links.
+//app.register('locale', locale );
 app.register('datetimepicker', datetimepicker );
 app.register('table', table );
 //app.register('action-changer', actionChanger );

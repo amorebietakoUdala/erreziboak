@@ -536,6 +536,9 @@ class Recibo implements \Stringable
 
     public function fechaLimitePagoBancoVencida()
     {
+        if (null === $this->fechaLimitePagoBanco) {
+            return false;
+        }
         $fechaLimitePagoBanco = clone $this->fechaLimitePagoBanco;
         if ($fechaLimitePagoBanco->modify('+1 day') < new \DateTime()) {
             return true;

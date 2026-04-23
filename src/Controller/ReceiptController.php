@@ -63,7 +63,14 @@ class ReceiptController extends BaseController
         return $recibosNoPagados;
     }
 
-    #[Route(path: '/my-unpaid-receipts', name: 'my_receipts_unpayed_receipts', methods: ['GET'])]
+    #[Route(
+        path: [
+            'es' => '/recibos-pendiente-pago',
+            'eu' => '/ordaintzeke-ordaingiriak',
+        ],
+        name: 'my_receipts_unpaid_receipts',
+        methods: ['GET']
+    )]
     public function getPersonReceipts(Request $request): Response
     {
         $this->loadQueryParameters($request);
@@ -81,8 +88,6 @@ class ReceiptController extends BaseController
         if ( null === $dni && isset($giltzaUser['dni']) ) {
             $dni = $giltzaUser['dni'];
         }
-
-        $dni = '72318623E';
 
         $this->logger->info("Giltza User DNI or CIF: $dni" );
         $exists = $this->gts->personExists($dni);

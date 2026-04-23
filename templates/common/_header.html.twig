@@ -18,9 +18,9 @@
       'locale' : app.request.locale|split('_')[0]
    }) }} id="hizkuntza" class="col-lg-auto text-black ml-1 mr-1" >
 		&nbsp;&nbsp;
-		<a id="js-locale-es" href="#" data-action="click->locale#changeLocale">es</a>
+		<a id="js-locale-es" href="{{ path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params')|merge({'_locale': 'es'})) }}">es</a>
 		/
-		<a id="js-locale-eu" href="#" data-action="click->locale#changeLocale">eu</a>
+		<a id="js-locale-eu" href="{{ path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params')|merge({'_locale': 'eu'})) }}">eu</a>
 		&nbsp;&nbsp;
 	</div>
 </header>
